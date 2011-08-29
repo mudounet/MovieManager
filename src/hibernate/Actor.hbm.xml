@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 3 d?c. 2010 21:10:02 by Hibernate Tools 3.3.0.GA -->
+<hibernate-mapping>
+  <class name="hibernate.Actor" table="ACTOR">
+    <id access="field" name="id" type="long">
+      <column name="ACTOR_ID"/>
+      <generator class="native"/>
+    </id>
+    <property access="field" name="name" type="java.lang.String">
+      <meta attribute="field-description">Name of actor</meta>
+      <meta attribute="use-in-tostring">true</meta>
+      <column name="NAME" not-null="true"/>
+    </property>
+    <set inverse="true" name="movies" table="MOVIE_ACTORS">
+      <meta attribute="field-description">Movies played by this actor</meta>
+      <key column="ACTOR_ID"/>
+      <many-to-many class="hibernate.movie.Movie" column="MOVIE_ID"/>
+    </set>
+  </class>
+  <query name="com.hibernate.actorByName">
+    
+        from Actor as actor
+        where upper(actor.name) = upper(:name)
+      
+	</query>
+</hibernate-mapping>

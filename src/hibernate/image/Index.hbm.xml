@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 3 d?c. 2010 15:49:49 by Hibernate Tools 3.3.0.GA -->
+<hibernate-mapping>
+  <subclass discriminator-value="INDEX" extends="hibernate.image.Image" name="hibernate.image.Index"/>
+</hibernate-mapping>

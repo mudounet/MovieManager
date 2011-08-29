@@ -1,0 +1,25 @@
+
+<dataset>
+    <GENERICTAG ID="1" TYPE="G" KEY="key1" VALUE="a"/>
+    <GENERICTAG ID="2" TYPE="G" KEY="key2" VALUE="b"/>
+    <GENERICTAG ID="3" TYPE="S" KEY="simpleKey2" VALUE=""/>
+    <GENERICTAG ID="4" TYPE="G" KEY="key3" VALUE="c"/>
+    <GENERICTAG ID="5" TYPE="S" KEY="simpleKey1" VALUE=""/>
+    <GENERICTAG ID="6" TYPE="T" KEY="totoTag3" VALUE=""/>
+    <GENERICTAG ID="7" TYPE="T" KEY="totoTag" VALUE=""/>
+    <GENERICTAG ID="8" TYPE="T" KEY="totoTag3" VALUE=""/>
+    <GENERICTAG ID="9" TYPE="T" KEY="totoTag" VALUE=""/>
+    <GENERICTAG ID="10" TYPE="S" KEY="simpleKey3" VALUE=""/>
+    <GENERICMOVIE ID="1" TYPE="M" TITLE="Titre de test 1"/>
+    <GENERICMOVIE ID="2" TYPE="Q" TITLE="Titre de test 2"/>
+    <GENERICMOVIE ID="3" TYPE="P" TITLE="Titre de test 3"/>
+    <GENERICMOVIE ID="4" TYPE="Q" TITLE="Titre de test 4"/>
+    <GENERICMOVIE ID="8" TYPE="P" TITLE="Titre de test 8"/>
+    <GENERICMOVIE ID="5" TYPE="M" TITLE="Titre de test 5"/>
+    <GENERICMOVIE ID="6" TYPE="Q" TITLE="Titre de test 6"/>
+    <GENERICMOVIE ID="7" TYPE="P" TITLE="Titre de test 7"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="3" FK_TAG="5"/>
+</dataset>
