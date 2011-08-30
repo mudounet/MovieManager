@@ -11,8 +11,8 @@
 	
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<main.java.config.dir>${basedir}/src/main/config</main.java.config.dir>
-		<test.java.config.dir>${basedir}/src/test/resources</test.java.config.dir>
+        <main.java.config.dir>${basedir}/src/main/config</main.java.config.dir>
+        <test.java.config.dir>${basedir}/src/test/resources</test.java.config.dir>
     </properties>
 
     <repositories>
@@ -27,36 +27,7 @@
         </repository>
     </repositories>
     <dependencies>
-<!--    <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>maven-xdoclet-plugin</artifactId>
-            <version>1.2</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>xdoclet-xdoclet-module</artifactId>
-            <version>1.2.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>xdoclet-hibernate-module</artifactId>
-            <version>1.2.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>xdoclet</artifactId>
-            <version>1.2.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>xjavadoc</artifactId>
-            <version>1.1</version>
-            <type>jar</type>
-        </dependency> 
+<!--    
 		 <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -130,98 +101,6 @@
     
     <build>
         <plugins>
-<!--             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>hibernate3-maven-plugin</artifactId>
-                <version>2.2</version>
-                <executions>
-                    <execution>
-                        <id>hbm2hbmxml</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>hbm2hbmxml</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                        <configuration>
-					<components>
-                          <component>
-                                <name>hbm2hbmxml</name>
-                                <outputDirectory>target/classes</outputDirectory>
-                            </component>
-                        </components> 
-                            <componentProperties>
-                                <packagename>com.mudounet.hibernate</packagename>
-                            </componentProperties>
-                        </configuration>
-                    </execution>
-                 <execution>
-                    <id>hbm2cfgxml</id>
-                    <phase>generate-resources</phase>
-                    <goals>
-                        <goal>hbm2cfgxml</goal>
-                    </goals>
-                    <inherited>false</inherited>
-                    <configuration>
-                        <components>
-                            <component>
-                                <name>hbm2cfgxml</name>
-                                <implementation>jdbcconfiguration</implementation>
-                            </component>
-                        </components>
-                        <componentProperties>
-                            <packagename>package.name</packagename>
-                        </componentProperties>
-                    </configuration>
-                </execution>
-            <execution>
-                    <id>hbm2java</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>hbm2java</goal>
-                    </goals>
-                    <inherited>false</inherited>
-                    <configuration>
-                        <components>
-                            <component>
-                                <name>hbm2java</name>
-                                <implementation>configuration</implementation>
-                            </component>
-                        </components>
-                        <componentProperties>
-                            <packagename>package.name</packagename>
-                            <configurationfile>target/hibernate3/generated-mappings/hibernate.cfg.xml</configurationfile>
-                        </componentProperties>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>hbm2dao</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>hbm2dao</goal>
-                    </goals>
-                    <inherited>false</inherited>
-                    <configuration>
-                        <components>
-                            <component>
-                                <name>hbm2dao</name>
-                                <implementation>configuration</implementation>
-                            </component>
-                        </components>
-                        <componentProperties>
-                            <packagename>package.name</packagename>
-                            <configurationfile>target/hibernate3/generated-mappings/hibernate.cfg.xml</configurationfile>
-                        </componentProperties>
-                    </configuration>
-                </execution> 
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.hsqldb</groupId>
-                        <artifactId>hsqldb</artifactId>
-                        <version>2.0.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.xdoclet</groupId>
                 <artifactId>maven2-xdoclet2-plugin</artifactId>
@@ -260,7 +139,7 @@
                                     <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
                                     <params>
                                         <version>3.0</version>
-										<properties>${main.java.config.dir}/database.properties</properties>
+                                        <properties>${main.java.config.dir}/database.properties</properties>
                                         <destdir>${project.build.outputDirectory}</destdir>
                                     </params>
                                 </component>
@@ -268,7 +147,7 @@
                                     <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
                                     <params>
                                         <version>3.0</version>
-										<properties>${test.java.config.dir}/database.properties</properties>
+                                        <properties>${test.java.config.dir}/database.properties</properties>
                                         <destdir>${project.build.testOutputDirectory}</destdir>
                                     </params>
                                 </component>
@@ -277,23 +156,42 @@
                     </configs>
                 </configuration>
             </plugin> 
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>hibernate3-maven-plugin</artifactId>
-        <version>2.2</version>
-		        <executions>
-          <execution>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>hbm2ddl</goal>
-            </goals>
-          </execution>
-		  </executions>
-        <configuration>
-          <componentProperties>
-            <outputfilename>schema.sql</outputfilename>
-          </componentProperties>
-        </configuration>
+            
+                        <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>src/test/resources/database.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>hibernate3-maven-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>hbm2ddl</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <componentProperties>
+                        <outputfilename>schema.sql</outputfilename>
+                    </componentProperties>
+                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.hsqldb</groupId>
@@ -301,7 +199,93 @@
                         <version>2.0.0</version>
                     </dependency>
                 </dependencies>
-      </plugin>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.0.0</version>
+                    </dependency>
+                </dependencies>
+
+        <!-- common configuration shared by all executions -->
+                <configuration>
+                    <driver>${hibernate.connection.driver_class}</driver>
+                    <url>${hibernate.connection.url}</url>
+                    <username>${hibernate.connection.username}</username>
+                    <password>${hibernate.connection.password}</password>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>refresh-db</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>target/hibernate3/sql/schema.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                    
+                    <!--<execution>
+                        <id>close-db</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>shutdown</sqlCommand>
+                        </configuration>
+                    </execution>-->
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>dbunit-maven-plugin</artifactId>
+                <version>1.0-beta-3</version>
+        
+        <!--jar file that has the jdbc driver -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.0.0</version>
+                    </dependency>
+                </dependencies>
+        
+        <!-- common configurations -->
+                <!-- common configuration shared by all executions -->
+                <configuration>
+                    <driver>${hibernate.connection.driver_class}</driver>
+                    <url>${hibernate.connection.url}</url>
+                    <username>${hibernate.connection.username}</username>
+                    <password>${hibernate.connection.password}</password>
+                </configuration>
+        
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>operation</goal>
+                        </goals>
+            <!-- specific configurations -->
+                        <configuration>
+                            <type>CLEAN_INSERT</type>
+                            <src>testdata/TestGenericTag.xml</src>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -10,8 +10,6 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.operation.DatabaseOperation;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
@@ -24,7 +22,6 @@ import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.hibernate.SessionFactory;
 import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
-import org.hibernate.EntityMode;
 import org.junit.After;
 import org.junit.Before;
 
@@ -86,23 +83,17 @@ public abstract class ProjectDatabaseTestCase
         } else {
             InputStream fileStream = loadFromTestPath(file);
             InputStream dtdStream = loadFromClasspath("database-schema.dtd");
-            if(dtdStream == null) {
+            if (dtdStream == null) {
                 logger.fatal("Database-schema loading failed");
-                //Get the System Classloader
-                ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
 
-                //Get the URLs
-                URL[] urls = ((URLClassLoader)sysClassLoader).getURLs();
-
-                for(int i=0; i< urls.length; i++)
-                    logger.debug("Path from CLASSPATH : \""+urls[i]+"\"");
-                   
                 throw new Exception("Database-schema loading failed");
+            } else {
+                FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+                builder.setMetaDataSetFromDtd(dtdStream);
+                return builder.build(fileStream);
             }
 
-            FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-            builder.setMetaDataSetFromDtd(dtdStream);
-            return builder.build(fileStream);
+
         }
     }
 
