@@ -8,6 +8,10 @@
     <packaging>jar</packaging>
 
     <name>MovieManager</name>
+	
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <repositories>
         <repository>
@@ -21,9 +25,7 @@
         </repository>
     </repositories>
     <dependencies>
-
-		<!-- 
-        <dependency>
+<!--    <dependency>
             <groupId>xdoclet</groupId>
             <artifactId>maven-xdoclet-plugin</artifactId>
             <version>1.2</version>
@@ -58,7 +60,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.6.1</version>
         </dependency>
-
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
@@ -70,23 +71,21 @@
             <version>1.0.4</version>
         </dependency>
         <dependency>
-            <groupId>org.swinglabs</groupId>
-            <artifactId>swing-layout</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-
-        <dependency>
             <groupId>xuggle</groupId>
             <artifactId>xuggle-utils</artifactId>
             <version>1.21.888.200908201439</version>
         </dependency>
-
 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.swinglabs</groupId>
+            <artifactId>swing-layout</artifactId>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -127,5 +126,146 @@
         </dependency>
     </dependencies>
     
-
+    <build>
+        <plugins>
+<!--             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>hibernate3-maven-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <id>hbm2hbmxml</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>hbm2hbmxml</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+					<components>
+                          <component>
+                                <name>hbm2hbmxml</name>
+                                <outputDirectory>target/classes</outputDirectory>
+                            </component>
+                        </components> 
+                            <componentProperties>
+                                <packagename>com.mudounet.hibernate</packagename>
+                            </componentProperties>
+                        </configuration>
+                    </execution>
+                 <execution>
+                    <id>hbm2cfgxml</id>
+                    <phase>generate-resources</phase>
+                    <goals>
+                        <goal>hbm2cfgxml</goal>
+                    </goals>
+                    <inherited>false</inherited>
+                    <configuration>
+                        <components>
+                            <component>
+                                <name>hbm2cfgxml</name>
+                                <implementation>jdbcconfiguration</implementation>
+                            </component>
+                        </components>
+                        <componentProperties>
+                            <packagename>package.name</packagename>
+                        </componentProperties>
+                    </configuration>
+                </execution>
+            <execution>
+                    <id>hbm2java</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>hbm2java</goal>
+                    </goals>
+                    <inherited>false</inherited>
+                    <configuration>
+                        <components>
+                            <component>
+                                <name>hbm2java</name>
+                                <implementation>configuration</implementation>
+                            </component>
+                        </components>
+                        <componentProperties>
+                            <packagename>package.name</packagename>
+                            <configurationfile>target/hibernate3/generated-mappings/hibernate.cfg.xml</configurationfile>
+                        </componentProperties>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>hbm2dao</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>hbm2dao</goal>
+                    </goals>
+                    <inherited>false</inherited>
+                    <configuration>
+                        <components>
+                            <component>
+                                <name>hbm2dao</name>
+                                <implementation>configuration</implementation>
+                            </component>
+                        </components>
+                        <componentProperties>
+                            <packagename>package.name</packagename>
+                            <configurationfile>target/hibernate3/generated-mappings/hibernate.cfg.xml</configurationfile>
+                        </componentProperties>
+                    </configuration>
+                </execution> 
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.0.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>-->
+            <plugin>
+                <groupId>org.codehaus.xdoclet</groupId>
+                <artifactId>maven2-xdoclet2-plugin</artifactId>
+                <version>2.0.7</version>
+                <executions>
+                    <execution>
+                        <id>xdoclet</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>xdoclet</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.xdoclet</groupId>
+                        <artifactId>xdoclet-plugin-hibernate</artifactId>
+                        <version>1.0.5</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configs>
+                        <config>
+                            <includes>com/mudounet/hibernate/**/*.java</includes>
+                            <components>
+                                <component>
+                                    <classname>org.xdoclet.plugin.hibernate.HibernateMappingPlugin</classname>
+                                    <params>
+                                        <version>3.0</version>
+                                        <force>true</force>
+                                        <destdir>${project.build.outputDirectory}</destdir>
+                                        <encoding>UTF-8</encoding>
+                                    </params>
+                                </component>
+                                <component>
+                                    <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
+                                    <params>
+                                        <version>3.0</version>
+                                        <destdir>${project.build.outputDirectory}</destdir>
+                                    </params>
+                                </component>
+                            </components>
+                        </config>
+                    </configs>
+                </configuration>
+            </plugin> 
+        </plugins>
+    </build>
 </project>
