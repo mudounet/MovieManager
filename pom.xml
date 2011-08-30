@@ -11,6 +11,8 @@
 	
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<main.java.config.dir>${basedir}/src/main/config</main.java.config.dir>
+		<test.java.config.dir>${basedir}/src/test/config</test.java.config.dir>
     </properties>
 
     <repositories>
@@ -258,6 +260,7 @@
                                     <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
                                     <params>
                                         <version>3.0</version>
+										<properties>${main.java.config.dir}/database.properties</properties>
                                         <destdir>${project.build.outputDirectory}</destdir>
                                     </params>
                                 </component>
