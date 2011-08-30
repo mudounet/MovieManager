@@ -277,6 +277,31 @@
                     </configs>
                 </configuration>
             </plugin> 
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>hibernate3-maven-plugin</artifactId>
+        <version>2.2</version>
+		        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>hbm2ddl</goal>
+            </goals>
+          </execution>
+		  </executions>
+        <configuration>
+          <componentProperties>
+            <outputfilename>schema.sql</outputfilename>
+          </componentProperties>
+        </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.0.0</version>
+                    </dependency>
+                </dependencies>
+      </plugin>
         </plugins>
     </build>
 </project>
