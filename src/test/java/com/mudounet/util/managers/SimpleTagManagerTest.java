@@ -77,7 +77,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
         
         ITable resultSet = this.getResults("select * from GenericTag where type = 'S'");
        
-       ResultSetReporter.dump(resultSet);     
+       //ResultSetReporter.dump(resultSet);     
    
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
