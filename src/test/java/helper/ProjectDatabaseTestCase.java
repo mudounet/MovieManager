@@ -32,10 +32,10 @@ public abstract class ProjectDatabaseTestCase
         extends DatabaseTestCase {
 
     protected static Logger logger = Logger.getLogger(ProjectDatabaseTestCase.class.getName());
-    private static String driver = "hibernate.db.driver";
-    private static String url = "hibernate.db.url";
-    private static String username = "hibernate.db.username";
-    private static String password = "hibernate.db.password";
+    private static String driver = "hibernate.connection.driver_class";
+    private static String url = "hibernate.connection.url";
+    private static String username = "hibernate.connection.username";
+    private static String password = "hibernate.connection.password";
     private SessionFactory sessionFactory;
     protected AbstractDao template;
 
@@ -118,7 +118,7 @@ public abstract class ProjectDatabaseTestCase
 
     protected IDatabaseConnection getConnection() throws Exception {
         Properties p = new Properties();
-        InputStream m = loadFromClasspath("hibernate.properties");
+        InputStream m = loadFromClasspath("database.properties");
         p.load(m);
         Class.forName(p.getProperty(driver));
         Connection c =

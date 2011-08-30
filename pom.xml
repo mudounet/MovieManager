@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.java.config.dir>${basedir}/src/main/config</main.java.config.dir>
-		<test.java.config.dir>${basedir}/src/test/config</test.java.config.dir>
+		<test.java.config.dir>${basedir}/src/test/resources</test.java.config.dir>
     </properties>
 
     <repositories>
