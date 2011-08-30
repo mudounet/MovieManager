@@ -60,11 +60,11 @@ public abstract class GenericMovie {
      * @hibernate.set
      * table="movies_tags"
      * cascade="save-update"
-     * @hibernate.collection-many-to-many
-     * column="fk_tag"
      * lazy="false"
+     * @hibernate.many-to-many
+     * column="fk_tag"
      * class="com.mudounet.hibernate.tags.GenericTag"
-     * @hibernate.collection-key
+     * @hibernate.key
      * column="fk_movie"
      */
     public Set getTags() {
