@@ -264,6 +264,14 @@
                                         <destdir>${project.build.outputDirectory}</destdir>
                                     </params>
                                 </component>
+                                <component>
+                                    <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
+                                    <params>
+                                        <version>3.0</version>
+										<properties>${test.java.config.dir}/database.properties</properties>
+                                        <destdir>${project.build.testOutputDirectory}</destdir>
+                                    </params>
+                                </component>
                             </components>
                         </config>
                     </configs>
