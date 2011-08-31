@@ -82,7 +82,7 @@ public abstract class ProjectDatabaseTestCase
             return null;
         } else {
             InputStream fileStream = loadFromTestPath(file);
-            InputStream dtdStream = loadFromClasspath("database-schema.dtd");
+            InputStream dtdStream = loadFromClasspath("database.dtd");
             if (dtdStream == null) {
                 logger.fatal("Database-schema loading failed");
 

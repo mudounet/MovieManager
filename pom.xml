@@ -157,7 +157,7 @@
                 </configuration>
             </plugin> 
             
-                        <plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
                 <version>1.0-alpha-2</version>
@@ -189,9 +189,9 @@
                 </executions>
                 <configuration>
                     <componentProperties>
-						<configurationfile>${project.build.testOutputDirectory}/hibernate.cfg.xml</configurationfile>
+                        <configurationfile>${project.build.testOutputDirectory}/hibernate.cfg.xml</configurationfile>
                         <outputfilename>schema.sql</outputfilename>
-						<export>true</export>
+                        <export>true</export>
                     </componentProperties>
                 </configuration>
                 <dependencies>
@@ -224,18 +224,20 @@
                     <url>${hibernate.connection.url}</url>
                     <username>${hibernate.connection.username}</username>
                     <password>${hibernate.connection.password}</password>
+                    <dataTypeFactoryName>org.dbunit.ext.hsqldb.HsqldbDataTypeFactory</dataTypeFactoryName>
+                    <format>dtd</format>
                 </configuration>
         
                 <executions>
                     <execution>
                         <phase>generate-test-resources</phase>
                         <goals>
-                            <goal>operation</goal>
+                            <goal>export</goal>
                         </goals>
             <!-- specific configurations -->
                         <configuration>
-                            <type>CLEAN_INSERT</type>
-                            <src>testdata/TestGenericTag.xml</src>
+
+                            <dest>${project.build.testOutputDirectory}/database.dtd</dest>
                         </configuration>
                     </execution>
                 </executions>
