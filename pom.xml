@@ -2,70 +2,33 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mycompany.project</groupId>
-    <artifactId>project-model</artifactId>
+    <groupId>com.mudounet</groupId>
+    <artifactId>MovieManager</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
+    <name>MovieManager</name>
+	
+	 <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+	
     <repositories>
         <repository>
             <id>xuggleRepository</id>
             <name>Xuggle Repository</name>
             <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java</url>
         </repository>
-		<repository>
-			<id>Java 2</id>
-			<url>http://download.java.net/maven/2/</url>
-		</repository>
+        <repository>
+            <id>Java 2</id>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
     </repositories>
     <dependencies>
-        <dependency>
-            <groupId>org.dbunit</groupId>
-            <artifactId>dbunit</artifactId>
-            <version>2.4.8</version>
-        </dependency>
-		<!-- <dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-hibernate</artifactId>
-    <version>1.2.9</version>
-	</dependency> -->
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>maven-xdoclet-plugin</artifactId>
-            <version>1.2</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>xdoclet-xdoclet-module</artifactId>
-            <version>1.2.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>xdoclet-hibernate-module</artifactId>
-            <version>1.2.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>xdoclet</artifactId>
-            <version>1.2.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xdoclet</groupId>
-            <artifactId>xjavadoc</artifactId>
-            <version>1.1</version>
-            <type>jar</type>
-        </dependency>
+<!--    
 		 <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
             <version>1.6.1</version>
         </dependency>
         <dependency>
@@ -79,19 +42,43 @@
             <version>1.0.4</version>
         </dependency>
         <dependency>
+            <groupId>xuggle</groupId>
+            <artifactId>xuggle-utils</artifactId>
+            <version>1.21.888.200908201439</version>
+        </dependency>
+-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.swinglabs</groupId>
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.4.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>2.0.0</version>
+            <artifactId>hsqldb</artifactId>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -104,19 +91,166 @@
             <version>3.2.0.beta9a</version>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-        </dependency>
-        <dependency>
             <groupId>xuggle</groupId>
             <artifactId>xuggle-xuggler</artifactId>
             <version>3.4.1012.201001312056</version>
         </dependency>
-        <dependency>
-            <groupId>xuggle</groupId>
-            <artifactId>xuggle-utils</artifactId>
-            <version>1.21.888.200908201439</version>
-        </dependency>
     </dependencies>
+    
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.xdoclet</groupId>
+                <artifactId>maven2-xdoclet2-plugin</artifactId>
+                <version>2.0.7</version>
+                <executions>
+                    <execution>
+                        <id>xdoclet</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>xdoclet</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.xdoclet</groupId>
+                        <artifactId>xdoclet-plugin-hibernate</artifactId>
+                        <version>1.0.5</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configs>
+                        <config>
+                            <includes>com/mudounet/hibernate/**/*.java</includes>
+                            <components>
+                                <component>
+                                    <classname>org.xdoclet.plugin.hibernate.HibernateMappingPlugin</classname>
+                                    <params>
+                                        <version>3.0</version>
+                                        <force>true</force>
+                                        <destdir>${project.build.outputDirectory}</destdir>
+                                        <encoding>UTF-8</encoding>
+                                    </params>
+                                </component>
+                                <component>
+                                    <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
+                                    <params>
+                                        <version>3.0</version>
+                                        <properties>${project.build.resources[0].directory}/hibernate-db.properties</properties>
+                                        <destdir>${project.build.outputDirectory}</destdir>
+                                    </params>
+                                </component>
+                                <component>
+                                    <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
+                                    <params>
+                                        <version>3.0</version>
+                                        <properties>${project.build.testResources[0].directory}/hibernate-db.properties</properties>
+                                        <destdir>${project.build.testOutputDirectory}</destdir>
+                                    </params>
+                                </component>
+                            </components>
+                        </config>
+                    </configs>
+                </configuration>
+            </plugin> 
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${project.build.testResources[0].directory}/hibernate-db.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>hibernate3-maven-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>hbm2ddl</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <componentProperties>
+                        <configurationfile>${project.build.testOutputDirectory}/hibernate.cfg.xml</configurationfile>
+						<propertyfile></propertyfile>
+                        <outputfilename>schema.sql</outputfilename>
+                        <export>true</export>
+                    </componentProperties>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.0.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>dbunit-maven-plugin</artifactId>
+                <version>1.0-beta-3</version>
+        
+        <!--jar file that has the jdbc driver -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.0.0</version>
+                    </dependency>
+                </dependencies>
+        
+        <!-- common configurations -->
+                <!-- common configuration shared by all executions -->
+                <configuration>
+                    <driver>${hibernate.connection.driver_class}</driver>
+                    <url>${hibernate.connection.url}</url>
+                    <username>${hibernate.connection.username}</username>
+                    <password>${hibernate.connection.password}</password>
+                    <dataTypeFactoryName>org.dbunit.ext.hsqldb.HsqldbDataTypeFactory</dataTypeFactoryName>
+                    <format>dtd</format>
+                </configuration>
+        
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>export</goal>
+                        </goals>
+            <!-- specific configurations -->
+                        <configuration>
+                            <dest>${project.build.testOutputDirectory}/database.dtd</dest>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.9</version>
+            </plugin>    
+        </plugins>
+    </reporting>
 </project>
