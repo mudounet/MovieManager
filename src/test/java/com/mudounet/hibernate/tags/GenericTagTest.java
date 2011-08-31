@@ -10,16 +10,12 @@ import com.mudounet.hibernate.movie.QueuedMovie;
 import com.mudounet.util.hibernate.HibernateFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.dbunit.dataset.ITable;
-import java.net.URL;
-import java.net.URLClassLoader;
 import org.hibernate.Hibernate;
 
 /**
@@ -32,14 +28,6 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
     public GenericTagTest(String name) {
         super(name);
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {    
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
     }
 
     /**
