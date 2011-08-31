@@ -12,7 +12,7 @@ import org.dbunit.dataset.DefaultTableMetaData;
 import org.dbunit.dataset.ITable;
 import org.hibernate.Transaction;
 import org.hibernate.Session;
-import helper.ProjectDatabaseTestCase;
+import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.test.ResultSetReporter;
 import java.util.ArrayList;

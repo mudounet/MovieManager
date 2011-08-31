@@ -13,7 +13,7 @@ import org.hibernate.Transaction;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import helper.ProjectDatabaseTestCase;
+import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package helper;
+package com.mudounet.utils.dbunit;
 
 import com.mudounet.util.hibernate.AbstractDao;
 import com.mudounet.util.hibernate.HibernateFactory;
