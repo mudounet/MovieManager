@@ -9,12 +9,10 @@
 
     <name>MovieManager</name>
 	
-    <properties>
+	 <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <main.java.config.dir>${basedir}/src/main/resources</main.java.config.dir>
-        <test.java.config.dir>${basedir}/src/test/resources</test.java.config.dir>
     </properties>
-
+	
     <repositories>
         <repository>
             <id>xuggleRepository</id>
@@ -101,6 +99,7 @@
     
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.codehaus.xdoclet</groupId>
                 <artifactId>maven2-xdoclet2-plugin</artifactId>
@@ -139,7 +138,7 @@
                                     <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
                                     <params>
                                         <version>3.0</version>
-                                        <properties>${main.java.config.dir}/database.properties</properties>
+                                        <properties>${project.build.resources[0].directory}/hibernate-db.properties</properties>
                                         <destdir>${project.build.outputDirectory}</destdir>
                                     </params>
                                 </component>
@@ -147,7 +146,7 @@
                                     <classname>org.xdoclet.plugin.hibernate.HibernateConfigPlugin</classname>
                                     <params>
                                         <version>3.0</version>
-                                        <properties>${test.java.config.dir}/database.properties</properties>
+                                        <properties>${project.build.testResources[0].directory}/hibernate-db.properties</properties>
                                         <destdir>${project.build.testOutputDirectory}</destdir>
                                     </params>
                                 </component>
@@ -169,7 +168,7 @@
                         </goals>
                         <configuration>
                             <files>
-                                <file>src/test/resources/database.properties</file>
+                                <file>${project.build.testResources[0].directory}/hibernate-db.properties</file>
                             </files>
                         </configuration>
                     </execution>
@@ -190,6 +189,7 @@
                 <configuration>
                     <componentProperties>
                         <configurationfile>${project.build.testOutputDirectory}/hibernate.cfg.xml</configurationfile>
+						<propertyfile></propertyfile>
                         <outputfilename>schema.sql</outputfilename>
                         <export>true</export>
                     </componentProperties>

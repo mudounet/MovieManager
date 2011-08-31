@@ -109,7 +109,7 @@ public abstract class ProjectDatabaseTestCase
 
     protected IDatabaseConnection getConnection() throws Exception {
         Properties p = new Properties();
-        InputStream m = loadFromClasspath("database.properties");
+        InputStream m = loadFromClasspath("hibernate-db.properties");
         p.load(m);
         Class.forName(p.getProperty(driver));
         Connection c =
