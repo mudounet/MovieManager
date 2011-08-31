@@ -1,25 +1,87 @@
 
 <dataset>
-    <GENERICTAG ID="1" TYPE="G" KEY="key1" VALUE="a"/>
-    <GENERICTAG ID="2" TYPE="G" KEY="key2" VALUE="b"/>
-    <GENERICTAG ID="3" TYPE="S" KEY="simpleKey2" VALUE=""/>
-    <GENERICTAG ID="4" TYPE="G" KEY="key3" VALUE="c"/>
-    <GENERICTAG ID="5" TYPE="S" KEY="simpleKey1" VALUE=""/>
-    <GENERICTAG ID="6" TYPE="T" KEY="totoTag3" VALUE=""/>
-    <GENERICTAG ID="7" TYPE="T" KEY="totoTag" VALUE=""/>
-    <GENERICTAG ID="8" TYPE="T" KEY="totoTag3" VALUE=""/>
-    <GENERICTAG ID="9" TYPE="T" KEY="totoTag" VALUE=""/>
-    <GENERICTAG ID="10" TYPE="S" KEY="simpleKey3" VALUE=""/>
-    <GENERICMOVIE ID="1" TYPE="M" TITLE="Titre de test 1"/>
-    <GENERICMOVIE ID="2" TYPE="Q" TITLE="Titre de test 2"/>
-    <GENERICMOVIE ID="3" TYPE="P" TITLE="Titre de test 3"/>
-    <GENERICMOVIE ID="4" TYPE="Q" TITLE="Titre de test 4"/>
-    <GENERICMOVIE ID="8" TYPE="P" TITLE="Titre de test 8"/>
-    <GENERICMOVIE ID="5" TYPE="M" TITLE="Titre de test 5"/>
-    <GENERICMOVIE ID="6" TYPE="Q" TITLE="Titre de test 6"/>
-    <GENERICMOVIE ID="7" TYPE="P" TITLE="Titre de test 7"/>
+    <GENERICMOVIE ID="1" TYPE="M" TITLE="Titre du Film 1 : Documentaire+Animation+Action+Oscar+Comedie"/>
+    <GENERICMOVIE ID="2" TYPE="M" TITLE="Titre du Film 2 : Documentaire+Animation+Action+Oscar+Comedie"/>
+    <GENERICMOVIE ID="3" TYPE="M" TITLE="Titre du Film 3 : Documentaire+Animation+Action+Oscar"/>
+    <GENERICMOVIE ID="4" TYPE="M" TITLE="Titre du Film 4 : Documentaire+Animation+Action+Oscar"/>
+    <GENERICMOVIE ID="5" TYPE="M" TITLE="Titre du Film 5 : Documentaire+Animation+Action"/>
+    <GENERICMOVIE ID="6" TYPE="M" TITLE="Titre du Film 6 : Documentaire+Animation+Action"/>
+    <GENERICMOVIE ID="7" TYPE="M" TITLE="Titre du Film 7 : Documentaire+Animation"/>
+    <GENERICMOVIE ID="8" TYPE="M" TITLE="Titre du Film 8 : Documentaire+Animation"/>
+    <GENERICMOVIE ID="9" TYPE="M" TITLE="Titre du Film 9 : Documentaire"/>
+    <GENERICMOVIE ID="10" TYPE="M" TITLE="Titre du Film 10 : Documentaire"/>
+    <GENERICMOVIE ID="11" TYPE="M" TITLE="Titre du Film 11"/>
+    <GENERICMOVIE ID="12" TYPE="M" TITLE="Titre du Film 12"/>
+
+    <GENERICTAG ID="3" TYPE="S" KEY="Action" VALUE=""/>
+    <GENERICTAG ID="5" TYPE="S" KEY="Documentaire" VALUE=""/>
+    <GENERICTAG ID="10" TYPE="S" KEY="Animation" VALUE=""/>
+    <GENERICTAG ID="20" TYPE="S" KEY="Oscar" VALUE=""/>
+    <GENERICTAG ID="21" TYPE="S" KEY="Comedie" VALUE=""/>
+    <GENERICTAG ID="6" TYPE="T" KEY="Actor" VALUE="Acteur pair"/>
+    <GENERICTAG ID="7" TYPE="T" KEY="Actor" VALUE="Acteur impair"/>
+    <GENERICTAG ID="8" TYPE="T" KEY="Actor" VALUE="Acteur pair+impair"/>
+    <GENERICTAG ID="9" TYPE="T" KEY="Actor" VALUE="Acteur sans film"/>
+
+    <MOVIES_TAGS FK_MOVIE="1" FK_TAG="7"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="6"/>
+    <MOVIES_TAGS FK_MOVIE="3" FK_TAG="7"/>
+    <MOVIES_TAGS FK_MOVIE="4" FK_TAG="6"/>
+    <MOVIES_TAGS FK_MOVIE="5" FK_TAG="7"/>
+    <MOVIES_TAGS FK_MOVIE="6" FK_TAG="6"/>
+    <MOVIES_TAGS FK_MOVIE="7" FK_TAG="7"/>
+    <MOVIES_TAGS FK_MOVIE="8" FK_TAG="6"/>
+    <MOVIES_TAGS FK_MOVIE="9" FK_TAG="7"/>
+    <MOVIES_TAGS FK_MOVIE="10" FK_TAG="6"/>
+    <MOVIES_TAGS FK_MOVIE="11" FK_TAG="7"/>
+    <MOVIES_TAGS FK_MOVIE="12" FK_TAG="6"/>
+
+    <MOVIES_TAGS FK_MOVIE="1" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="3" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="4" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="5" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="6" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="7" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="8" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="9" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="10" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="11" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="12" FK_TAG="8"/>
+
+
+    <MOVIES_TAGS FK_MOVIE="1" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="1" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="1" FK_TAG="10"/>
+    <MOVIES_TAGS FK_MOVIE="1" FK_TAG="20"/>
+    <MOVIES_TAGS FK_MOVIE="1" FK_TAG="21"/>
     <MOVIES_TAGS FK_MOVIE="2" FK_TAG="3"/>
     <MOVIES_TAGS FK_MOVIE="2" FK_TAG="5"/>
-    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="10"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="20"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="21"/>
+
+    <MOVIES_TAGS FK_MOVIE="3" FK_TAG="3"/>
     <MOVIES_TAGS FK_MOVIE="3" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="3" FK_TAG="10"/>
+    <MOVIES_TAGS FK_MOVIE="3" FK_TAG="20"/>
+    <MOVIES_TAGS FK_MOVIE="4" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="4" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="4" FK_TAG="10"/>
+    <MOVIES_TAGS FK_MOVIE="4" FK_TAG="20"/>
+
+    <MOVIES_TAGS FK_MOVIE="5" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="5" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="5" FK_TAG="10"/>
+    <MOVIES_TAGS FK_MOVIE="6" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="6" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="6" FK_TAG="10"/>
+
+    <MOVIES_TAGS FK_MOVIE="7" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="7" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="8" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="8" FK_TAG="5"/>
+
+    <MOVIES_TAGS FK_MOVIE="9" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="10" FK_TAG="3"/>
 </dataset>
