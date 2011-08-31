@@ -189,7 +189,9 @@
                 </executions>
                 <configuration>
                     <componentProperties>
+						<configurationfile>${project.build.testOutputDirectory}/hibernate.cfg.xml</configurationfile>
                         <outputfilename>schema.sql</outputfilename>
+						<export>true</export>
                     </componentProperties>
                 </configuration>
                 <dependencies>
@@ -199,54 +201,6 @@
                         <version>2.0.0</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sql-maven-plugin</artifactId>
-                <version>1.5</version>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>org.hsqldb</groupId>
-                        <artifactId>hsqldb</artifactId>
-                        <version>2.0.0</version>
-                    </dependency>
-                </dependencies>
-
-        <!-- common configuration shared by all executions -->
-                <configuration>
-                    <driver>${hibernate.connection.driver_class}</driver>
-                    <url>${hibernate.connection.url}</url>
-                    <username>${hibernate.connection.username}</username>
-                    <password>${hibernate.connection.password}</password>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <id>refresh-db</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <autocommit>true</autocommit>
-                            <srcFiles>
-                                <srcFile>target/hibernate3/sql/schema.sql</srcFile>
-                            </srcFiles>
-                        </configuration>
-                    </execution>
-                    
-                    <!--<execution>
-                        <id>close-db</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <sqlCommand>shutdown</sqlCommand>
-                        </configuration>
-                    </execution>-->
-                </executions>
             </plugin>
             
             <plugin>
