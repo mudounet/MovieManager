@@ -9,7 +9,7 @@
 
     <name>MovieManager</name>
 	
-	 <properties>
+    <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 	
@@ -189,7 +189,6 @@
                 <configuration>
                     <componentProperties>
                         <configurationfile>${project.build.testOutputDirectory}/hibernate.cfg.xml</configurationfile>
-						<propertyfile></propertyfile>
                         <outputfilename>schema.sql</outputfilename>
                         <export>true</export>
                     </componentProperties>
@@ -202,7 +201,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>dbunit-maven-plugin</artifactId>
