@@ -11,7 +11,7 @@
 	
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <main.java.config.dir>${basedir}/src/main/config</main.java.config.dir>
+        <main.java.config.dir>${basedir}/src/main/resources</main.java.config.dir>
         <test.java.config.dir>${basedir}/src/test/resources</test.java.config.dir>
     </properties>
 
@@ -236,7 +236,6 @@
                         </goals>
             <!-- specific configurations -->
                         <configuration>
-
                             <dest>${project.build.testOutputDirectory}/database.dtd</dest>
                         </configuration>
                     </execution>
