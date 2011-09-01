@@ -4,3 +4,12 @@ select TITLE from GENERICMOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.
 
 ----------------------------------
 
+select KEY, COUNT(*) from GENERICMOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.ID = MT.FK_MOVIE and T.ID = MT.FK_TAG AND (T.KEY = 'Animation') GROUP BY KEY
+
+----------------------------------
+
+SELECT KEY, COUNT(*) FROM GENERICTAG as T, MOVIES_TAGS as MT  WHERE T.ID = MT.FK_TAG AND MT.FK_MOVIE IN (select M.ID from GENERICMOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.ID = MT.FK_MOVIE and T.ID = MT.FK_TAG AND (T.KEY = 'Animation')) GROUP BY KEY
+
+----------------------------------
+
+SELECT KEY, COUNT(*) FROM (SELECT KEY, FK_MOVIE FROM GENERICTAG as T, MOVIES_TAGS as MT  WHERE T.ID = MT.FK_TAG AND MT.FK_MOVIE IN (select M.ID from GENERICMOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.ID = MT.FK_MOVIE and T.ID = MT.FK_TAG AND (T.KEY = 'Animation')) GROUP BY KEY, FK_MOVIE) GROUP BY KEY
