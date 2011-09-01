@@ -1,10 +1,8 @@
 package com.mudounet.util.hibernate;
 
-import com.mudounet.util.hibernate.HibernateFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.Query;
 
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -12,7 +10,6 @@ import java.io.StringWriter;
 import java.io.PrintWriter;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Expression;
 
 /**
  * A layer supertype that handles the common operations for all Data Access Objects.
