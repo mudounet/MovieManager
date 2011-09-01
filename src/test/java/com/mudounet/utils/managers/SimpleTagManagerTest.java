@@ -102,4 +102,32 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
     protected String getDataSetFilename() {
         return "TestSimpleTagManager.xml";
     }
+
+    /**
+     * Test of getFilterTagsList method, of class SimpleTagManager.
+     */
+    @Test
+    public void testGetFilterTagsList() {
+        logger.info("getFilterTagsList");
+        SimpleTagManager instance = new SimpleTagManager();
+        ArrayList expResult = null;
+        ArrayList result = instance.getFilterTagsList();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getMovies method, of class SimpleTagManager.
+     */
+    @Test
+    public void testGetMovies() {
+        logger.info("getMovies");
+        SimpleTagManager st = null;
+        ArrayList expResult = null;
+        ArrayList result = SimpleTagManager.getMovies(st);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }

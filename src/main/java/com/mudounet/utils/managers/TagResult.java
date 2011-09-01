@@ -4,28 +4,26 @@
  */
 package com.mudounet.utils.managers;
 
-import com.mudounet.hibernate.movie.GenericMovie;
-import com.mudounet.hibernate.tags.GenericTag;
-import java.util.ArrayList;
+import com.mudounet.hibernate.tags.SimpleTag;
 
 /**
  *
  * @author gmanciet
  */
 public class TagResult {
-    private GenericTag _tag;
-    private ArrayList<GenericMovie> _movies;
+    private SimpleTag _tag;
+    private int _moviesCount;
 
-    public TagResult(GenericTag _tag, ArrayList<GenericMovie> _movies) {
+    public TagResult(SimpleTag _tag,  int moviesCount) {
         this._tag = _tag;
-        this._movies = _movies;
+        this._moviesCount = moviesCount;
     }
 
-    public ArrayList<GenericMovie> getMovies() {
-        return _movies;
+    public int getMoviesCount() {
+        return this._moviesCount;
     }
 
-    public GenericTag getTag() {
+    public SimpleTag getTag() {
         return _tag;
     }
 }
