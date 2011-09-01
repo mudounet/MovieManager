@@ -62,3 +62,13 @@ FROM  GenericMovie as a
                    GROUP BY Movies_Tags.fk_movie
                    HAVING   Count(Movies_Tags.fk_tag) = 3) aa
          ON a.id = aa.fk_movie
+		 
+-----------------------------------
+
+SELECT fk_movie
+FROM Movies_Tags
+	INNER JOIN GenericMovie m ON m.id = fk_movie
+    INNER JOIN Generictag t ON t.id = fk_tag
+WHERE t.key IN ('Oscar','Documentaire','Comedie')
+GROUP BY fk_movie
+HAVING Count(fk_tag) = 3
