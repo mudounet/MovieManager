@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import com.mudounet.hibernate.tags.GenericTag;
 import java.util.ArrayList;
+import org.dbunit.operation.DatabaseOperation;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -26,6 +27,11 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
         super(name);
     }
 
+    @Override
+    protected DatabaseOperation getTearDownOperation() {
+        return DatabaseOperation.NONE;
+    }    
+    
     /**
      * Test of addFilterTag method, of class TagManager.
      */
