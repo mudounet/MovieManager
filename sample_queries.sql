@@ -45,3 +45,20 @@ SELECT TITLE from GENERICMOVIE where ID IN (
 	INTERSECT
 	SELECT FK_MOVIE from MOVIES_TAGS where FK_TAG IN (SELECT ID FROM GENERICTAG where KEY='Oscar')
 )
+
+----------------------------------
+
+Found in : http://www.sergiy.ca/how-to-write-many-to-many-search-queries-in-mysql-and-hibernate/
+
+SELECT a.*
+FROM  GenericMovie as a
+       INNER JOIN (SELECT Movies_Tags.fk_movie
+                   FROM     Movies_Tags
+                            INNER JOIN GenericMovie a
+                              ON a.id = Movies_Tags.fk_movie
+                            INNER JOIN Generictag t
+                              ON t.id = Movies_Tags.fk_tag
+                   WHERE    t.key IN ('Oscar','Documentaire','Comedie')
+                   GROUP BY Movies_Tags.fk_movie
+                   HAVING   Count(Movies_Tags.fk_tag) = 3) aa
+         ON a.id = aa.fk_movie
