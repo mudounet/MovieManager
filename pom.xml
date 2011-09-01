@@ -82,13 +82,18 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>3.2.7.ga</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>3.6.7.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.12.0.GA</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-tools</artifactId>
-            <version>3.2.0.beta9a</version>
+            <version>3.2.4.GA</version>
         </dependency>
         <dependency>
             <groupId>xuggle</groupId>
@@ -99,7 +104,6 @@
     
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.codehaus.xdoclet</groupId>
                 <artifactId>maven2-xdoclet2-plugin</artifactId>
