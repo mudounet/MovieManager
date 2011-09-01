@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author gmanciet
  */
-public class MovieManagerTest {
+public class MovieManagerTestOld {
 
-    public MovieManagerTest() {
+    public MovieManagerTestOld() {
     }
 
     @BeforeClass

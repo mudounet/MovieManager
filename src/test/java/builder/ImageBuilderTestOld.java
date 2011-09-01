@@ -21,9 +21,9 @@ import static org.junit.Assert.*;
  *
  * @author gmanciet
  */
-public class ImageBuilderTest {
+public class ImageBuilderTestOld {
 
-    public ImageBuilderTest() {
+    public ImageBuilderTestOld() {
     }
 
     @BeforeClass
@@ -66,7 +66,7 @@ public class ImageBuilderTest {
             //File dir = new File(".");
             //File file = File.createTempFile("frame", ".png", dir);
         } catch (Exception ex) {
-            Logger.getLogger(ImageBuilderTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ImageBuilderTestOld.class.getName()).log(Level.SEVERE, null, ex);
         }
 
        // write out PNG

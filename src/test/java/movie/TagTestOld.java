@@ -18,9 +18,9 @@ import static org.junit.Assert.*;
  *
  * @author gmanciet
  */
-public class TagTest {
+public class TagTestOld {
 
-    public TagTest() {
+    public TagTestOld() {
     }
 
     @BeforeClass

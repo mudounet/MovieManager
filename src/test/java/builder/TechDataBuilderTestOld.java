@@ -17,9 +17,9 @@ import static org.junit.Assert.*;
  *
  * @author gmanciet
  */
-public class TechDataBuilderTest {
+public class TechDataBuilderTestOld {
 
-    public TechDataBuilderTest() {
+    public TechDataBuilderTestOld() {
     }
 
     @BeforeClass

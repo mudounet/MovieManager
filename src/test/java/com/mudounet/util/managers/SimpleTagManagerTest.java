@@ -4,6 +4,7 @@
  */
 package com.mudounet.util.managers;
 
+import com.mudounet.utils.managers.SimpleTagManager;
 import com.mudounet.hibernate.movie.Movie;
 import com.mudounet.test.ResultSetReporter;
 import org.dbunit.dataset.ITable;
@@ -11,7 +12,7 @@ import org.hibernate.Transaction;
 import org.hibernate.Session;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import com.mudounet.hibernate.tags.GenericTag;
-import com.mudounet.util.hibernate.HibernateFactory;
+import com.mudounet.utils.hibernate.HibernateFactory;
 import java.util.ArrayList;
 import java.util.List;
 import org.dbunit.operation.DatabaseOperation;

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mudounet.util.hibernate;
+package com.mudounet.utils.hibernate;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;

@@ -14,7 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import org.apache.log4j.Logger;
-import util.Md5Generator;
+import com.mudounet.utils.Md5Generator;
 
 /**
  *

@@ -1,4 +1,4 @@
-package util;
+package com.mudounet.utils;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

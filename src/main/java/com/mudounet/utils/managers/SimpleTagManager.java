@@ -1,4 +1,4 @@
-package com.mudounet.util.managers;
+package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.tags.GenericTag;
 import java.util.ArrayList;

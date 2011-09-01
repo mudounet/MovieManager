@@ -1,7 +1,7 @@
 package com.mudounet.utils.dbunit;
 
-import com.mudounet.util.hibernate.AbstractDao;
-import com.mudounet.util.hibernate.HibernateFactory;
+import com.mudounet.utils.hibernate.AbstractDao;
+import com.mudounet.utils.hibernate.HibernateFactory;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

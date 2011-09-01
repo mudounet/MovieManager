@@ -7,7 +7,7 @@ package com.mudounet.hibernate.tags;
 import com.mudounet.hibernate.movie.GenericMovie;
 import com.mudounet.hibernate.movie.ProcessedMovie;
 import com.mudounet.hibernate.movie.QueuedMovie;
-import com.mudounet.util.hibernate.HibernateFactory;
+import com.mudounet.utils.hibernate.HibernateFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;

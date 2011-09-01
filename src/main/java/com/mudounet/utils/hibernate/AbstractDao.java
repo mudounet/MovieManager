@@ -1,4 +1,4 @@
-package com.mudounet.util.hibernate;
+package com.mudounet.utils.hibernate;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
