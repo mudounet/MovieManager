@@ -12,7 +12,9 @@ import org.hibernate.Session;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import com.mudounet.hibernate.tags.SimpleTag;
 import com.mudounet.utils.hibernate.HibernateFactory;
+import java.lang.String;
 import java.util.ArrayList;
+import java.util.Collections;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -27,7 +29,6 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
     protected static Logger logger = Logger.getLogger(SimpleTagManagerTest.class.getName());
     private Session session;
     private Transaction tx;
-    
 
     public SimpleTagManagerTest(String name) {
         super(name);
@@ -48,7 +49,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
         tag.setKey("test");
         SimpleTagManager instance = new SimpleTagManager();
         instance.addFilterTag(tag);
-        
+
         assertEquals(1, instance.getFilterTagsList().size());
     }
 
@@ -102,11 +103,44 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
     @Test
     public void testGetMovies() throws Exception {
         logger.info("getMovies");
-        SimpleTagManager st = new SimpleTagManager();
-        boolean addFilterTag = st.addFilterTag("Oscar");
-        List<GenericMovie> result = st.getMovies();
-        //assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+
+        ITable resultSet = this.getResults("select KEY FROM GENERICTAG  WHERE TYPE='S'");
+
+        ArrayList<String> completeTagList = new ArrayList<String>();
+        for (int i = 0; i < resultSet.getRowCount(); i++) {
+            completeTagList.add((String) resultSet.getValue(i, "key"));
+        }
+        Collections.shuffle(completeTagList);
+
+        
+        ArrayList<String> testedTagList = new ArrayList<String>();
+        String keyList = "";
+        for (String key : completeTagList) {
+            testedTagList.add(key);
+            
+            if(keyList.equals("")) keyList = "'" + key+ "'";
+            else keyList = keyList + ", '" + key+ "'";
+
+            logger.debug("Testing keys : " + keyList);
+            
+            SimpleTagManager st = new SimpleTagManager();
+            for (String testedKey : testedTagList) {
+                st.addFilterTag(testedKey);
+            }
+            List<GenericMovie> result = st.getMovies();
+            
+            String query = "SELECT fk_movie " +
+ "FROM Movies_Tags INNER JOIN GenericMovie m ON m.id = fk_movie INNER JOIN Generictag t ON t.id = fk_tag " +
+" WHERE t.key IN (" + keyList + ") "+
+"GROUP BY fk_movie " +
+"HAVING Count(fk_tag) = " + testedTagList.size();
+            
+            resultSet = this.getResults(query);
+            
+            logger.debug("Number of films found : " + resultSet.getRowCount());
+            
+            assertEquals("Number of films for key(s) " + keyList + " : ", resultSet.getRowCount(), result.size());
+        }
     }
 }
