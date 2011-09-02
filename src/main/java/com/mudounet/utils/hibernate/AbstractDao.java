@@ -10,6 +10,8 @@ import java.io.StringWriter;
 import java.io.PrintWriter;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * A layer supertype that handles the common operations for all Data Access Objects.
@@ -120,17 +122,27 @@ public class AbstractDao {
         }
         return obj;
     }
+    
+    public Object find(Class clazz, String Column, String Value) throws DataAccessLayerException {
+        List result = this.findList(clazz, Restrictions.like(Column, Value, MatchMode.EXACT), 1);
+        
+        if(result.size() == 1) {
+            return result.get(0);
+        }
+        else return null;
+    }
 
     public List findList(Class clazz) throws DataAccessLayerException {
-        return findList(clazz, null);
+        return findList(clazz, null, 0);
     }
     
-    public List findList(Class clazz, Criterion crit) throws DataAccessLayerException {
+    public List findList(Class clazz, Criterion crit, int resultLimit) throws DataAccessLayerException {
         List objects = null;
         try {
             _startOperation();
             Criteria criteria = session.createCriteria(clazz.getName());
-            if(crit != null) criteria.add(crit);        
+            if(crit != null) criteria.add(crit);
+            if(resultLimit > 0) criteria.setMaxResults(resultLimit);
             objects = criteria.list();
             _endOperation();
         } catch (HibernateException e) {
@@ -140,7 +152,7 @@ public class AbstractDao {
         }
         return objects;
     }
-
+    
     protected void handleException(HibernateException e) throws DataAccessLayerException {
         HibernateFactory.rollback(tx);
         
