@@ -60,7 +60,7 @@ public class SimpleTagManager {
                 + "group by m "
                 + "having count(t)=:tag_count";
 
-        session = session = HibernateFactory.openSession();
+        session = HibernateFactory.openSession();
         Query query = session.createQuery(hql);
         query.setParameterList("tags", tags);
         query.setInteger("tag_count", tags.length);
