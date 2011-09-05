@@ -60,21 +60,9 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
     public void testGetTagLists() throws Exception {
         logger.info("getTagLists");
         SimpleTagManager instance = new SimpleTagManager();
-        ArrayList expResult = null;
         ArrayList result = instance.getTagLists();
 
-        ITable resultSet //= this.getResults("select * from GENERICMOVIE AS G,GENERICTAG AS T");
-                = this.getResults("select TITLE from GENERICMOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.ID = MT.FK_MOVIE and T.ID = MT.FK_TAG AND (T.KEY='Comedie')");
-        logger.debug("Number of films: " + resultSet.getRowCount());
-
-        session = HibernateFactory.openSession();
-
-
-
-
-        //ResultSetReporter.dump(resultSet);     
-
-        assertEquals(expResult, result);
+        
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
