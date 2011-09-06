@@ -51,7 +51,7 @@ public class SimpleTagManager {
 
 
 
-        String hql = "select tags, count(*) from GenericMovie as movie join movie.tags tags "
+        String hql = "select new com.mudounet.utils.managers.TagResult(tags , count(*)) from GenericMovie as movie join movie.tags tags "
                 + "where movie in (select m from GenericMovie as m join m.tags t ";
 
         if (_tagList.size() > 0) {
@@ -74,7 +74,7 @@ public class SimpleTagManager {
             query.setInteger("tag_count", _tagList.size());
         }
 
-        List results = query.list();
+        List<TagResult> results = query.list();
         session.close();
 
         return _resultList;
@@ -82,23 +82,19 @@ public class SimpleTagManager {
 
     public List<GenericMovie> getMovies() {
 
-        /*ArrayList<String> tagList = new ArrayList<String>();
-        for(SimpleTag t : _tagList) {
-        tagList.add(t.getKey());
-        }
-        
-        String[] tags = (String[]) tagList.toArray(new String[0]);*/
-
         String hql = "select m from Movie m "
-                + "join m.tags t "
-                + "where t in (:tags) "
-                + "group by m "
-                + "having count(t)=:tag_count";
+                + "join m.tags t ";
+        if (_tagList.size() > 0) {
+            hql += "where t in (:tags) group by m having count(t)=:tag_count ";
+                    
+        }
 
         session = HibernateFactory.openSession();
         Query query = session.createQuery(hql);
-        query.setParameterList("tags", _tagList);
-        query.setInteger("tag_count", _tagList.size());
+        if (_tagList.size() > 0) {
+            query.setParameterList("tags", _tagList);
+            query.setInteger("tag_count", _tagList.size());
+        }
         List<GenericMovie> results = query.list();
         session.close();
         return results;

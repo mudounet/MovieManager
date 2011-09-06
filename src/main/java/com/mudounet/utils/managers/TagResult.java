@@ -4,26 +4,31 @@
  */
 package com.mudounet.utils.managers;
 
-import com.mudounet.hibernate.tags.SimpleTag;
+import com.mudounet.hibernate.tags.GenericTag;
 
 /**
  *
  * @author gmanciet
  */
 public class TagResult {
-    private SimpleTag _tag;
-    private int _moviesCount;
+    private GenericTag _tag;
+    private long _moviesCount;
 
-    public TagResult(SimpleTag _tag,  int moviesCount) {
+    /*public TagResult(SimpleTag _tag,  long moviesCount) {
+        //this._tag = _tag;
+        this._moviesCount = moviesCount;
+    }*/
+    
+    public TagResult(GenericTag _tag,  long moviesCount) {
         this._tag = _tag;
         this._moviesCount = moviesCount;
     }
 
-    public int getMoviesCount() {
+    public long getMoviesCount() {
         return this._moviesCount;
     }
 
-    public SimpleTag getTag() {
+    public GenericTag getTag() {
         return _tag;
     }
 }
