@@ -16,12 +16,10 @@ public class SimpleTagManager {
 
     //protected static Logger logger = Logger.getLogger(SimpleTagManager.class.getName());
     private ArrayList<SimpleTag> _tagList;
-    private ArrayList<TagResult> _resultList;
     private Session session;
     protected AbstractDao template;
 
     public SimpleTagManager() {
-        this._resultList = new ArrayList<TagResult>();
         this._tagList = new ArrayList<SimpleTag>();
         this.template = new AbstractDao();
     }
@@ -44,7 +42,7 @@ public class SimpleTagManager {
         return this._tagList;
     }
 
-    public ArrayList<TagResult> getTagLists() {
+    public List<TagResult> getTagLists() {
 
 
         // select tags.key, count(*) from GenericMovie as movie join movie.tags tags where movie in (select m from GenericMovie as m join m.tags t where t.key in ('Oscar') group by m having count(t)=1) and tags.class = SimpleTag and tags.key not in ('Oscar') group by tags
@@ -69,6 +67,7 @@ public class SimpleTagManager {
 
         session = HibernateFactory.openSession();
         Query query = session.createQuery(hql);
+        
         if (_tagList.size() > 0) {
             query.setParameterList("tags", _tagList);
             query.setInteger("tag_count", _tagList.size());
@@ -77,16 +76,16 @@ public class SimpleTagManager {
         List<TagResult> results = query.list();
         session.close();
 
-        return _resultList;
+        return results;
     }
 
     public List<GenericMovie> getMovies() {
 
         String hql = "select m from Movie m "
                 + "join m.tags t ";
+        
         if (_tagList.size() > 0) {
             hql += "where t in (:tags) group by m having count(t)=:tag_count ";
-                    
         }
 
         session = HibernateFactory.openSession();
@@ -95,6 +94,7 @@ public class SimpleTagManager {
             query.setParameterList("tags", _tagList);
             query.setInteger("tag_count", _tagList.size());
         }
+
         List<GenericMovie> results = query.list();
         session.close();
         return results;
