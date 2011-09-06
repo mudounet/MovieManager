@@ -11,8 +11,6 @@ import org.hibernate.Transaction;
 import org.hibernate.Session;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import com.mudounet.hibernate.tags.SimpleTag;
-import com.mudounet.utils.hibernate.HibernateFactory;
-import java.lang.String;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.dbunit.operation.DatabaseOperation;
@@ -60,6 +58,9 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
     public void testGetTagLists() throws Exception {
         logger.info("getTagLists");
         SimpleTagManager instance = new SimpleTagManager();
+        
+        instance.addFilterTag("Oscar");
+        
         ArrayList result = instance.getTagLists();
 
         
@@ -75,7 +76,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
      * Test of getFilterTagsList method, of class SimpleTagManager.
      */
     @Test
-    public void testGetFilterTagsList() {
+    public void testGetFilterTagsList() throws Exception {
         logger.info("getFilterTagsList");
         SimpleTagManager instance = new SimpleTagManager();
         ArrayList result = instance.getFilterTagsList();
