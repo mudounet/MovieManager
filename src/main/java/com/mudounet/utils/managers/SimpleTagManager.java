@@ -27,11 +27,14 @@ public class SimpleTagManager {
     }
 
     public boolean addFilterTag(SimpleTag tag) {
-        if(tag != null) return this._tagList.add(tag);
-        else return false;
-        
+        if (tag != null) {
+            return this._tagList.add(tag);
+        } else {
+            return false;
+        }
+
     }
-    
+
     public boolean addFilterTag(String tag) throws Exception {
         SimpleTag t = (SimpleTag) template.find(SimpleTag.class, "key", tag);
         return this._tagList.add(t);
@@ -42,35 +45,50 @@ public class SimpleTagManager {
     }
 
     public ArrayList<TagResult> getTagLists() {
-        
-        String hql = "from SimpleTag t "
-                + "left join fetch t.movies m "
-                + "left join fetch m.tags r";
-               // + "join m.tags t "
-               // + "where t.key in (:tags) "
-               // + "group by m "
-               // + "having count(t)=:tag_count";
 
-        
+
+        // select tags.key, count(*) from GenericMovie as movie join movie.tags tags where movie in (select m from GenericMovie as m join m.tags t where t.key in ('Oscar') group by m having count(t)=1) and tags.class = SimpleTag and tags.key not in ('Oscar') group by tags
+
+
+
+        String hql = "select tags, count(*) from GenericMovie as movie join movie.tags tags "
+                + "where movie in (select m from GenericMovie as m join m.tags t ";
+
+        if (_tagList.size() > 0) {
+            hql += "where t in (:tags) group by m having count(t)=:tag_count ";
+        }
+
+        hql = hql + ") and tags.class = SimpleTag ";
+
+        if (_tagList.size() > 0) {
+            hql += " and tags not in (:tags) ";
+        }
+
+        hql = hql + "group by tags ";
+
+
         session = HibernateFactory.openSession();
         Query query = session.createQuery(hql);
-        //query.setParameterList("tags", _tagList);
-        //query.setInteger("tag_count", _tagList.size());
+        if (_tagList.size() > 0) {
+            query.setParameterList("tags", _tagList);
+            query.setInteger("tag_count", _tagList.size());
+        }
+
         List results = query.list();
-        session.close();      
-        
+        session.close();
+
         return _resultList;
     }
 
     public List<GenericMovie> getMovies() {
-        
+
         /*ArrayList<String> tagList = new ArrayList<String>();
         for(SimpleTag t : _tagList) {
-            tagList.add(t.getKey());
+        tagList.add(t.getKey());
         }
         
         String[] tags = (String[]) tagList.toArray(new String[0]);*/
-        
+
         String hql = "select m from Movie m "
                 + "join m.tags t "
                 + "where t in (:tags) "
