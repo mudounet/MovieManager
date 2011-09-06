@@ -50,6 +50,23 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
 
         assertEquals(1, instance.getFilterTagsList().size());
     }
+    
+    /**
+     * Test of getFilterTagsList method, of class SimpleTagManager.
+     */
+    @Test
+    public void testGetFilterTagsList() throws Exception {
+        logger.info("getFilterTagsList");
+        SimpleTagManager instance = new SimpleTagManager();
+        
+        ITable resultSet = this.getResults("select KEY FROM GENERICTAG  WHERE TYPE='S'");
+
+        for (int i = 0; i < resultSet.getRowCount(); i++) {
+            instance.addFilterTag((String) resultSet.getValue(i, "key"));
+            
+            assertEquals(i+1, instance.getFilterTagsList().size());
+        }
+    }
 
     /**
      * Test of getTagLists method, of class TagManager.
@@ -61,7 +78,9 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
         
         instance.addFilterTag("Oscar");
         
-        ArrayList result = instance.getTagLists();
+        
+        
+       instance.getTagLists();
 
         
         // TODO review the generated test code and remove the default call to fail.
@@ -72,18 +91,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
         return "TestSimpleTagManager.xml";
     }
 
-    /**
-     * Test of getFilterTagsList method, of class SimpleTagManager.
-     */
-    @Test
-    public void testGetFilterTagsList() throws Exception {
-        logger.info("getFilterTagsList");
-        SimpleTagManager instance = new SimpleTagManager();
-        ArrayList result = instance.getFilterTagsList();
 
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of getMovies method, of class SimpleTagManager.
