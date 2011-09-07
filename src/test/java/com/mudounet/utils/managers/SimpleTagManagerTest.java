@@ -103,7 +103,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
                 st.addFilterTag(testedKey);
             }
 
-            String query = "SELECT KEY, COUNT(*) AS FILMS_COUNT FROM GENERICTAG as T, MOVIES_TAGS as MT  WHERE T.TYPE='S' AND T.ID = MT.FK_TAG AND MT.FK_MOVIE IN ( "
+            String query = "SELECT KEY, ID, COUNT(*) AS FILMS_COUNT FROM GENERICTAG as T, MOVIES_TAGS as MT  WHERE T.TYPE='S' AND T.ID = MT.FK_TAG AND MT.FK_MOVIE IN ( "
                     + "select M.ID from GENERICMOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.ID = MT.FK_MOVIE and T.ID = MT.FK_TAG AND (T.KEY = 'Animation') AND FK_MOVIE IN (SELECT Movies_Tags.fk_movie "
                     + "FROM Movies_Tags "
                     + "INNER JOIN GenericMovie a "
@@ -113,20 +113,33 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
                     + "WHERE t.key IN ("+keyList+") "
                     + "GROUP BY Movies_Tags.fk_movie "
                     + "HAVING Count(Movies_Tags.fk_tag) = "+testedTagList.size()+")) AND KEY NOT IN ("+keyList+") "
-                    + "GROUP BY KEY";
+                    + "GROUP BY KEY, ID";
 
             resultSet = this.getResults(query);
             List<TagResult> tagList = st.getTagLists();
+            
+            int refArrayDim = resultSet.getRowCount();
 
-            assertEquals("Items returned did not match : ", resultSet.getRowCount(), tagList.size());
-
+            assertEquals("Number of items returned did not match : ", refArrayDim, tagList.size());
 
             for (TagResult tag : tagList) {
+                String foundItemName = "";
+                
+                for(int i = 0; i < refArrayDim; i++) {
+                    String itemName = (String)resultSet.getValue(i, "KEY");
+                    long itemID = Long.parseLong(resultSet.getValue(i, "ID").toString());
+                    long itemValue = Long.parseLong(resultSet.getValue(i, "FILMS_COUNT").toString());
+                    
+                    if(itemName.equals(tag.getTag().getKey()) && itemID == tag.getTag().getId()) {
+                        foundItemName = itemName;
+                        assertEquals("Value of item is invalid : ", itemValue , tag.getMoviesCount());
+                        break;
+                    }
+                }
+                
+                assertEquals("Item has not been found into referential : ", tag.getTag().getKey(), foundItemName);
             }
         }
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     protected String getDataSetFilename() {
