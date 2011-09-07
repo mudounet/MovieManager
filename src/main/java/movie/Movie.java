@@ -14,25 +14,13 @@ public class Movie {
     private Rating _rating;
     private TechData _techData;
     private Thumbnail _thumbnail;
-    private Index _index;
-    private TagList _tagList;
 
     public Movie(String _title) {
         this._title = _title;
-        this._tagList = new TagList();
     }
 
     public Movie() {
         this("");
-    }
-
-
-    public Index getIndex() {
-        return _index;
-    }
-
-    public void setIndex(Index _index) {
-        this._index = _index;
     }
 
     public Rating getRating() {
@@ -43,13 +31,6 @@ public class Movie {
         this._rating = _rating;
     }
 
-    public TagList getTagList() {
-        return _tagList;
-    }
-
-    public void setTagList(TagList _tagList) {
-        this._tagList = _tagList;
-    }
 
     public TechData getTechData() {
         return _techData;
@@ -67,9 +48,6 @@ public class Movie {
         this._thumbnail = _thumbnail;
     }
 
-    public boolean addTag(Tag t) {
-        return this._tagList.addTag(t);
-    }
 
     @Override
     public String toString() {
