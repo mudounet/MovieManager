@@ -59,7 +59,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
         logger.info("getFilterTagsList");
         SimpleTagManager instance = new SimpleTagManager();
 
-        ITable resultSet = this.getResults("select KEY FROM GENERICTAG  WHERE TYPE='S'");
+        ITable resultSet = this.getResults("select KEY FROM GENERICTAG INNER JOIN SIMPLETAG ON ID = FK_TAG");
 
         for (int i = 0; i < resultSet.getRowCount(); i++) {
             instance.addFilterTag((String) resultSet.getValue(i, "key"));
@@ -76,7 +76,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
         logger.info("getTagLists");
 
         // Building list of tags to test
-        ITable resultSet = this.getResults("select KEY FROM GENERICTAG  WHERE TYPE='S'");
+        ITable resultSet = this.getResults("select KEY FROM GENERICTAG INNER JOIN SIMPLETAG ON ID = FK_TAG");
         ArrayList<String> completeTagList = new ArrayList<String>();
         for (int i = 0; i < resultSet.getRowCount(); i++) {
             completeTagList.add((String) resultSet.getValue(i, "key"));
@@ -103,7 +103,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
                 st.addFilterTag(testedKey);
             }
 
-            String query = "SELECT KEY, ID, COUNT(*) AS FILMS_COUNT FROM GENERICTAG as T, MOVIES_TAGS as MT  WHERE T.TYPE='S' AND T.ID = MT.FK_TAG AND MT.FK_MOVIE IN ( "
+            String query = "SELECT KEY, ID, COUNT(*) AS FILMS_COUNT FROM GENERICTAG as T, MOVIES_TAGS as MT INNER JOIN SIMPLETAG AS S ON T.ID = S.FK_TAG WHERE T.ID = MT.FK_TAG AND MT.FK_MOVIE IN ( "
                     + "select M.ID from GENERICMOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.ID = MT.FK_MOVIE and T.ID = MT.FK_TAG AND (T.KEY = 'Animation') AND FK_MOVIE IN (SELECT Movies_Tags.fk_movie "
                     + "FROM Movies_Tags "
                     + "INNER JOIN GenericMovie a "
@@ -115,6 +115,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
                     + "HAVING Count(Movies_Tags.fk_tag) = "+testedTagList.size()+")) AND KEY NOT IN ("+keyList+") "
                     + "GROUP BY KEY, ID";
 
+            logger.debug(query);
             resultSet = this.getResults(query);
             List<TagResult> tagList = st.getTagLists();
             
@@ -154,7 +155,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
         logger.info("getMovies");
 
 
-        ITable resultSet = this.getResults("select KEY FROM GENERICTAG  WHERE TYPE='S'");
+        ITable resultSet = this.getResults("select KEY FROM GENERICTAG INNER JOIN SIMPLETAG ON ID = FK_TAG");
 
         ArrayList<String> completeTagList = new ArrayList<String>();
         for (int i = 0; i < resultSet.getRowCount(); i++) {
