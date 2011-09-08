@@ -115,7 +115,6 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
                     + "HAVING Count(Movies_Tags.fk_tag) = "+testedTagList.size()+")) AND KEY NOT IN ("+keyList+") "
                     + "GROUP BY KEY, ID";
 
-            logger.debug(query);
             resultSet = this.getResults(query);
             List<TagResult> tagList = st.getTagLists();
             
