@@ -3,8 +3,7 @@ package com.mudounet.hibernate.tags;
 
 
 /**
-* @hibernate.subclass
-* discriminator-value="S"
+* @hibernate.joined-subclass
 */
 public class SimpleTag extends GenericTag implements java.io.Serializable {
 

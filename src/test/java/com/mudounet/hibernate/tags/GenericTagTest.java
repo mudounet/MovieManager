@@ -65,7 +65,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
         assertEquals(template.findList(SimpleTag.class).size(), this.getNbResults("select * from GENERICTAG where TYPE='S'"));
 
-        assertEquals(template.findList(Tag.class).size(), this.getNbResults("select * from GENERICTAG where TYPE='T'"));
+        assertEquals(template.findList(TagValue.class).size(), this.getNbResults("select * from GENERICTAG where TYPE='T'"));
 
     }
 
@@ -102,7 +102,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
                         classType = com.mudounet.hibernate.tags.GenericTag.class.getCanonicalName();
                         break;
                     case 'T':
-                        classType = com.mudounet.hibernate.tags.Tag.class.getCanonicalName();
+                        classType = com.mudounet.hibernate.tags.TagValue.class.getCanonicalName();
                         break;
                     case 'S':
                         classType = com.mudounet.hibernate.tags.SimpleTag.class.getCanonicalName();

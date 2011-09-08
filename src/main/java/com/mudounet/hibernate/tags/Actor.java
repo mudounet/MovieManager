@@ -8,7 +8,7 @@ package com.mudounet.hibernate.tags;
  *
  * @hibernate.joined-subclass
  */
-public class Actor extends Tag implements java.io.Serializable {
+public class Actor extends GenericTag implements java.io.Serializable {
 
     private String name;
 

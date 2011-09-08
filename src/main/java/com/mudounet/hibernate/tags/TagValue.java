@@ -3,7 +3,7 @@ package com.mudounet.hibernate.tags;
 /**
 * @hibernate.joined-subclass
 */
-public class TagValue extends Tag implements java.io.Serializable {
+public class TagValue extends GenericTag implements java.io.Serializable {
 
 
      /**
