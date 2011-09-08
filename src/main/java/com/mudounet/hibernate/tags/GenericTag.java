@@ -9,10 +9,6 @@ import java.util.Set;
 
 /**
  * @hibernate.class
- * discriminator-value="G"
- * @hibernate.discriminator
- * column="TYPE"
- * type="char"
  * */
 public class GenericTag implements java.io.Serializable {
 
