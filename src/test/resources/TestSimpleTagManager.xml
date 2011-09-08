@@ -13,15 +13,26 @@
     <GENERICMOVIE ID="11" TYPE="M" TITLE="Titre du Film 11"/>
     <GENERICMOVIE ID="12" TYPE="M" TITLE="Titre du Film 12"/>
 
-    <GENERICTAG ID="3" TYPE="S" KEY="Action" VALUE=""/>
-    <GENERICTAG ID="5" TYPE="S" KEY="Documentaire" VALUE=""/>
-    <GENERICTAG ID="10" TYPE="S" KEY="Animation" VALUE=""/>
-    <GENERICTAG ID="20" TYPE="S" KEY="Oscar" VALUE=""/>
-    <GENERICTAG ID="21" TYPE="S" KEY="Comedie" VALUE=""/>
-    <GENERICTAG ID="6" TYPE="T" KEY="Actor" VALUE="Acteur pair"/>
-    <GENERICTAG ID="7" TYPE="T" KEY="Actor" VALUE="Acteur impair"/>
-    <GENERICTAG ID="8" TYPE="T" KEY="Actor" VALUE="Acteur pair+impair"/>
-    <GENERICTAG ID="9" TYPE="T" KEY="Actor" VALUE="Acteur sans film"/>
+    <GENERICTAG ID="3" KEY="Action"/>
+    <SIMPLETAG FK_TAG="3">
+    <GENERICTAG ID="5" KEY="Documentaire"/>
+    <SIMPLETAG FK_TAG="5">
+    <GENERICTAG ID="10" KEY="Animation"/>
+    <SIMPLETAG FK_TAG="10">
+    <GENERICTAG ID="20" KEY="Oscar"/>
+    <SIMPLETAG FK_TAG="20">
+    <GENERICTAG ID="21" KEY="Comedie"/>
+    <SIMPLETAG FK_TAG="21">
+    
+    
+    <GENERICTAG ID="6" KEY="Actor"/>
+    <TAGVALUE FK_TAG="6" VALUE="Acteur pair">
+    <GENERICTAG ID="7" KEY="Actor"/>
+    <TAGVALUE FK_TAG="7" VALUE="Acteur impair">
+    <GENERICTAG ID="8" KEY="Actor"/>
+    <TAGVALUE FK_TAG="8" VALUE="Acteur pair+impair">
+    <GENERICTAG ID="9" KEY="Actor"/>
+    <TAGVALUE FK_TAG="9" VALUE="Acteur sans film">
 
     <MOVIES_TAGS FK_MOVIE="1" FK_TAG="7"/>
     <MOVIES_TAGS FK_MOVIE="2" FK_TAG="6"/>
