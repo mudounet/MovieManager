@@ -63,9 +63,9 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         
         assertEquals(template.findList(GenericTag.class).size(), this.getNbResults("select * from GENERICTAG"));
 
-        assertEquals(template.findList(SimpleTag.class).size(), this.getNbResults("select * from GENERICTAG where TYPE='S'"));
+        assertEquals(template.findList(SimpleTag.class).size(), this.getNbResults("select * from GENERICTAG inner join SIMPLETAG ON id = fk_tag"));
 
-        assertEquals(template.findList(TagValue.class).size(), this.getNbResults("select * from GENERICTAG where TYPE='T'"));
+        assertEquals(template.findList(TagValue.class).size(), this.getNbResults("select * from GENERICTAG  inner join TAGVALUE ON id = fk_tag"));
 
     }
 
@@ -225,7 +225,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         long newTagId = newTag.getId();
         logger.debug("ID of new tag is"+newTagId);
         template.closeConnection();
-        assertEquals(1,this.getResults("select * from GenericTag where KEY='"+newKeyDescription+"' AND TYPE='S'").getRowCount());
+        assertEquals(1,this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where KEY='"+newKeyDescription+"'").getRowCount());
         template.keepConnectionOpened();
         newTag = (SimpleTag)template.find(SimpleTag.class, newTagId);
         template.closeConnection();
@@ -241,12 +241,12 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         long idToDelete = 10;
         SimpleTag foundItem = (SimpleTag) template.find(SimpleTag.class, idToDelete);
         assertEquals("simpleKey3", foundItem.getKey());
-        assertEquals(1,this.getResults("select * from GenericTag where ID="+idToDelete+" AND TYPE='S'").getRowCount());
+        assertEquals(1,this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where ID="+idToDelete+"").getRowCount());
 
         template.closeConnection();
         logger.debug("Tring to delete "+foundItem);
         template.delete(foundItem);
-        assertEquals(0,this.getResults("select * from GenericTag where ID="+idToDelete+" AND TYPE='S'").getRowCount());
+        assertEquals(0,this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where ID="+idToDelete+"").getRowCount());
     }
 
     @Override
