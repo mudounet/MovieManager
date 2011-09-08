@@ -1,15 +1,29 @@
 
 <dataset>
-    <GENERICTAG ID="1" TYPE="G" KEY="key1" VALUE="a"/>
-    <GENERICTAG ID="2" TYPE="G" KEY="key2" VALUE="b"/>
-    <GENERICTAG ID="3" TYPE="S" KEY="simpleKey2" VALUE=""/>
-    <GENERICTAG ID="4" TYPE="G" KEY="key3" VALUE="c"/>
-    <GENERICTAG ID="5" TYPE="S" KEY="simpleKey1" VALUE=""/>
-    <GENERICTAG ID="6" TYPE="T" KEY="totoTag3" VALUE=""/>
-    <GENERICTAG ID="7" TYPE="T" KEY="totoTag" VALUE=""/>
-    <GENERICTAG ID="8" TYPE="T" KEY="totoTag3" VALUE=""/>
-    <GENERICTAG ID="9" TYPE="T" KEY="totoTag" VALUE=""/>
-    <GENERICTAG ID="10" TYPE="S" KEY="simpleKey3" VALUE=""/>
+    <GENERICTAG ID="3" KEY="simpleKey2"/>
+    <SIMPLETAG FK_TAG="3"/>
+    <SIMPLETAG FK_TAG="5"/>
+    <SIMPLETAG FK_TAG="10"/>
+    <GENERICTAG ID="5" KEY="simpleKey1"/>
+    <GENERICTAG ID="10" KEY="simpleKey3"/>
+    
+    <GENERICTAG ID="1" KEY="key1"/>
+    <GENERICTAG ID="2" KEY="key2"/>
+    <GENERICTAG ID="4" KEY="key3"/>
+    <TAGVALUE FK_TAG="1" VALUE="value 1"/>
+    <TAGVALUE FK_TAG="2" VALUE="value 2"/>
+    <TAGVALUE FK_TAG="4" VALUE="value 3"/>
+    
+    
+    <GENERICTAG ID="6" KEY="actorTag3"/>
+    <GENERICTAG ID="7" KEY="actorTag"/>
+    <GENERICTAG ID="8" KEY="actorTag3"/>
+    <GENERICTAG ID="9" KEY="actorTag"/>
+    <ACTOR FK_TAG="6" NAME="value 1"/>
+    <ACTOR FK_TAG="7" NAME="value 1"/>
+    <ACTOR FK_TAG="8" NAME="value 1"/>
+    <ACTOR FK_TAG="9" NAME="value 1"/>
+    
     <GENERICMOVIE ID="1" TYPE="M" TITLE="Titre de test 1"/>
     <GENERICMOVIE ID="2" TYPE="Q" TITLE="Titre de test 2"/>
     <GENERICMOVIE ID="3" TYPE="P" TITLE="Titre de test 3"/>
