@@ -130,9 +130,8 @@ public abstract class ProjectDatabaseTestCase
         return cl.getResourceAsStream(s);
     }
 
-    private InputStream loadFromTestPath(String file) throws FileNotFoundException {
-        InputStream is = new BufferedInputStream(
-                new FileInputStream("testdata/" + file));
+    private InputStream loadFromTestPath(String file) throws Exception {
+        InputStream is = loadFromClasspath(file);
         return is;
     }
 
