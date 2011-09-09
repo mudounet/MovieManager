@@ -19,10 +19,10 @@
     <GENERICTAG ID="7" KEY="actorTag"/>
     <GENERICTAG ID="8" KEY="actorTag3"/>
     <GENERICTAG ID="9" KEY="actorTag"/>
-    <ACTOR FK_TAG="6" NAME="value 1"/>
-    <ACTOR FK_TAG="7" NAME="value 1"/>
-    <ACTOR FK_TAG="8" NAME="value 1"/>
-    <ACTOR FK_TAG="9" NAME="value 1"/>
+    <TAGVALUE FK_TAG="6" VALUE="value 1"/>
+    <TAGVALUE FK_TAG="7" VALUE="value 1"/>
+    <TAGVALUE FK_TAG="8" VALUE="value 1"/>
+    <TAGVALUE FK_TAG="9" VALUE="value 1"/>
     
     <GENERICMOVIE ID="1" TYPE="M" TITLE="Titre de test 1"/>
     <GENERICMOVIE ID="2" TYPE="Q" TITLE="Titre de test 2"/>
