@@ -89,25 +89,11 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
             for (Object obj : taglist) {
                 GenericTag tag = (GenericTag) obj;
-                refList = this.getResults("select * from GENERICTAG WHERE id=" + tag.getId());
-                assertEquals(1, refList.getRowCount());
 
-                assertEquals(tag.getKey(), refList.getValue(0, "KEY"));
-
-                char type = refList.getValue(0, "TYPE").toString().charAt(0);
                 String classType = "";
-
-                switch (type) {
-                    case 'G':
-                        classType = com.mudounet.hibernate.tags.GenericTag.class.getCanonicalName();
-                        break;
-                    case 'T':
-                        classType = com.mudounet.hibernate.tags.TagValue.class.getCanonicalName();
-                        break;
-                    case 'S':
-                        classType = com.mudounet.hibernate.tags.SimpleTag.class.getCanonicalName();
-                        break;
-                }
+                
+                if(this.getResults("select FK_TAG from TAGVALUE WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) classType = com.mudounet.hibernate.tags.TagValue.class.getCanonicalName();
+                if(this.getResults("select FK_TAG from SIMPLETAG WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) classType = com.mudounet.hibernate.tags.SimpleTag.class.getCanonicalName();
 
                 assertEquals(classType, Hibernate.getClass(tag).getCanonicalName());
             }
@@ -122,7 +108,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     public void testTags() throws Exception {
         template.keepConnectionOpened();
         List list = template.findList(GenericTag.class);
-        ITable refList = this.getResults("select * from GENERICTAG");
+        ITable refList = this.getResults("select ID, KEY, S.FK_TAG AS S_TAG, T.FK_TAG AS T_TAG  from GENERICTAG LEFT OUTER JOIN SIMPLETAG AS S ON ID=S.FK_TAG LEFT OUTER JOIN TAGVALUE AS T ON ID=T.FK_TAG");
         assertEquals(list.size(), refList.getRowCount());
 
         Iterator i = list.iterator();
