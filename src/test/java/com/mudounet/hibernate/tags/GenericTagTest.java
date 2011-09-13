@@ -7,8 +7,6 @@ package com.mudounet.hibernate.tags;
 import com.mudounet.hibernate.movie.GenericMovie;
 import com.mudounet.hibernate.movie.ProcessedMovie;
 import com.mudounet.hibernate.movie.QueuedMovie;
-import com.mudounet.utils.hibernate.HibernateFactory;
-import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
@@ -25,7 +23,6 @@ import org.hibernate.Hibernate;
  */
 public class GenericTagTest extends ProjectDatabaseTestCase {
     protected static Logger logger = Logger.getLogger(GenericTagTest.class.getName());
-	private Session session;
     private Transaction tx;
 
     public GenericTagTest(String name) {
@@ -166,18 +163,17 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
             QueuedMovie q = (QueuedMovie) i.next();
             refList = this.getResults("select * from GENERICMOVIE where id="+q.getId());
 
-            session = HibernateFactory.openSession();
-            tx = session.beginTransaction();
+            
 
 
             ProcessedMovie p = new ProcessedMovie();
             p.setTitle(q.getTitle());
             p.setTags(q.getTags());
 
-            session.saveOrUpdate(p);
-            session.delete(q);
-            tx.commit();
-            session.close();
+            template.keepConnectionOpened();
+            template.saveOrUpdate(p);
+            template.delete(q);
+            template.closeConnection();
 
             // Checking that object has been deleted
             assertEquals(0,this.getResults("select * from GENERICMOVIE where id="+q.getId()).getRowCount());
@@ -203,9 +199,9 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
     @Test
     public void testAddTag() throws Exception {
-        SimpleTag newTag = new SimpleTag();
         String newKeyDescription = "myNewTag";
-        newTag.setKey(newKeyDescription);
+        SimpleTag newTag = new SimpleTag(newKeyDescription);
+
         template.keepConnectionOpened();
         template.saveOrUpdate(newTag);
         long newTagId = newTag.getId();

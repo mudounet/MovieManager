@@ -8,7 +8,6 @@ import com.mudounet.hibernate.movie.GenericMovie;
 import java.util.List;
 import org.dbunit.dataset.ITable;
 import org.hibernate.Transaction;
-import org.hibernate.Session;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import com.mudounet.hibernate.tags.SimpleTag;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import org.apache.log4j.Logger;
 public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
 
     protected static Logger logger = Logger.getLogger(SimpleTagManagerTest.class.getName());
-    private Session session;
     private Transaction tx;
 
     public SimpleTagManagerTest(String name) {
@@ -43,8 +41,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
     @Test
     public void testAddFilterTag() {
         logger.info("addFilterTag");
-        SimpleTag tag = new SimpleTag();
-        tag.setKey("test");
+        SimpleTag tag = new SimpleTag("test");
         SimpleTagManager instance = new SimpleTagManager();
         instance.addFilterTag(tag);
 

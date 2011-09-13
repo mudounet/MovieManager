@@ -2,9 +2,6 @@ package com.mudounet.utils.dbunit;
 
 import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.HibernateFactory;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import org.dbunit.DatabaseTestCase;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.database.DatabaseConnection;
@@ -20,7 +17,6 @@ import org.dbunit.database.DatabaseConfig;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.hibernate.SessionFactory;
 import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +29,6 @@ public abstract class ProjectDatabaseTestCase
     private static String url = "hibernate.connection.url";
     private static String username = "hibernate.connection.username";
     private static String password = "hibernate.connection.password";
-    private SessionFactory sessionFactory;
     protected AbstractDao template;
 
     public ProjectDatabaseTestCase(String name) {
@@ -46,7 +41,6 @@ public abstract class ProjectDatabaseTestCase
     @Override
     public void setUp() throws Exception {
         HibernateFactory.buildSessionFactory();
-        sessionFactory = HibernateFactory.getSessionFactory();
         template = new AbstractDao();
         super.setUp();
     }
