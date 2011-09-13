@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mudounet.test;
+package com.mudounet.utils.dbunit;
 import java.sql.ResultSet;  
 import java.sql.ResultSetMetaData;  
 import java.sql.SQLException;
