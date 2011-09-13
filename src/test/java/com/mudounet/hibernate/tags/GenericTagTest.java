@@ -4,9 +4,9 @@
  */
 package com.mudounet.hibernate.tags;
 
-import com.mudounet.hibernate.movie.GenericMovie;
-import com.mudounet.hibernate.movie.ProcessedMovie;
-import com.mudounet.hibernate.movie.QueuedMovie;
+import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.movies.ProcessedMovie;
+import com.mudounet.hibernate.movies.QueuedMovie;
 import org.hibernate.Transaction;
 import org.junit.Test;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
@@ -129,16 +129,16 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
                 switch (type) {
                     case 'G':
-                        classType = com.mudounet.hibernate.movie.GenericMovie.class.getCanonicalName();
+                        classType = com.mudounet.hibernate.movies.GenericMovie.class.getCanonicalName();
                         break;
                     case 'M':
-                        classType = com.mudounet.hibernate.movie.Movie.class.getCanonicalName();
+                        classType = com.mudounet.hibernate.movies.Movie.class.getCanonicalName();
                         break;
                     case 'P':
-                        classType = com.mudounet.hibernate.movie.ProcessedMovie.class.getCanonicalName();
+                        classType = com.mudounet.hibernate.movies.ProcessedMovie.class.getCanonicalName();
                         break;
                     case 'Q':
-                        classType = com.mudounet.hibernate.movie.QueuedMovie.class.getCanonicalName();
+                        classType = com.mudounet.hibernate.movies.QueuedMovie.class.getCanonicalName();
                         break;
                 }
 

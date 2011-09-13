@@ -4,7 +4,7 @@
  */
 package com.mudounet.utils.managers;
 
-import com.mudounet.hibernate.movie.GenericMovie;
+import com.mudounet.hibernate.movies.GenericMovie;
 import java.util.List;
 import org.dbunit.dataset.ITable;
 import org.hibernate.Transaction;

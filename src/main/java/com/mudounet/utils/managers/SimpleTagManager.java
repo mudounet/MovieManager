@@ -1,6 +1,6 @@
 package com.mudounet.utils.managers;
 
-import com.mudounet.hibernate.movie.GenericMovie;
+import com.mudounet.hibernate.movies.GenericMovie;
 import com.mudounet.hibernate.tags.SimpleTag;
 import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.DataAccessLayerException;

@@ -55,7 +55,7 @@ public class GenericTag implements java.io.Serializable {
      * lazy="false"
      * @hibernate.many-to-many
      * column="fk_movie"
-     * class="com.mudounet.hibernate.movie.GenericMovie"
+     * class="com.mudounet.hibernate.movies.GenericMovie"
      * @hibernate.key
      * column="fk_tag"
      */
