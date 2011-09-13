@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.mudounet.hibernate.movies;
 
 import java.util.HashSet;
@@ -10,24 +9,23 @@ import java.util.Set;
 
 /**
  * @hibernate.class
-  * discriminator-value="G"
+ * discriminator-value="G"
  * @hibernate.discriminator
  * column="TYPE"
  * type="char"
  **/
 public abstract class GenericMovie {
-     private Long id;
-     private String title;
 
+    private Long id;
+    private String title;
+    private Set tags = new HashSet(0);
+    private TechData techData;
 
-     /**
-      * Tags describing this movie
+    /**
+     * Tags describing this movie
      */
-     private Set Tags = new HashSet(0);
-
     public GenericMovie() {
     }
-
 
     public GenericMovie(String title) {
         this.title = title;
@@ -57,6 +55,18 @@ public abstract class GenericMovie {
     }
 
     /**
+     * @hibernate.many-to-one
+     * class="com.mudounet.hibernate.movies.TechData"
+     */
+    public TechData getTechData() {
+        return techData;
+    }
+
+    public void setTechData(TechData techData) {
+        this.techData = techData;
+    }
+
+    /**
      * @hibernate.set
      * table="movies_tags"
      * cascade="save-update"
@@ -68,25 +78,25 @@ public abstract class GenericMovie {
      * column="fk_movie"
      */
     public Set getTags() {
-        return this.Tags;
+        return this.tags;
     }
 
     public void setTags(Set Tags) {
-        this.Tags = Tags;
+        this.tags = Tags;
     }
 
     /**
      * toString
      * @return String
      */
-     public String toString() {
-	  StringBuilder buffer = new StringBuilder();
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
 
-      buffer.append(getClass().getName()).append("@").append(Integer.toHexString(hashCode())).append(" [");
-      buffer.append("title").append("='").append(getTitle()).append("' ");
-      buffer.append("Tags").append("='").append(getTags()).append("' ");
-      buffer.append("]");
+        buffer.append(getClass().getName()).append("@").append(Integer.toHexString(hashCode())).append(" [");
+        buffer.append("title").append("='").append(getTitle()).append("' ");
+        buffer.append("Tags").append("='").append(getTags()).append("' ");
+        buffer.append("]");
 
-      return buffer.toString();
-     }
+        return buffer.toString();
+    }
 }

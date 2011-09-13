@@ -18,6 +18,10 @@ public class MovieManager {
     }
     
     public static boolean addTagToMovie(GenericMovie movie, GenericTag tag) {
-        
+        return false;
+    }
+    
+    public static boolean addBasicInfosToMovie(GenericMovie movie, Object techData) {
+        return false;
     }
 }
