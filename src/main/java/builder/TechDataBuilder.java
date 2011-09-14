@@ -49,7 +49,7 @@ public class TechDataBuilder {
         logger.debug("Duration of file "+filename+" is "+result);
         b.setPlayTime(container.getDuration() / 1000);
 
-        b.setMd5Sum(Md5Generator.getMD5Checksum(filename));
+        b.setMd5Sum(Md5Generator.computeMD5(filename));
 
         int numStreams = container.getNumStreams();
         // and iterate through the streams to print their meta data

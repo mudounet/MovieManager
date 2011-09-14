@@ -25,7 +25,7 @@ public class Md5Generator {
 
     // see this How-to for a faster way to convert
     // a byte array to a HEX string
-    public static String getMD5Checksum(String filename) throws Exception {
+    public static String computeMD5(String filename) throws Exception {
         byte[] b = createChecksum(filename);
         String result = "";
         for (int i = 0; i < b.length; i++) {
