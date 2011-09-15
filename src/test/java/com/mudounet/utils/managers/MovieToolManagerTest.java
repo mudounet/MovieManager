@@ -6,7 +6,6 @@ package com.mudounet.utils.managers;
 
 import java.io.File;
 import com.mudounet.utils.dbunit.TestTools;
-import java.io.InputStream;
 import com.mudounet.hibernate.movies.TechData;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -40,7 +39,7 @@ public class MovieToolManagerTest {
         File movieFile = TestTools.getFileFromClasspath("sample_video.flv");
 
         TechData expResult = null;
-        TechData result = MovieToolManager.getMovieInformations(movieFile.getPath());
+        TechData result = MovieToolManager.getMovieInformations(movieFile);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

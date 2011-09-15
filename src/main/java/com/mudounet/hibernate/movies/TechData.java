@@ -13,7 +13,8 @@ public class TechData {
     private long playTime;
     private int width;
     private int height;
-    private int size;
+    private String codecName;
+    private long size;
 
     /**
      * @hibernate.id
@@ -52,11 +53,11 @@ public class TechData {
     /**
      * @hibernate.property
      */
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
@@ -69,5 +70,21 @@ public class TechData {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    /**
+     * @hibernate.property
+     */
+    public String getCodecName() {
+        return codecName;
+    }
+
+    public void setCodecName(String codecName) {
+        this.codecName = codecName;
+    }
+
+    @Override
+    public String toString() {
+        return "TechData{" + "id=" + id + ", playTime=" + playTime + ", width=" + width + ", height=" + height + ", codecName=" + codecName + ", size=" + size + '}';
     }
 }

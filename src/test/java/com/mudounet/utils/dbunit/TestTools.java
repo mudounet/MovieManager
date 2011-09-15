@@ -6,6 +6,10 @@ package com.mudounet.utils.dbunit;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,6 +24,14 @@ public class TestTools {
 
     public static File getFileFromClasspath(String s) {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        return new File(cl.getResource(s).getFile());
+        URL url = cl.getResource(s);
+        File f;
+        try {
+            f = new File(url.toURI());
+        } catch (URISyntaxException ex) {
+            f = new File(url.getPath());
+        }
+        
+        return f;
     }
 }
