@@ -10,11 +10,11 @@ package com.mudounet.hibernate.movies;
 public class TechData {
 
     private Long id;
-    private long playTime;
-    private int width;
-    private int height;
-    private String codecName;
-    private long size;
+    private long playTime = -1;
+    private int width = -1;
+    private int height = -1;
+    private String codecName = "";
+    private long size = -1;
 
     /**
      * @hibernate.id
