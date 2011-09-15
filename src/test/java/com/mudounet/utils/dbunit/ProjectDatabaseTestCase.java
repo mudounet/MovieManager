@@ -76,7 +76,7 @@ public abstract class ProjectDatabaseTestCase
             return null;
         } else {
             InputStream fileStream = loadFromTestPath(file);
-            InputStream dtdStream = loadFromClasspath("database.dtd");
+            InputStream dtdStream = TestTools.loadFromClasspath("database.dtd");
             if (dtdStream == null) {
                 logger.fatal("Database-schema loading failed");
 
@@ -103,7 +103,7 @@ public abstract class ProjectDatabaseTestCase
 
     protected IDatabaseConnection getConnection() throws Exception {
         Properties p = new Properties();
-        InputStream m = loadFromClasspath("hibernate-db.properties");
+        InputStream m = TestTools.loadFromClasspath("hibernate-db.properties");
         p.load(m);
         Class.forName(p.getProperty(driver));
         Connection c =
@@ -117,15 +117,10 @@ public abstract class ProjectDatabaseTestCase
         return connection;
     }
 
-    private InputStream loadFromClasspath(String s)
-            throws Exception {
-        ClassLoader cl =
-                Thread.currentThread().getContextClassLoader();
-        return cl.getResourceAsStream(s);
-    }
+
 
     private InputStream loadFromTestPath(String file) throws Exception {
-        InputStream is = loadFromClasspath(file);
+        InputStream is = TestTools.loadFromClasspath(file);
         return is;
     }
 

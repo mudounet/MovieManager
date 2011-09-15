@@ -6,6 +6,7 @@ import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 
 /**
@@ -13,7 +14,7 @@ import org.hibernate.Query;
  */
 public class SimpleTagManager {
 
-    //protected static Logger logger = Logger.getLogger(SimpleTagManager.class.getName());
+    protected static Logger logger = Logger.getLogger(SimpleTagManager.class.getName());
     private ArrayList<SimpleTag> _tagList;
     protected AbstractDao template;
 
