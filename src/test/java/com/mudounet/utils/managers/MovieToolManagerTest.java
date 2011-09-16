@@ -38,9 +38,12 @@ public class MovieToolManagerTest {
         String moviePath = "";
         File movieFile = TestTools.getFileFromClasspath("sample_video.flv");
 
-        TechData expResult = null;
         TechData result = MovieToolManager.getMovieInformations(movieFile);
-        assertEquals(expResult, result);
+        
+        movieFile = TestTools.getFileFromClasspath("sample_video.mp4");
+
+        result = MovieToolManager.getMovieInformations(movieFile);
+
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
