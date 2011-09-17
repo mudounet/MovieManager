@@ -37,6 +37,8 @@ public class MovieToolManager {
     private static final float VLC_THUMBNAIL_POSITION = 30.0f / 100.0f;
     protected static Logger logger = Logger.getLogger(SimpleTagManager.class.getName());
     private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+    private File file;
+    private MediaPlayer mediaPlayer;
 
     /**
      * Test whether the runtime operating system is "unix-like".
@@ -64,6 +66,10 @@ public class MovieToolManager {
     public static boolean isMac() {
         return OS_NAME.indexOf("mac") != -1;
     }
+    
+    public void initializeMedia(File file) {
+        
+    }
 
     public static TechData getMovieInformations(File file) throws InterruptedException, IOException {
         TechData techData = new TechData();
@@ -73,6 +79,7 @@ public class MovieToolManager {
         if (isWindows()) {
             NativeLibrary.addSearchPath("libvlc", "C:\\Program Files\\VideoLAN\\VLC"); // or whatever
         }
+        
         MediaPlayerFactory factory = new MediaPlayerFactory(VLC_ARGS);
         MediaPlayer mediaPlayer = factory.newHeadlessMediaPlayer();
 

@@ -4,6 +4,7 @@
  */
 package com.mudounet.utils.managers;
 
+import org.apache.log4j.Logger;
 import java.io.File;
 import com.mudounet.utils.dbunit.TestTools;
 import com.mudounet.hibernate.movies.TechData;
@@ -17,7 +18,8 @@ import static org.junit.Assert.*;
  * @author isabelle
  */
 public class MovieToolManagerTest {
-    
+    protected static Logger logger = Logger.getLogger(SimpleTagManager.class.getName());
+   
     public MovieToolManagerTest() {
     }
 
@@ -34,15 +36,14 @@ public class MovieToolManagerTest {
      */
     @Test
     public void testGetMovieInformations() throws Exception {
-        System.out.println("getMovieInformations");
-        String moviePath = "";
+        logger.info("getMovieInformations");
         File movieFile = TestTools.getFileFromClasspath("sample_video.flv");
 
         TechData result = MovieToolManager.getMovieInformations(movieFile);
         
-        movieFile = TestTools.getFileFromClasspath("sample_video.mp4");
+        //movieFile = TestTools.getFileFromClasspath("sample_video.mp4");
 
-        result = MovieToolManager.getMovieInformations(movieFile);
+        //result = MovieToolManager.getMovieInformations(movieFile);
 
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
