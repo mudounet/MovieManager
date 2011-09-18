@@ -4,8 +4,9 @@
  */
 package com.mudounet.utils.managers;
 
+import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.movies.Movie;
 import com.mudounet.hibernate.movies.TechData;
-import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +17,6 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.TrackInfo;
 import uk.co.caprica.vlcj.player.VideoTrackInfo;
-import uk.co.caprica.vlcj.player.events.VideoOutputEventListener;
 
 /**
  *
@@ -39,13 +39,16 @@ public class MovieToolManager {
     private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
     private File file;
     private MediaPlayer mediaPlayer;
+    
+    final CountDownLatch inPositionLatch = new CountDownLatch(1);
+    final CountDownLatch snapshotTakenLatch = new CountDownLatch(1);
 
     /**
      * Test whether the runtime operating system is "unix-like".
      * 
      * @return true if the runtime OS is unix-like, Linux, Unix, FreeBSD etc
      */
-    public static boolean isNix() {
+    private static boolean isNix() {
         return OS_NAME.indexOf("nux") != -1 || OS_NAME.indexOf("nix") != -1 || OS_NAME.indexOf("freebsd") != -1;
     }
 
@@ -54,7 +57,7 @@ public class MovieToolManager {
      * 
      * @return true if the runtime OS is Windows
      */
-    public static boolean isWindows() {
+    private static boolean isWindows() {
         return OS_NAME.indexOf("win") != -1;
     }
 
@@ -63,28 +66,23 @@ public class MovieToolManager {
      * 
      * @return true if the runtime OS is Mac
      */
-    public static boolean isMac() {
+    private static boolean isMac() {
         return OS_NAME.indexOf("mac") != -1;
     }
-    
+    private MediaPlayerFactory factory;
+
     public void initializeMedia(File file) {
-        
-    }
-
-    public static TechData getMovieInformations(File file) throws InterruptedException, IOException {
-        TechData techData = new TechData();
-
-        techData.setSize(file.length());
 
         if (isWindows()) {
             NativeLibrary.addSearchPath("libvlc", "C:\\Program Files\\VideoLAN\\VLC"); // or whatever
         }
-        
-        MediaPlayerFactory factory = new MediaPlayerFactory(VLC_ARGS);
-        MediaPlayer mediaPlayer = factory.newHeadlessMediaPlayer();
 
-        final CountDownLatch inPositionLatch = new CountDownLatch(1);
-        final CountDownLatch snapshotTakenLatch = new CountDownLatch(1);
+        factory = new MediaPlayerFactory(VLC_ARGS);
+        mediaPlayer = factory.newHeadlessMediaPlayer();
+        mediaPlayer.prepareMedia(file.getPath());
+        mediaPlayer.parseMedia();
+        
+
 
         mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
 
@@ -102,38 +100,57 @@ public class MovieToolManager {
             }
         });
 
-        mediaPlayer.prepareMedia(file.getPath());
 
-        mediaPlayer.parseMedia();
-
-        if (mediaPlayer.startMedia(file.getPath())) {
-
-
-
-            mediaPlayer.setPosition(0.2f);
+    }
+    
+    public void moveTo(float newPosition) throws InterruptedException {
+         mediaPlayer.setPosition(newPosition);
             inPositionLatch.await(); // Might wait forever if error
+    }
+    
+    public void takeSnapshot(File file) throws InterruptedException {
+        mediaPlayer.saveSnapshot(file);
+        snapshotTakenLatch.await(); // Might wait forever if error
+    }
 
-            //mediaPlayer.saveSnapshot("test.jpg", 300, 0);
-            File testFile = new File("./test.jpg");
-            mediaPlayer.saveSnapshot(testFile);
-            snapshotTakenLatch.await(); // Might wait forever if error
-            techData.setPlayTime(mediaPlayer.getLength());
-
-
-            for (TrackInfo t : mediaPlayer.getTrackInfo()) {
-                if (t.getClass().getName().equals("uk.co.caprica.vlcj.player.VideoTrackInfo")) {
-                    VideoTrackInfo v = (VideoTrackInfo) t;
-                    techData.setCodecName(v.codecName());
-                    techData.setHeight(v.height());
-                    techData.setWidth(v.width());
-                }
-            }
-
-            mediaPlayer.stop();
-        }
-
+    public void closeMedia() {
+        mediaPlayer.stop();
         mediaPlayer.release();
         factory.release();
+    }
+
+    public static TechData getMovieInformations(GenericMovie movie) throws InterruptedException, IOException {
+        TechData techData = new TechData();
+
+        File file = new File(movie.getPath());
+        techData.setSize(file.length());
+
+
+
+
+
+//        if (mediaPlayer.startMedia(file.getPath())) {
+//
+//
+//
+//           
+//
+//            //mediaPlayer.saveSnapshot("test.jpg", 300, 0);
+//            File testFile = new File("./test.jpg");
+//
+//            techData.setPlayTime(mediaPlayer.getLength());
+//
+//
+//            for (TrackInfo t : mediaPlayer.getTrackInfo()) {
+//                if (t.getClass().getName().equals("uk.co.caprica.vlcj.player.VideoTrackInfo")) {
+//                    VideoTrackInfo v = (VideoTrackInfo) t;
+//                    techData.setCodecName(v.codecName());
+//                    techData.setHeight(v.height());
+//                    techData.setWidth(v.width());
+//                }
+//            }
+//
+//        }
 
         logger.info(techData);
 
@@ -141,7 +158,7 @@ public class MovieToolManager {
     }
 
     public static void test(String mrl, int imageWidth, File snapshotFile) throws InterruptedException {
-   
+
         MediaPlayerFactory factory = new MediaPlayerFactory(VLC_ARGS);
         MediaPlayer mediaPlayer = factory.newHeadlessMediaPlayer();
 

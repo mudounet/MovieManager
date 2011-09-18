@@ -18,6 +18,7 @@ public abstract class GenericMovie {
 
     private Long id;
     private String title;
+    private String path;
     private Set tags = new HashSet(0);
     private TechData techData;
 
@@ -41,6 +42,17 @@ public abstract class GenericMovie {
 
     protected void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * @hibernate.property
+     */
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     /**
