@@ -100,7 +100,7 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
             } else {
                 player.read(player.mediaPlayer);
             }
-        } catch (NumberFormatException | IOException ex) {
+        } catch (Exception ex) {
             logger.warn(ex);
         } finally {
             if (stream != null) {

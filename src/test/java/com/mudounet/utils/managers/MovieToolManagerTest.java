@@ -39,7 +39,7 @@ public class MovieToolManagerTest {
         logger.info("getMovieInformations");
         File movieFile = TestTools.getFileFromClasspath("sample_video.flv");
 
-        TechData result = MovieToolManager.getMovieInformations(movieFile);
+        //TechData result = MovieToolManager.getMovieInformations(movieFile);
         
         //movieFile = TestTools.getFileFromClasspath("sample_video.mp4");
 
