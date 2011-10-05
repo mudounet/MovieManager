@@ -21,10 +21,7 @@ import com.sun.jna.NativeLibrary;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.quelea.utils.LoggerUtils;
-import org.quelea.utils.QueleaProperties;
+import org.apache.log4j.Logger;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
@@ -37,7 +34,7 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
 
     private final int port;
     private MediaPlayer mediaPlayer;
-    private static final Logger LOGGER = LoggerUtils.getLogger();
+    protected static Logger logger = Logger.getLogger(OutOfProcessEmbeddedPlayer.class.getName());
 
     /**
      * Create a new headless player that sits out of process.
@@ -46,7 +43,7 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
      */
     public OutOfProcessHeadlessPlayer(int port) throws IOException {
         MediaPlayerFactory factory = new MediaPlayerFactory(new String[]{"--no-video-title"});
-        mediaPlayer = factory.newMediaPlayer();
+        mediaPlayer = factory.newHeadlessMediaPlayer();
         this.port = port;
     }
 
@@ -76,7 +73,6 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
         String ret = ":sout=#duplicate{dst=std{access=http,mux=ts,dst=127.0.0.1:" + port + "}}";
         return new String[]{ret};
     }
-    
     /**
      * On for testing, off for normal...
      */
@@ -93,19 +89,23 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
         File nativeDir = new File("lib/native");
         NativeLibrary.addSearchPath("libvlc", nativeDir.getAbsolutePath());
         NativeLibrary.addSearchPath("vlc", nativeDir.getAbsolutePath());
-        try (PrintStream stream = new PrintStream(new File(QueleaProperties.getQueleaUserHome(), "ooplog.txt"))) {
+        PrintStream stream = null;
+        try {
+            stream = new PrintStream(new File("ooplog.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessHeadlessPlayer player = new OutOfProcessHeadlessPlayer(Integer.parseInt(args[0]));
             if (TEST_MODE) {
                 player.mediaPlayer.prepareMedia("dvdsimple://E:");
                 player.mediaPlayer.play();
-            }
-            else {
+            } else {
                 player.read(player.mediaPlayer);
             }
-        }
-        catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Error occured", ex);
+        } catch (NumberFormatException | IOException ex) {
+            logger.warn(ex);
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
         }
     }
 }
