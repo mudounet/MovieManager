@@ -18,22 +18,14 @@
 package com.mudounet.utils.video;
 
 import com.sun.jna.NativeLibrary;
-import com.sun.jna.Pointer;
 import java.awt.Canvas;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.quelea.utils.LoggerUtils;
-import org.quelea.utils.QueleaProperties;
-import uk.co.caprica.vlcj.binding.LibVlcFactory;
-import uk.co.caprica.vlcj.binding.internal.libvlc_media_player_t;
+import org.apache.log4j.Logger;
+import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.linux.LinuxEmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.mac.MacEmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.windows.WindowsEmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.runtime.RuntimeUtil;
+import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
 
 /**
  * An embedded player that sits out of process in a separate VM. In process
@@ -44,46 +36,21 @@ import uk.co.caprica.vlcj.runtime.RuntimeUtil;
  */
 public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
 
-    private static final Logger LOGGER = LoggerUtils.getLogger();
     private EmbeddedMediaPlayer mediaPlayer;
+    private CanvasVideoSurface videoSurface;
+    protected static Logger logger = Logger.getLogger(OutOfProcessEmbeddedPlayer.class.getName());
+    private Canvas canvas;
 
     public OutOfProcessEmbeddedPlayer(final long canvasId) throws IOException {
 
-        //Lifted pretty much out of the VLCJ code
-        if (RuntimeUtil.isNix()) {
-            mediaPlayer = new LinuxEmbeddedMediaPlayer(LibVlcFactory.factory().synchronise().log().create().libvlc_new(1, new String[]{"--no-video-title"}), null) {
+        canvas = new Canvas();
 
-                @Override
-                protected void nativeSetVideoSurface(libvlc_media_player_t mediaPlayerInstance, Canvas videoSurface) {
-                    libvlc.libvlc_media_player_set_xwindow(mediaPlayerInstance, (int) canvasId);
-                }
-            };
-        }
-        else if (RuntimeUtil.isWindows()) {
-            mediaPlayer = new WindowsEmbeddedMediaPlayer(LibVlcFactory.factory().synchronise().log().create().libvlc_new(1, new String[]{"--no-video-title"}), null) {
+        MediaPlayerFactory factory = new MediaPlayerFactory("--no-video-title");
+        mediaPlayer = factory.newEmbeddedMediaPlayer();
 
-                @Override
-                protected void nativeSetVideoSurface(libvlc_media_player_t mediaPlayerInstance, Canvas videoSurface) {
-                    Pointer ptr = Pointer.createConstant(canvasId);
-                    libvlc.libvlc_media_player_set_hwnd(mediaPlayerInstance, ptr);
-                }
-            };
-        }
-        else if (RuntimeUtil.isMac()) {
-            mediaPlayer = new MacEmbeddedMediaPlayer(LibVlcFactory.factory().synchronise().log().create().libvlc_new(2, new String[]{"--no-video-title", "--vout=macosx"}), null) {
+        videoSurface = factory.newVideoSurface(canvas);
 
-                @Override
-                protected void nativeSetVideoSurface(libvlc_media_player_t mediaPlayerInstance, Canvas videoSurface) {
-                    Pointer ptr = Pointer.createConstant(canvasId);
-                    libvlc.libvlc_media_player_set_nsobject(mediaPlayerInstance, ptr);
-                }
-            };
-        }
-        else {
-            mediaPlayer = null;
-            System.exit(1);
-        }
-        mediaPlayer.setVideoSurface(new Canvas()); //Required with a dummy canvas to active the above nativeSetVideoSurface method
+        mediaPlayer.setVideoSurface(videoSurface); //Required with a dummy canvas to active the above nativeSetVideoSurface method
 
     }
 
@@ -95,7 +62,6 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
     public String[] getPrepareOptions() {
         return new String[0];
     }
-    
     /**
      * Set this to true if we want to test a file straight off.
      */
@@ -112,19 +78,23 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
         File nativeDir = new File("lib/native");
         NativeLibrary.addSearchPath("libvlc", nativeDir.getAbsolutePath());
         NativeLibrary.addSearchPath("vlc", nativeDir.getAbsolutePath());
-        try (PrintStream stream = new PrintStream(new File(QueleaProperties.getQueleaUserHome(), "ooplog.txt"))) {
+        PrintStream stream = null;
+        try {
+            stream = new PrintStream(new File("ooplog.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessEmbeddedPlayer player = new OutOfProcessEmbeddedPlayer(Integer.parseInt(args[0]));
             if (TEST_MODE) {
                 player.mediaPlayer.prepareMedia("dvdsimple://E:");
                 player.mediaPlayer.play();
-            }
-            else {
+            } else {
                 player.read(player.mediaPlayer);
             }
-        }
-        catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Error occured", ex);
+        } catch (Exception ex) {
+            logger.warn(ex);
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
         }
     }
 }
