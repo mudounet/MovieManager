@@ -89,7 +89,7 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
             } else {
                 player.read(player.mediaPlayer);
             }
-        } catch (Exception ex) {
+        } catch (NumberFormatException | IOException ex) {
             logger.warn(ex);
         } finally {
             if (stream != null) {
