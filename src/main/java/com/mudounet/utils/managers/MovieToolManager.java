@@ -5,7 +5,6 @@
 package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.movies.GenericMovie;
-import com.mudounet.hibernate.movies.Movie;
 import com.mudounet.hibernate.movies.TechData;
 import com.sun.jna.NativeLibrary;
 import java.io.File;
@@ -15,8 +14,6 @@ import org.apache.log4j.Logger;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
-import uk.co.caprica.vlcj.player.TrackInfo;
-import uk.co.caprica.vlcj.player.VideoTrackInfo;
 
 /**
  *
