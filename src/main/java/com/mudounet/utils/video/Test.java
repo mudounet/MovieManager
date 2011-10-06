@@ -17,6 +17,8 @@
  */
 package com.mudounet.utils.video;
 
+import java.awt.Canvas;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -34,25 +36,25 @@ public class Test {
      * @throws Exception if something goes wrong.
      */
     public static void main(String[] args) throws Exception {
-//        JFrame frame = new JFrame();
-//        frame.setLayout(new GridLayout(1, 2));
-//        Canvas panel = new Canvas();
-//        panel.setPreferredSize(new Dimension(300,300));
-//        Canvas panel2 = new Canvas();
-//        panel2.setPreferredSize(new Dimension(300,300));
-//        frame.add(panel);
-//        frame.add(panel2);
-//        frame.pack();
-//        frame.setVisible(true);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//        RemotePlayer player = RemotePlayerFactory.getRemotePlayer(panel);
-//        player.load("F:\\Videos\\Inception\\Inception.mkv");
-//        player.play();
-//        RemotePlayer player2 = RemotePlayerFactory.getRemotePlayer(panel2);
-//        player2.load("F:\\Videos\\Gone in 60 Seconds\\Gone in 60 Seconds.avi");
-//        player2.play();
-        go();
+        JFrame frame = new JFrame();
+        frame.setLayout(new GridLayout(1, 2));
+        Canvas panel = new Canvas();
+        panel.setPreferredSize(new Dimension(300,300));
+        Canvas panel2 = new Canvas();
+        panel2.setPreferredSize(new Dimension(300,300));
+        frame.add(panel);
+        frame.add(panel2);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        RemotePlayer player = RemotePlayerFactory.getEmbeddedRemotePlayer(panel);
+        player.load("sample_video.flv");
+        player.play();
+        RemotePlayer player2 = RemotePlayerFactory.getEmbeddedRemotePlayer(panel2);
+        player2.load("sample_video.flv");
+        player2.play();
+        //go();
     }
 
     /**
