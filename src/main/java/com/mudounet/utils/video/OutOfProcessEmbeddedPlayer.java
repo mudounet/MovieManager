@@ -38,12 +38,8 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentIdVideoSurface;
 public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
 
     private EmbeddedMediaPlayer mediaPlayer;
-    private CanvasVideoSurface videoSurface;
-    private Canvas canvas;
 
     public OutOfProcessEmbeddedPlayer(final long canvasId) throws IOException {
-
-        canvas = new Canvas();
 
         MediaPlayerFactory factory = new MediaPlayerFactory("--no-video-title");
         mediaPlayer = factory.newEmbeddedMediaPlayer();
