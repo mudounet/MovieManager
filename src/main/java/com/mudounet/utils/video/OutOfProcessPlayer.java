@@ -43,7 +43,7 @@ public abstract class OutOfProcessPlayer {
 
         //Process the input - I know this isn't very OO but it works for now...
         while ((inputLine = in.readLine()) != null) {
-            System.out.println("Received following command : "+inputLine);
+
             if (inputLine.startsWith("open ")) {
                 inputLine = inputLine.substring("open ".length());
                 mediaPlayer.prepareMedia(inputLine, getPrepareOptions());
@@ -84,9 +84,11 @@ public abstract class OutOfProcessPlayer {
                 System.exit(0);
             }
             else {
-                System.out.println("unknown command : "+inputLine);
+                System.out.println("unknown command ."+inputLine+".");
             }
         }
+        
+        System.exit(0);
     }
     
     /**
