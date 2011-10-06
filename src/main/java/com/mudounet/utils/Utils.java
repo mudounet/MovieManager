@@ -339,7 +339,7 @@ public final class Utils {
             }
         }
         catch (IOException ex) {
-            logger.warn("Couldn't get image: " + location, ex);
+            logger.error("Couldn't get image: " + location, ex);
             return null;
         }
     }
