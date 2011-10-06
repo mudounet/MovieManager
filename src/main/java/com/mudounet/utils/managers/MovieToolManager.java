@@ -5,7 +5,7 @@
 package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.movies.GenericMovie;
-import com.mudounet.hibernate.movies.TechData;
+import com.mudounet.hibernate.movies.others.TechData;
 import com.sun.jna.NativeLibrary;
 import java.io.File;
 import java.io.IOException;

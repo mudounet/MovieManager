@@ -7,7 +7,7 @@ package com.mudounet.utils.managers;
 import org.apache.log4j.Logger;
 import java.io.File;
 import com.mudounet.utils.dbunit.TestTools;
-import com.mudounet.hibernate.movies.TechData;
+import com.mudounet.hibernate.movies.others.TechData;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

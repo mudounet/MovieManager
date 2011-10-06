@@ -4,6 +4,7 @@
  */
 package com.mudounet.hibernate.movies;
 
+import com.mudounet.hibernate.movies.others.TechData;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,7 +69,7 @@ public abstract class GenericMovie {
 
     /**
      * @hibernate.many-to-one
-     * class="com.mudounet.hibernate.movies.TechData"
+     * class="com.mudounet.hibernate.movies.others.TechData"
      */
     public TechData getTechData() {
         return techData;
