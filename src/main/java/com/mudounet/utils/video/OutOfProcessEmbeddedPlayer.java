@@ -90,7 +90,7 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
                 player.read(player.mediaPlayer);
             }
         } catch (Exception ex) {
-            logger.warn(ex);
+            System.out.println(ex);
         } finally {
             if (stream != null) {
                 stream.close();

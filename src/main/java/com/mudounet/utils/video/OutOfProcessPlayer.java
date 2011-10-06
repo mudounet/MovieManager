@@ -38,10 +38,12 @@ public abstract class OutOfProcessPlayer {
     public void read(MediaPlayer mediaPlayer) throws IOException {
 
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        
         String inputLine;
 
         //Process the input - I know this isn't very OO but it works for now...
         while ((inputLine = in.readLine()) != null) {
+            System.out.println("Received following command : "+inputLine);
             if (inputLine.startsWith("open ")) {
                 inputLine = inputLine.substring("open ".length());
                 mediaPlayer.prepareMedia(inputLine, getPrepareOptions());
@@ -82,7 +84,7 @@ public abstract class OutOfProcessPlayer {
                 System.exit(0);
             }
             else {
-                System.out.println("unknown command: ." + inputLine + ".");
+                System.out.println("unknown command : "+inputLine);
             }
         }
     }
