@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import org.apache.log4j.Logger;
 
 /**
  * An internal test class to play around with the video stuff without launching
@@ -29,6 +30,8 @@ import javax.swing.SwingUtilities;
  * @author Michael
  */
 public class Test {
+
+    protected static Logger logger = Logger.getLogger(Test.class.getName());
 
     /**
      * Start the test.
@@ -39,9 +42,9 @@ public class Test {
         JFrame frame = new JFrame();
         frame.setLayout(new GridLayout(1, 2));
         Canvas panel = new Canvas();
-        panel.setPreferredSize(new Dimension(300,300));
+        panel.setPreferredSize(new Dimension(300, 300));
         Canvas panel2 = new Canvas();
-        panel2.setPreferredSize(new Dimension(300,300));
+        panel2.setPreferredSize(new Dimension(300, 300));
         frame.add(panel);
         frame.add(panel2);
         frame.pack();
@@ -50,10 +53,20 @@ public class Test {
 
         RemotePlayer player = RemotePlayerFactory.getEmbeddedRemotePlayer(panel);
         player.load("sample_video.flv");
+
         player.play();
-        RemotePlayer player2 = RemotePlayerFactory.getEmbeddedRemotePlayer(panel2);
-        player2.load("sample_video.flv");
-        player2.play();
+
+        //do what you want to do before sleeping
+        long length = 0;
+        while(player.getTime() < 1000 && length == 0) {
+            Thread.sleep(500);//sleep for 1000 ms
+            length = player.getLength();
+            logger.debug("length : " + length);
+        }
+        player.close();
+       
+        
+        
         //go();
     }
 
