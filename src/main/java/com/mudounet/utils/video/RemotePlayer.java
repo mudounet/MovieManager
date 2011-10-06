@@ -22,6 +22,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import org.apache.log4j.Logger;
 
 /**
  * Controls an OutOfProcessPlayer via input / output process streams.
@@ -33,6 +34,7 @@ public class RemotePlayer {
     private BufferedWriter out;
     private boolean open;
     private boolean playing;
+    protected static Logger logger = Logger.getLogger(RemotePlayer.class.getName());
     private boolean paused;
 
     /**
@@ -54,6 +56,7 @@ public class RemotePlayer {
             throw new IllegalArgumentException("This remote player has been closed!");
         }
         try {
+            logger.debug("Sending command "+command);
             out.write(command + "\n");
             out.flush();
         }
@@ -68,7 +71,9 @@ public class RemotePlayer {
      */
     private String getInput() {
         try {
-            return in.readLine();
+            String returnedInfo = in.readLine();
+            logger.debug("received command : "+returnedInfo);
+            return returnedInfo;
         }
         catch (IOException ex) {
             throw new RuntimeException("Couldn't perform operation", ex);
