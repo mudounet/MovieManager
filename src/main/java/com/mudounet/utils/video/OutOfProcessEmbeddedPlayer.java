@@ -22,10 +22,11 @@ import java.awt.Canvas;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import org.apache.log4j.Logger;
+import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
+import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentIdVideoSurface;
 
 /**
  * An embedded player that sits out of process in a separate VM. In process
@@ -38,7 +39,6 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
 
     private EmbeddedMediaPlayer mediaPlayer;
     private CanvasVideoSurface videoSurface;
-    protected static Logger logger = Logger.getLogger(OutOfProcessEmbeddedPlayer.class.getName());
     private Canvas canvas;
 
     public OutOfProcessEmbeddedPlayer(final long canvasId) throws IOException {
@@ -48,9 +48,9 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
         MediaPlayerFactory factory = new MediaPlayerFactory("--no-video-title");
         mediaPlayer = factory.newEmbeddedMediaPlayer();
 
-        videoSurface = factory.newVideoSurface(canvas);
+        ComponentIdVideoSurface videoSurfaceById = factory.newVideoSurface(canvasId);
+        videoSurfaceById.attach(LibVlc.INSTANCE, mediaPlayer);
 
-        mediaPlayer.setVideoSurface(videoSurface); //Required with a dummy canvas to active the above nativeSetVideoSurface method
 
     }
 
