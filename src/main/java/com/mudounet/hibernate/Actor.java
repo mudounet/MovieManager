@@ -9,6 +9,7 @@ package com.mudounet.hibernate;
  * @hibernate.class
  */
 public class Actor implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     private String name;
@@ -16,6 +17,7 @@ public class Actor implements java.io.Serializable {
     /**
      * @hibernate.id
      * generator-class="native"
+     * @return identifiant de l'objet
      */
     public Long getId() {
         return this.id;
@@ -27,6 +29,7 @@ public class Actor implements java.io.Serializable {
     
     /**
      * @hibernate.property
+     * @return Nom de l'acteur/actrive
      */
     public String getName() {
         return name;

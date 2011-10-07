@@ -7,7 +7,6 @@ package com.mudounet.hibernate;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import javax.imageio.ImageIO;
 
 /**
@@ -17,7 +16,7 @@ import javax.imageio.ImageIO;
  * column="TYPE"
  * type="char"
  **/
-public class Image implements Serializable {
+public class Image implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
     private String path;
