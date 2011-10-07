@@ -43,7 +43,7 @@ public class TechData {
 
     /**
      * @hibernate.property
-     * @return PlayTime
+     * @return Playing time in seconds
      */
     public long getPlayTime() {
         return playTime;

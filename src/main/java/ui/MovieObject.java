@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 
 public final class MovieObject implements Comparator, Serializable {
+    private static final long serialVersionUID = 1L;
 
     public static String getName() {
        return "test implementation";
