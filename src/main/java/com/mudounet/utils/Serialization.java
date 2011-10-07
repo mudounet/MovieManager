@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -16,6 +17,8 @@ import java.io.ObjectOutputStream;
  */
 public class Serialization {
 
+    protected static Logger logger = Logger.getLogger(Serialization.class.getName());
+    
     static public boolean writeObject(Object obj, String filename) {
         try {
             // création d'une personne
@@ -31,7 +34,7 @@ public class Serialization {
                 oos.writeObject(obj);
                 // on vide le tampon
                 oos.flush();
-                System.out.println(obj + " a ete serialise");
+                logger.debug(obj + " has been serialized");
                 return true;
 
             } finally {
@@ -43,6 +46,7 @@ public class Serialization {
                 }
             }
         } catch (IOException ioe) {
+            logger.error(obj + " has not been serialized : "+ioe);
         }
 
         return false;
@@ -67,12 +71,12 @@ public class Serialization {
                 }
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(obj + " has not been serialized : "+ioe);
         } catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
+            logger.error(obj + " has not been serialized : "+cnfe);
         }
         if (obj != null) {
-            System.out.println(obj + " a ete deserialise");
+            logger.debug(obj + " has been unserialized");
         }
         
         return obj;

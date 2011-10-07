@@ -16,6 +16,7 @@ import org.hibernate.HibernateException;
 public class DataAccessLayerException extends Exception {
 
     protected static Logger logger = Logger.getLogger(DataAccessLayerException.class.getName());
+    private static final long serialVersionUID = 1L;
 
     public DataAccessLayerException() {
     }

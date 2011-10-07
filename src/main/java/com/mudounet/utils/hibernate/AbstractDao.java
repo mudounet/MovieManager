@@ -75,10 +75,10 @@ public class AbstractDao {
         }
     }
 
-    public List getQueryResults() throws DataAccessLayerException {
+    public List<Object> getQueryResults() throws DataAccessLayerException {
         try {
             _startOperation();
-            List results = query.list();
+            List<Object> results = query.list();
             this.keepConnectionOpened = this.oldKeepConnectionOpened;
             _endOperation();
             return results;
@@ -124,7 +124,7 @@ public class AbstractDao {
         }
     }
 
-    public Object find(Class clazz, Long id) throws DataAccessLayerException {
+    public Object find(Class<Object> clazz, Long id) throws DataAccessLayerException {
         Object obj = null;
         try {
             _startOperation();
@@ -138,8 +138,8 @@ public class AbstractDao {
         return obj;
     }
 
-    public Object find(Class clazz, String Column, String Value) throws DataAccessLayerException {
-        List result = this.findList(clazz, Restrictions.like(Column, Value, MatchMode.EXACT), 1);
+    public Object find(Class<Object> clazz, String Column, String Value) throws DataAccessLayerException {
+        List<Object> result = this.findList(clazz, Restrictions.like(Column, Value, MatchMode.EXACT), 1);
 
         if (result.size() == 1) {
             return result.get(0);
@@ -148,12 +148,13 @@ public class AbstractDao {
         }
     }
 
-    public List findList(Class clazz) throws DataAccessLayerException {
+    public List<Object> findList(Class<Object> clazz) throws DataAccessLayerException {
         return findList(clazz, null, 0);
     }
 
-    public List findList(Class clazz, Criterion crit, int resultLimit) throws DataAccessLayerException {
-        List objects = null;
+    @SuppressWarnings("unchecked")
+    public List<Object> findList(Class<Object> clazz, Criterion crit, int resultLimit) throws DataAccessLayerException {
+        List<Object> objects = null;
         try {
             _startOperation();
             Criteria criteria = session.createCriteria(clazz.getName());
