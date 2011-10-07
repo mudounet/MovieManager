@@ -48,4 +48,31 @@ public class MovieToolManagerTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+    @Test
+    public void testOnVideoPicture() {
+        System.out.println("onVideoPicture");
+//        try {
+//            String filename = "testdata/RRTT - Christmas Delivery trailer.mp4";
+//            String alternateName = "RRTT";
+//            ImageBuilder b = new ImageBuilder(filename);
+//            int numberOfFrames = 10;
+//            ArrayList<BufferedImage> list = b.extractFrames(numberOfFrames);
+//            assertEquals(numberOfFrames, list.size());
+//
+//            for(int i = 0;i<list.size();i++) {
+//                String outImageName = "test_img_"+alternateName+"_"+i+".jpg";
+//                File file = new File(outImageName);
+//                System.out.println("Writing image "+outImageName);
+//                ImageIO.write(((BufferedImage)list.get(i)), "jpg", file);
+//            }
+//
+//            //File dir = new File(".");
+//            //File file = File.createTempFile("frame", ".png", dir);
+//        } catch (Exception ex) {
+//            Logger.getLogger(ImageBuilderTestOld.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
+        fail("The test case is a prototype.");
+    }
 }
