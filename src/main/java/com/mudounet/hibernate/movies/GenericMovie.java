@@ -5,6 +5,8 @@
 package com.mudounet.hibernate.movies;
 
 import com.mudounet.hibernate.movies.others.TechData;
+import com.mudounet.hibernate.tags.GenericTag;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +22,7 @@ public abstract class GenericMovie {
     private Long id;
     private String title;
     private String path;
-    private Set tags = new HashSet(0);
+    private Set<GenericTag> tags = new HashSet<GenericTag>(0);
     private TechData techData;
 
     /**
@@ -36,6 +38,7 @@ public abstract class GenericMovie {
     /**
      * @hibernate.id
      * generator-class="native"
+     * @return Identifier of movie
      */
     public Long getId() {
         return this.id;
@@ -47,6 +50,7 @@ public abstract class GenericMovie {
 
     /**
      * @hibernate.property
+     * @return path of movie
      */
     public String getPath() {
         return path;
@@ -58,6 +62,7 @@ public abstract class GenericMovie {
 
     /**
      * @hibernate.property
+     * @return movie title
      */
     public String getTitle() {
         return this.title;
@@ -70,6 +75,7 @@ public abstract class GenericMovie {
     /**
      * @hibernate.many-to-one
      * class="com.mudounet.hibernate.movies.others.TechData"
+     * @return technical data
      */
     public TechData getTechData() {
         return techData;
@@ -89,12 +95,13 @@ public abstract class GenericMovie {
      * class="com.mudounet.hibernate.tags.GenericTag"
      * @hibernate.key
      * column="fk_movie"
+     * @return list of tags applied to movie
      */
-    public Set getTags() {
-        return this.tags;
+    public Set<GenericTag> getTags() {
+        return Collections.unmodifiableSet(this.tags);
     }
 
-    public void setTags(Set Tags) {
+    public void setTags(Set<GenericTag> Tags) {
         this.tags = Tags;
     }
 
@@ -102,6 +109,7 @@ public abstract class GenericMovie {
      * toString
      * @return String
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
