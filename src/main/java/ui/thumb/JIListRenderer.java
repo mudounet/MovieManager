@@ -2,7 +2,6 @@ package ui.thumb;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -14,8 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
-import javax.swing.border.EtchedBorder;
-import ui.MovieObject;
 
 public class JIListRenderer extends JPanel implements ListCellRenderer {
 	//private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JIListRenderer.class);
