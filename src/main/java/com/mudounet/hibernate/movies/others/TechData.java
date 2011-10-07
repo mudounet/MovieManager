@@ -19,6 +19,7 @@ public class TechData {
     /**
      * @hibernate.id
      * generator-class="native"
+     * @return Identifier
      */
     public Long getId() {
         return id;
@@ -30,6 +31,7 @@ public class TechData {
 
     /**
      * @hibernate.property
+     * @return Height of movie
      */
     public int getHeight() {
         return height;
@@ -41,6 +43,7 @@ public class TechData {
 
     /**
      * @hibernate.property
+     * @return PlayTime
      */
     public long getPlayTime() {
         return playTime;
@@ -52,6 +55,7 @@ public class TechData {
 
     /**
      * @hibernate.property
+     * @return Size of movie in bytes
      */
     public long getSize() {
         return size;
@@ -63,6 +67,7 @@ public class TechData {
 
     /**
      * @hibernate.property
+     * @return Width of movie
      */
     public int getWidth() {
         return width;
@@ -74,6 +79,7 @@ public class TechData {
 
     /**
      * @hibernate.property
+     * @return Codec name
      */
     public String getCodecName() {
         return codecName;
