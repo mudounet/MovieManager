@@ -13,6 +13,8 @@ import com.mudounet.hibernate.Image;
 public class Snapshot extends Image {
 
     private long time;
+    private static final long serialVersionUID = 1L;
+    
 
      /**
      * @hibernate.property
