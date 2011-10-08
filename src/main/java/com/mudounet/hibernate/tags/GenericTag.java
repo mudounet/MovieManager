@@ -4,6 +4,7 @@
  */
 package com.mudounet.hibernate.tags;
 
+import com.mudounet.hibernate.movies.GenericMovie;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,10 +12,11 @@ import java.util.Set;
  * @hibernate.class
  * */
 public class GenericTag implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
     private long id;
     private String key;
-    private Set movies = new HashSet(0);
+    private Set<GenericMovie> movies = new HashSet<GenericMovie>(0);
 
     public GenericTag(String key) {
         this.key = key;
@@ -26,6 +28,7 @@ public class GenericTag implements java.io.Serializable {
     /**
      * @hibernate.id
      * generator-class="native"
+     * @return Identifier of tag
      */
     public long getId() {
         return this.id;
@@ -39,6 +42,7 @@ public class GenericTag implements java.io.Serializable {
      * Key of this tag. Used to reference data
      * @hibernate.property
      * not-null="true"
+     * @return key of tag
      */
     public String getKey() {
         return this.key;
@@ -58,19 +62,21 @@ public class GenericTag implements java.io.Serializable {
      * class="com.mudounet.hibernate.movies.GenericMovie"
      * @hibernate.key
      * column="fk_tag"
+     * @return List of maovies having this tag
      */
-    public Set getMovies() {
+    public Set<GenericMovie> getMovies() {
         return this.movies;
     }
 
-    public void setMovies(Set movies) {
+    public void setMovies(Set<GenericMovie> movies) {
         this.movies = movies;
     }
 
     /**
      * toString
-     * @return String
+     * @return Representation of Tag
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
