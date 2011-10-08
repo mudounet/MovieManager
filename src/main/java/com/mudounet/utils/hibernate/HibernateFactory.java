@@ -11,6 +11,10 @@ import org.hibernate.Transaction;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Configuration;
 
+/**
+ * 
+ * @author gmanciet
+ */
 public class HibernateFactory {
     protected static Logger logger = Logger.getLogger(HibernateFactory.class.getName());
     private static SessionFactory sessionFactory;
