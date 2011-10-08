@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 public class Serialization {
 
     protected static Logger logger = Logger.getLogger(Serialization.class.getName());
-    
+
     static public boolean writeObject(Object obj, String filename) {
         try {
             // création d'une personne
@@ -46,7 +46,7 @@ public class Serialization {
                 }
             }
         } catch (IOException ioe) {
-            logger.error(obj + " has not been serialized : "+ioe);
+            logger.error(obj + " has not been serialized : " + ioe);
         }
 
         return false;
@@ -71,14 +71,14 @@ public class Serialization {
                 }
             }
         } catch (IOException ioe) {
-            logger.error(obj + " has not been serialized : "+ioe);
+            logger.error(obj + " has not been serialized : " + ioe);
         } catch (ClassNotFoundException cnfe) {
-            logger.error(obj + " has not been serialized : "+cnfe);
+            logger.error(obj + " has not been serialized : " + cnfe);
         }
         if (obj != null) {
             logger.debug(obj + " has been unserialized");
         }
-        
+
         return obj;
     }
 }
