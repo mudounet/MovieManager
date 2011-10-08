@@ -16,6 +16,7 @@ package ui;
  * @author isabelle
  */
 public class TagSelector extends javax.swing.JFrame {
+    private static final long serialVersionUID = 1L;
 
     /** Creates new form TaSelector */
     public TagSelector() {

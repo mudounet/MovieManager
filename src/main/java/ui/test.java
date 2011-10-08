@@ -16,6 +16,7 @@ package ui;
  * @author gmanciet
  */
 public class test extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
 
     /** Creates new form test */
     public test() {

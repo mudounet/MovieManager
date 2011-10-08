@@ -1,13 +1,13 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.ComponentOrientation;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 public class ScrollList extends JFrame {
+    private static final long serialVersionUID = 1L;
 
   JScrollPane scrollpane;
 

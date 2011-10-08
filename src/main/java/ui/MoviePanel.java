@@ -18,6 +18,7 @@ import javax.swing.JPanel;
  * @author gmanciet
  */
 public class MoviePanel extends JPanel {
+    private static final long serialVersionUID = 1L;
 
     /** Creates new form MoviePanel */
     public MoviePanel(String text) {

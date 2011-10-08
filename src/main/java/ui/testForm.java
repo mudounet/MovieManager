@@ -22,6 +22,7 @@ import javax.swing.ListSelectionModel;
  * @author gmanciet
  */
 public class testForm extends javax.swing.JFrame {
+    private static final long serialVersionUID = 1L;
     JList list;
    String[] choices = {"A", "long", "array", "of", "strings", "A", "long", "array", "of", "strings", "A", "long", "array", "of", "strings", "A", "long", "array", "of", "strings"};
 
