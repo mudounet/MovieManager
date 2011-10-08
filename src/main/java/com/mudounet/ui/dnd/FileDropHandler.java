@@ -20,7 +20,9 @@ import org.apache.log4j.Logger;
 class FileDropHandler extends TransferHandler {
 
     protected static Logger logger = Logger.getLogger(FileDropHandler.class.getName());
+    private static final long serialVersionUID = 1L;
 
+    @Override
     public boolean canImport(TransferSupport support) {
         /* for the demo, we'll only support drops (not clipboard paste) */
         if (!support.isDrop()) {
@@ -51,6 +53,7 @@ class FileDropHandler extends TransferHandler {
         return false;
     }
 
+    @Override
     public boolean importData(TransferSupport support) {
         if (!canImport(support)) {
             return false;
