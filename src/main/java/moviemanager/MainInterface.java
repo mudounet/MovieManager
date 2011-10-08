@@ -6,9 +6,10 @@ import javax.swing.*;
  * @author gmanciet
  */
 public class MainInterface extends JFrame {
+    private static final long serialVersionUID = 1L;
 
 	/**
-	 * Variables declaration - do not modify//GEN-BEGIN:variables
+	 * Variables declaration - do not modify                     
 	 */
 	private javax.swing.JMenu jMenu1;
 	private javax.swing.JMenu jMenu2;
