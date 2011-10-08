@@ -29,6 +29,7 @@ public class Image implements java.io.Serializable {
     /**
      * @hibernate.id
      * generator-class="native"
+     * @return Identifier
      */
     public Long getId() {
         return id;
@@ -40,6 +41,7 @@ public class Image implements java.io.Serializable {
 
     /**
      * @hibernate.property
+     * @return MD5 string representation of image.
      */
     public String getMd5sum() {
         return md5sum;
@@ -51,6 +53,7 @@ public class Image implements java.io.Serializable {
 
     /**
      * @hibernate.property
+     * @return Path of image
      */
     public String getPath() {
         return path;
