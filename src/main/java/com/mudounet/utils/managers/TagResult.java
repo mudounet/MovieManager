@@ -11,15 +11,15 @@ import com.mudounet.hibernate.tags.GenericTag;
  * @author gmanciet
  */
 public class TagResult {
+
     private GenericTag _tag;
     private long _moviesCount;
 
     /*public TagResult(SimpleTag _tag,  long moviesCount) {
-        //this._tag = _tag;
-        this._moviesCount = moviesCount;
+    //this._tag = _tag;
+    this._moviesCount = moviesCount;
     }*/
-    
-    public TagResult(GenericTag _tag,  long moviesCount) {
+    public TagResult(GenericTag _tag, long moviesCount) {
         this._tag = _tag;
         this._moviesCount = moviesCount;
     }
