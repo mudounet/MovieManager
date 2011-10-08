@@ -17,7 +17,6 @@ public class MainInterface extends JFrame {
 
 	/**
 	 * Creates new form MainInterface
-	 * @return 
 	 */
 	public MainInterface() {
 		throw new UnsupportedOperationException();
