@@ -6,8 +6,13 @@ import java.security.MessageDigest;
 
 public class Md5Generator {
 
-    public static byte[] createChecksum(String filename) throws
-            Exception {
+    /**
+     * 
+     * @param filename 
+     * @return Array of byte computed
+     * @throws Exception
+     */
+    public static byte[] createChecksum(String filename) throws Exception {
         InputStream fis = new FileInputStream(filename);
 
         byte[] buffer = new byte[1024];
