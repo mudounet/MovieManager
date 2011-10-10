@@ -18,7 +18,6 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentIdVideoSurface;
  */
 public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
 
-    private EmbeddedMediaPlayer mediaPlayer;
 
     public OutOfProcessEmbeddedPlayer(final long canvasId) throws IOException {
 
@@ -39,11 +38,7 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
     public String[] getPrepareOptions() {
         return new String[0];
     }
-    /**
-     * Set this to true if we want to test a file straight off.
-     */
-    private static final boolean TEST_MODE = false;
-
+    
     /**
      * Testing stuff.
      * @param args 
@@ -57,7 +52,7 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
             stream = new PrintStream(new File("ooplog.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessEmbeddedPlayer player = new OutOfProcessEmbeddedPlayer(Integer.parseInt(args[0]));
-            player.read(player.mediaPlayer);
+            player.read();
         } catch (Exception ex) {
             System.err.println(ex);
         } finally {

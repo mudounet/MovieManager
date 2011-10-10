@@ -15,7 +15,6 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
  */
 public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
 
-    private MediaPlayer mediaPlayer;
     protected static Logger logger = Logger.getLogger(OutOfProcessEmbeddedPlayer.class.getName());
     private static final String[] VLC_ARGS = {
         "--intf", "dummy", /* no interface */
@@ -62,7 +61,7 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
             stream = new PrintStream(new File("ooplog.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessHeadlessPlayer player = new OutOfProcessHeadlessPlayer();
-            player.read(player.mediaPlayer);
+            player.read();
         } catch (Exception ex) {
             System.err.println(ex);
         } finally {

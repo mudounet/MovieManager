@@ -28,6 +28,9 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
  */
 public abstract class OutOfProcessPlayer {
 
+    protected MediaPlayer mediaPlayer;
+    
+    
     /**
      * Start the main loop reading from the standard input stream and writing
      * to sout.
@@ -35,9 +38,10 @@ public abstract class OutOfProcessPlayer {
      * received.
      * @throws IOException if something goes wrong.
      */
-    public void read(MediaPlayer mediaPlayer) throws IOException {
+    public void read() throws IOException {
 
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        
         
         String inputLine;
 
