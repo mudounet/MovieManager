@@ -20,16 +20,4 @@ public class TestTools {
         return cl.getResourceAsStream(s);
     }
 
-    public static File getFileFromClasspath(String s) {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        URL url = cl.getResource(s);
-        File f;
-        try {
-            f = new File(url.toURI());
-        } catch (URISyntaxException ex) {
-            f = new File(url.getPath());
-        }
-        
-        return f;
-    }
 }

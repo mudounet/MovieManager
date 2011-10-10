@@ -4,10 +4,9 @@
  */
 package com.mudounet.utils.managers;
 
+import com.mudounet.utils.Utils;
 import org.apache.log4j.Logger;
 import java.io.File;
-import com.mudounet.utils.dbunit.TestTools;
-import com.mudounet.hibernate.movies.others.TechData;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,7 +36,7 @@ public class MovieToolManagerTest {
     @Test
     public void testGetMovieInformations() throws Exception {
         logger.info("getMovieInformations");
-        File movieFile = TestTools.getFileFromClasspath("sample_video.flv");
+        File movieFile = Utils.getFileFromClasspath("sample_video.flv");
 
         //TechData result = MovieToolManager.getMovieInformations(movieFile);
         

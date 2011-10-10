@@ -33,6 +33,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,8 +73,7 @@ public final class Utils {
     public static void sleep(long millis) {
         try {
             Thread.sleep(millis);
-        }
-        catch (InterruptedException ex) {
+        } catch (InterruptedException ex) {
             //Nothing
         }
     }
@@ -96,7 +97,7 @@ public final class Utils {
             }
         };
     }
-    
+
     /**
      * Get a font identical to the one given apart from in size.
      * @param font the original font.
@@ -113,7 +114,7 @@ public final class Utils {
         }
         return new Font(attributes);
     }
-    
+
     /**
      * Calculates the largest size of the given font for which the given string 
      * will fit into the given size.
@@ -137,8 +138,7 @@ public final class Utils {
             if ((fontWidth > width) || (fontHeight > height)) {
                 maxSize = curSize;
                 curSize = (maxSize + minSize) / 2;
-            }
-            else {
+            } else {
                 minSize = curSize;
                 curSize = (minSize + maxSize) / 2;
             }
@@ -146,7 +146,7 @@ public final class Utils {
 
         return curSize;
     }
-    
+
     /**
      * Get the difference between two colours, from 0 to 100 where 100 is most
      * difference and 0 is least different.
@@ -155,17 +155,17 @@ public final class Utils {
      * @return the difference between the colours.
      */
     public static int getColorDifference(Color a, Color b) {
-        double ret = Math.abs(a.getRed()-b.getRed()) + Math.abs(a.getGreen()-b.getGreen()) + Math.abs(a.getBlue()-b.getBlue());
-        return (int)((ret/(255*3))*100);
+        double ret = Math.abs(a.getRed() - b.getRed()) + Math.abs(a.getGreen() - b.getGreen()) + Math.abs(a.getBlue() - b.getBlue());
+        return (int) ((ret / (255 * 3)) * 100);
     }
-    
+
     /**
      * Remove all HTML tags from a string.
      * @param str the string to remove the tags from.
      * @return the string with the tags removed.
      */
     public static String removeTags(String str) {
-        return str.replaceAll("\\<.*?>","");
+        return str.replaceAll("\\<.*?>", "");
     }
 
     /**
@@ -214,7 +214,6 @@ public final class Utils {
         list.addAll(newList);
     }
 
- 
     /**
      * Capitalise the first letter of a string.
      * @param line the input string.
@@ -272,8 +271,7 @@ public final class Utils {
                 content.append(line).append('\n');
             }
             return content.toString();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             logger.warn("Couldn't get the contents of " + fileName, ex);
             return errorText;
         } finally {
@@ -281,7 +279,7 @@ public final class Utils {
                 try {
                     reader.close();
                 } catch (IOException ex) {
-                   logger.warn(ex);
+                    logger.warn(ex);
                 }
             }
         }
@@ -329,18 +327,30 @@ public final class Utils {
      */
     public static BufferedImage getImage(String location, int width, int height) {
         try {
-            BufferedImage image = ImageIO.read(new File(location));
+            File f= getFileFromClasspath(location);
+            BufferedImage image = ImageIO.read(f);
             if (width > 0 && height > 0) {
                 return resizeImage(image, width, height);
-            }
-            else {
+            } else {
                 return image;
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             logger.error("Couldn't get image: " + location, ex);
             return null;
         }
+    }
+
+    public static File getFileFromClasspath(String s) {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        URL url = cl.getResource(s);
+        File f;
+        try {
+            f = new File(url.toURI());
+        } catch (URISyntaxException ex) {
+            f = new File(url.getPath());
+        }
+
+        return f;
     }
 
     /**
@@ -357,12 +367,11 @@ public final class Utils {
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             g.drawImage(image, 0, 0, width, height, null);
             return bdest;
-        }
-        else {
+        } else {
             return image;
         }
     }
-    
+
     /**
      * Convert the given icon to an image.
      * @param icon the icon to convert.

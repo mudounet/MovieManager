@@ -22,7 +22,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
-import org.pushingpixels.substance.internal.ui.SubstanceSliderUI;
+import javax.swing.plaf.SliderUI;
+import javax.swing.plaf.basic.BasicSliderUI;
 
 /**
  * The control panel for displaying the video.
@@ -30,7 +31,6 @@ import org.pushingpixels.substance.internal.ui.SubstanceSliderUI;
  */
 public class VideoControlPanel extends JPanel {
 
-    private static final boolean TEST_DISABLE_SUBSTANCE = false;
     private static final long serialVersionUID = 1L;
     private JButton play;
     private JButton pause;
@@ -49,7 +49,10 @@ public class VideoControlPanel extends JPanel {
     public VideoControlPanel() {
 
         executorService = Executors.newSingleThreadScheduledExecutor();
-        play = new JButton(Utils.getImageIcon("icons/play.png"));
+        play = new JButton(Utils.getImageIcon("images/play.png"));
+        play.setPressedIcon(Utils.getImageIcon("images/play-pressed.png"));
+        play.setRolloverEnabled(false);
+        play.setFocusPainted(false);
         play.setEnabled(false);
         play.addActionListener(new ActionListener() {
 
@@ -58,8 +61,11 @@ public class VideoControlPanel extends JPanel {
                 playVideo();
             }
         });
-        pause = new JButton(Utils.getImageIcon("icons/pause.png"));
+        pause = new JButton(Utils.getImageIcon("images/pause.png"));
+        pause.setPressedIcon(Utils.getImageIcon("images/pause-pressed.png"));
+        pause.setRolloverEnabled(false);
         pause.setEnabled(false);
+        pause.setFocusPainted(false);
         pause.addActionListener(new ActionListener() {
 
             @Override
@@ -67,7 +73,10 @@ public class VideoControlPanel extends JPanel {
                 pauseVideo();
             }
         });
-        stop = new JButton(Utils.getImageIcon("icons/stop.png"));
+        stop = new JButton(Utils.getImageIcon("images/stop.png"));
+        stop.setPressedIcon(Utils.getImageIcon("images/stop-pressed.png"));
+        stop.setRolloverEnabled(false);
+        stop.setFocusPainted(false);
         stop.setEnabled(false);
         stop.addActionListener(new ActionListener() {
 
@@ -77,7 +86,7 @@ public class VideoControlPanel extends JPanel {
                 positionSlider.setValue(0);
             }
         });
-        mute = new JButton(Utils.getImageIcon("icons/mute.png"));
+        mute = new JButton(Utils.getImageIcon("images/volume-high.png"));
         mute.setEnabled(false);
         mute.addActionListener(new ActionListener() {
 
@@ -97,8 +106,7 @@ public class VideoControlPanel extends JPanel {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.pause();
                         pauseCheck = false;
-                    }
-                    else {
+                    } else {
                         pauseCheck = true;
                     }
                 }
@@ -114,31 +122,30 @@ public class VideoControlPanel extends JPanel {
                 }
             }
         });
-        if (!TEST_DISABLE_SUBSTANCE) {
-            try {
-                positionSlider.setUI(new SubstanceSliderUI(positionSlider) {
 
-                    @Override
-                    protected void scrollDueToClickInTrack(int direction) {
-                        // this is the default behaviour, let's comment that out
-                        //scrollByBlock(direction);
+        try {
+            positionSlider.setUI(new BasicSliderUI(positionSlider) {
 
-                        int value = positionSlider.getValue();
+                @Override
+                protected void scrollDueToClickInTrack(int direction) {
+                    // this is the default behaviour, let's comment that out
+                    //scrollByBlock(direction);
 
-                        if (positionSlider.getOrientation() == JSlider.HORIZONTAL) {
-                            value = this.valueForXPosition(positionSlider.getMousePosition().x);
-                        }
-                        else if (positionSlider.getOrientation() == JSlider.VERTICAL) {
-                            value = this.valueForYPosition(positionSlider.getMousePosition().y);
-                        }
-                        positionSlider.setValue(value);
+                    int value = positionSlider.getValue();
+
+                    if (positionSlider.getOrientation() == JSlider.HORIZONTAL) {
+                        value = this.valueForXPosition(positionSlider.getMousePosition().x);
+                    } else if (positionSlider.getOrientation() == JSlider.VERTICAL) {
+                        value = this.valueForYPosition(positionSlider.getMousePosition().y);
                     }
-                });
-            }
-            catch (Exception ex) {
-                //UI issue, cannot do a lot and don't want to break program...
-            }
+                    positionSlider.setValue(value);
+                }
+            });
+
+        } catch (Exception ex) {
+            //UI issue, cannot do a lot and don't want to break program...
         }
+
         videoArea = new Canvas();
         videoArea.setBackground(Color.BLACK);
         videoArea.setMinimumSize(new Dimension(20, 20));
@@ -187,7 +194,6 @@ public class VideoControlPanel extends JPanel {
             }
         });
     }
-
 
     /**
      * Load the given video to be controlled via this panel.
@@ -272,10 +278,9 @@ public class VideoControlPanel extends JPanel {
     public void setMute(boolean muteState) {
         mediaPlayers.get(0).setMute(muteState);
         if (getMute()) {
-            mute.setIcon(Utils.getImageIcon("icons/unmute.png"));
-        }
-        else {
-            mute.setIcon(Utils.getImageIcon("icons/mute.png"));
+            mute.setIcon(Utils.getImageIcon("images/volume-low.png"));
+        } else {
+            mute.setIcon(Utils.getImageIcon("images/volume-high.png"));
         }
     }
 
@@ -322,8 +327,7 @@ public class VideoControlPanel extends JPanel {
         frame.pack();
         frame.setVisible(true);
 
-        panel.loadVideo("F:\\Videos\\Inception\\Inception.mkv");
-//        panel.loadVideo("C:\\1.avi");
+        panel.loadVideo("src/test/resources/sample_video.flv");
         panel.playVideo();
     }
 }
