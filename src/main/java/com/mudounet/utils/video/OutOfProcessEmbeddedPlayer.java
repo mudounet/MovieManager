@@ -49,9 +49,6 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
      * @param args 
      */
     public static void main(String[] args) {
-        if (TEST_MODE) {
-            args = new String[]{"0"};
-        }
         File nativeDir = new File("lib/native");
         NativeLibrary.addSearchPath("libvlc", nativeDir.getAbsolutePath());
         NativeLibrary.addSearchPath("vlc", nativeDir.getAbsolutePath());
@@ -60,14 +57,9 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
             stream = new PrintStream(new File("ooplog.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessEmbeddedPlayer player = new OutOfProcessEmbeddedPlayer(Integer.parseInt(args[0]));
-            if (TEST_MODE) {
-                player.mediaPlayer.prepareMedia("dvdsimple://E:");
-                player.mediaPlayer.play();
-            } else {
-                player.read(player.mediaPlayer);
-            }
+            player.read(player.mediaPlayer);
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         } finally {
             if (stream != null) {
                 stream.close();

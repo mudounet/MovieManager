@@ -15,35 +15,27 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
  */
 public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
 
-    private final int port;
     private MediaPlayer mediaPlayer;
     protected static Logger logger = Logger.getLogger(OutOfProcessEmbeddedPlayer.class.getName());
+    private static final String[] VLC_ARGS = {
+        "--intf", "dummy", /* no interface */
+        "--vout", "dummy", /* we don't want video (output) */
+        "--no-audio", /* we don't want audio (decoding) */
+        "--no-video-title-show", /* nor the filename displayed */
+        "--no-stats", /* no stats */
+        "--no-sub-autodetect-file", /* we don't want subtitles */
+        //"--no-inhibit", /* we don't want interfaces */
+        "--no-disable-screensaver", /* we don't want interfaces */
+        "--no-snapshot-preview", /* no blending in dummy vout */};
 
     /**
      * Create a new headless player that sits out of process.
      * @param port the port to run this headless player on.
      * @throws IOException if something went wrong.
      */
-    public OutOfProcessHeadlessPlayer(int port) throws IOException {
+    public OutOfProcessHeadlessPlayer() throws IOException {
         MediaPlayerFactory factory = new MediaPlayerFactory(new String[]{"--no-video-title"});
         mediaPlayer = factory.newHeadlessMediaPlayer();
-        this.port = port;
-    }
-
-    /**
-     * Get the port this headless player is running on.
-     * @return the port we're using.
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Get the player string used to play from this headless player.
-     * @return the player string.
-     */
-    public String getPlayMediaString() {
-        return "http://127.0.0.1:" + port;
     }
 
     /**
@@ -53,22 +45,15 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
      */
     @Override
     public String[] getPrepareOptions() {
-        String ret = ":sout=#duplicate{dst=std{access=http,mux=ts,dst=127.0.0.1:" + port + "}}";
-        return new String[]{ret};
+       String[]list = VLC_ARGS;
+        return list;
     }
-    /**
-     * On for testing, off for normal...
-     */
-    private static final boolean TEST_MODE = false;
 
     /**
      * Testing stuff.
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        if (TEST_MODE) {
-            args = new String[]{"5555"};
-        }
         File nativeDir = new File("lib/native");
         NativeLibrary.addSearchPath("libvlc", nativeDir.getAbsolutePath());
         NativeLibrary.addSearchPath("vlc", nativeDir.getAbsolutePath());
@@ -76,15 +61,10 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
         try {
             stream = new PrintStream(new File("ooplog.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
-            OutOfProcessHeadlessPlayer player = new OutOfProcessHeadlessPlayer(Integer.parseInt(args[0]));
-            if (TEST_MODE) {
-                player.mediaPlayer.prepareMedia("dvdsimple://E:");
-                player.mediaPlayer.play();
-            } else {
-                player.read(player.mediaPlayer);
-            }
+            OutOfProcessHeadlessPlayer player = new OutOfProcessHeadlessPlayer();
+            player.read(player.mediaPlayer);
         } catch (Exception ex) {
-            logger.warn(ex);
+            System.err.println(ex);
         } finally {
             if (stream != null) {
                 stream.close();
