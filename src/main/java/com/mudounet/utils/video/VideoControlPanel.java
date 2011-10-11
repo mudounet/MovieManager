@@ -48,11 +48,8 @@ public class VideoControlPanel extends JPanel {
     public VideoControlPanel() {
 
         executorService = Executors.newSingleThreadScheduledExecutor();
-        play = new JButton(Utils.getImageIcon("images/play.png"));
-        play.setPressedIcon(Utils.getImageIcon("images/play-pressed.png"));
-        play.setRolloverEnabled(false);
-        play.setFocusPainted(false);
-        play.setEnabled(false);
+        play = buildButton("images/play.png","images/play-pressed.png" );
+
         play.addActionListener(new ActionListener() {
 
             @Override
@@ -60,11 +57,9 @@ public class VideoControlPanel extends JPanel {
                 playVideo();
             }
         });
-        pause = new JButton(Utils.getImageIcon("images/pause.png"));
-        pause.setPressedIcon(Utils.getImageIcon("images/pause-pressed.png"));
-        pause.setRolloverEnabled(false);
-        pause.setEnabled(false);
-        pause.setFocusPainted(false);
+        
+        pause = buildButton("images/pause.png","images/pause-pressed.png");
+
         pause.addActionListener(new ActionListener() {
 
             @Override
@@ -192,6 +187,19 @@ public class VideoControlPanel extends JPanel {
                 }
             }
         });
+    }
+    
+    private JButton buildButton(String normalIcon, String pressedIcon) {
+        
+        
+        JButton button  = new JButton(Utils.getImageIcon(normalIcon));
+        if(pressedIcon != null) {
+            button.setPressedIcon(Utils.getImageIcon(pressedIcon));
+        }
+        button.setRolloverEnabled(false);
+        button.setEnabled(true);
+        button.setFocusPainted(false);
+        return button;
     }
 
     /**
