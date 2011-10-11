@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentIdVideoSurface;
 
 /**
@@ -17,7 +16,6 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentIdVideoSurface;
  * @author Michael
  */
 public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
-
 
     public OutOfProcessEmbeddedPlayer(final long canvasId) throws IOException {
 
@@ -38,7 +36,7 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
     public String[] getPrepareOptions() {
         return new String[0];
     }
-    
+
     /**
      * Testing stuff.
      * @param args 
@@ -48,17 +46,23 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
         NativeLibrary.addSearchPath("libvlc", nativeDir.getAbsolutePath());
         NativeLibrary.addSearchPath("vlc", nativeDir.getAbsolutePath());
         PrintStream stream = null;
+
         try {
-            stream = new PrintStream(new File("ooplog.txt"));
+           
+            stream = new PrintStream(new File("logfile.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessEmbeddedPlayer player = new OutOfProcessEmbeddedPlayer(Integer.parseInt(args[0]));
+            
+            System.err.println("Begin of process");
             player.read();
+            System.err.println("End of process");
         } catch (Exception ex) {
             System.err.println(ex);
         } finally {
             if (stream != null) {
                 stream.close();
             }
+     
         }
     }
 }

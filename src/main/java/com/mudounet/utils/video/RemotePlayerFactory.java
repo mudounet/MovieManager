@@ -52,7 +52,7 @@ public class RemotePlayerFactory {
      */
     public static RemotePlayer getHeadlessRemotePlayer() {
         try {
-            StreamWrapper wrapper = startSecondPlayerJVM(OutOfProcessHeadlessPlayer.class, Integer.toString(portCounter++));
+            StreamWrapper wrapper = startSecondPlayerJVM(OutOfProcessHeadlessPlayer.class, "");
             final RemotePlayer player = new RemotePlayer(wrapper);
             Runtime.getRuntime().addShutdownHook(new Thread() {
 

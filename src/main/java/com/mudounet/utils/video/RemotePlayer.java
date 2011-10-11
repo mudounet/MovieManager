@@ -17,11 +17,10 @@
  */
 package com.mudounet.utils.video;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import com.mudounet.utils.video.remotecommands.*;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import org.apache.log4j.Logger;
 
 /**
@@ -30,8 +29,8 @@ import org.apache.log4j.Logger;
  */
 public class RemotePlayer {
 
-    private BufferedReader in;
-    private BufferedWriter out;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
     private boolean open;
     private boolean playing;
     protected static Logger logger = Logger.getLogger(RemotePlayer.class.getName());
@@ -40,9 +39,9 @@ public class RemotePlayer {
     /**
      * Internal use only.
      */
-    RemotePlayer(StreamWrapper wrapper) {
-        out = new BufferedWriter(new OutputStreamWriter(wrapper.getOutputStream()));
-        in = new BufferedReader(new InputStreamReader(wrapper.getInputStream()));
+    RemotePlayer(StreamWrapper wrapper) throws IOException {
+        out = new ObjectOutputStream(wrapper.getOutputStream());
+        in = new ObjectInputStream(wrapper.getInputStream());
         playing = false;
         open = true;
     }
@@ -51,16 +50,18 @@ public class RemotePlayer {
      * Write a given command out to the remote VM player.
      * @param command the command to send.
      */
-    private void writeOut(String command) {
+    private void writeOut(Object command) {
         if (!open) {
+            logger.error("This remote player has been closed!");
             throw new IllegalArgumentException("This remote player has been closed!");
         }
         try {
             logger.debug("Sending command "+command);
-            out.write(command + "\n");
+            out.writeObject(command);
             out.flush();
         }
         catch (IOException ex) {
+            
             throw new RuntimeException("Couldn't perform operation", ex);
         }
     }
@@ -69,13 +70,13 @@ public class RemotePlayer {
      * Block until receiving input from the remote VM player.
      * @return the input string received.
      */
-    private String getInput() {
+    private Object getInput() {
         try {
-            String returnedInfo = in.readLine();
+            Object returnedInfo = in.readObject();
             logger.debug("received command : "+returnedInfo);
             return returnedInfo;
         }
-        catch (IOException ex) {
+        catch (Exception ex) {
             throw new RuntimeException("Couldn't perform operation", ex);
         }
     }
@@ -85,14 +86,15 @@ public class RemotePlayer {
      * @param path the path to load.
      */
     public void load(String path) {
-        writeOut("open " + path);
+        writeOut(new LoadFile(path));
+        logger.error(getInput());
     }
 
     /**
      * Play the loaded video.
      */
     public void play() {
-        writeOut("play");
+        writeOut(new PlayCommand());
         playing = true;
         paused = false;
     }
@@ -124,7 +126,7 @@ public class RemotePlayer {
      */
     public boolean isPlayable() {
         writeOut("playable?");
-        return Boolean.parseBoolean(getInput());
+        return Boolean.parseBoolean(getInput().toString());
     }
 
     /**
@@ -133,7 +135,7 @@ public class RemotePlayer {
      */
     public long getLength() {
         writeOut("length?");
-        return Long.parseLong(getInput());
+        return Long.parseLong(getInput().toString());
     }
 
     /**
@@ -142,7 +144,7 @@ public class RemotePlayer {
      */
     public long getTime() {
         writeOut("time?");
-        return Long.parseLong(getInput());
+        return Long.parseLong(getInput().toString());
     }
 
     /**
@@ -160,7 +162,7 @@ public class RemotePlayer {
      */
     public boolean getMute() {
         writeOut("mute?");
-        return Boolean.parseBoolean(getInput());
+        return Boolean.parseBoolean(getInput().toString());
     }
 
     /**

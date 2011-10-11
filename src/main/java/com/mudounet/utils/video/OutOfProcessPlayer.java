@@ -29,7 +29,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 public abstract class OutOfProcessPlayer {
 
     protected MediaPlayer mediaPlayer;
-    
+
     
     /**
      * Start the main loop reading from the standard input stream and writing
@@ -41,19 +41,20 @@ public abstract class OutOfProcessPlayer {
     public void read() throws IOException {
 
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        
+
         
         String inputLine;
 
-        //Process the input - I know this isn't very OO but it works for now...
+            //Process the input - I know this isn't very OO but it works for now...
+        System.err.println("begin of loop");
         while ((inputLine = in.readLine()) != null) {
-
+            System.err.println("Received command");
             if (inputLine.startsWith("open ")) {
                 inputLine = inputLine.substring("open ".length());
                 mediaPlayer.prepareMedia(inputLine, getPrepareOptions());
             }
             else if (inputLine.equalsIgnoreCase("play")) {
-                mediaPlayer.play();
+                    mediaPlayer.play();
             }
             else if (inputLine.equalsIgnoreCase("pause")) {
                 mediaPlayer.pause();
@@ -87,14 +88,15 @@ public abstract class OutOfProcessPlayer {
             else if (inputLine.equalsIgnoreCase("close")) {
                 System.exit(0);
             }
-            else {
-                System.out.println("unknown command ."+inputLine+".");
+                else {
+                System.err.println("unknown command ."+inputLine+".");
+                }
             }
-        }
-        
+            System.err.println("End of loop");
+
         System.exit(0);
     }
-    
+
     /**
      * This method should return an array of any options that need to be passed 
      * onto VLCJ and in turn libvlc. If no options are required, an empty array
