@@ -17,9 +17,10 @@
  */
 package com.mudounet.utils.video;
 
-import java.io.BufferedReader;
+import com.mudounet.utils.video.remotecommands.*;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
 /**
@@ -29,8 +30,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 public abstract class OutOfProcessPlayer {
 
     protected MediaPlayer mediaPlayer;
-    
-    
+
     /**
      * Start the main loop reading from the standard input stream and writing
      * to sout.
@@ -38,63 +38,88 @@ public abstract class OutOfProcessPlayer {
      * received.
      * @throws IOException if something goes wrong.
      */
-    public void read() throws IOException {
+    public void read() throws IOException, ClassNotFoundException {
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        
-        
-        String inputLine;
+        //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-        //Process the input - I know this isn't very OO but it works for now...
-        while ((inputLine = in.readLine()) != null) {
+        System.err.println("Création des flux");
+        ObjectOutputStream oos = new ObjectOutputStream(System.out);
+        ObjectInputStream ois = new ObjectInputStream(System.in);
+// Création de l'output stream
 
-            if (inputLine.startsWith("open ")) {
-                inputLine = inputLine.substring("open ".length());
-                mediaPlayer.prepareMedia(inputLine, getPrepareOptions());
-            }
-            else if (inputLine.equalsIgnoreCase("play")) {
-                mediaPlayer.play();
-            }
-            else if (inputLine.equalsIgnoreCase("pause")) {
-                mediaPlayer.pause();
-            }
-            else if (inputLine.equalsIgnoreCase("stop")) {
-                mediaPlayer.stop();
-            }
-            else if (inputLine.equalsIgnoreCase("playable?")) {
-                System.out.println(mediaPlayer.isPlayable());
-            }
-            else if (inputLine.startsWith("setTime ")) {
-                inputLine = inputLine.substring("setTime ".length());
-                mediaPlayer.setTime(Long.parseLong(inputLine));
-            }
-            else if (inputLine.startsWith("setMute ")) {
-                inputLine = inputLine.substring("setMute ".length());
-                mediaPlayer.mute(Boolean.parseBoolean(inputLine));
-            }
-            else if (inputLine.equalsIgnoreCase("mute?")) {
-                boolean mute = mediaPlayer.isMute();
-                System.out.println(mute);
-            }
-            else if (inputLine.equalsIgnoreCase("length?")) {
-                long length = mediaPlayer.getLength();
-                System.out.println(length);
-            }
-            else if (inputLine.equalsIgnoreCase("time?")) {
-                long time = mediaPlayer.getTime();
-                System.out.println(time);
-            }
-            else if (inputLine.equalsIgnoreCase("close")) {
+        Object receivedObject;
+
+        while ((receivedObject = ois.readObject()) != null) {
+
+            if (receivedObject.getClass() == LoadFile.class) {
+                System.err.println("Load command received : " + receivedObject);
+                mediaPlayer.prepareMedia(((LoadFile) receivedObject).getFilePath(), getPrepareOptions());
+            } else if (receivedObject.getClass() == CloseCommand.class) {
+                System.err.println("Close command received");
                 System.exit(0);
-            }
-            else {
-                System.out.println("unknown command ."+inputLine+".");
+            } else if (receivedObject.getClass() == PlayCommand.class) {
+                System.err.println("Play command received");
+                mediaPlayer.play();
+            } else if (receivedObject.getClass() == PauseCommand.class) {
+                System.err.println("Pause command received");
+                mediaPlayer.pause();
+            } else if (receivedObject.getClass() == StopCommand.class) {
+                System.err.println("Stop command received");
+                mediaPlayer.stop();
+            } else if (receivedObject.getClass() == TimeCommand.class) {
+                TimeCommand t = (TimeCommand) receivedObject;
+                if (t.getValue() < 0) {
+                    System.err.println("request to get time.");
+                    t.setValue(mediaPlayer.getTime());
+                    oos.writeObject(t);
+                } else {
+                    System.err.println("Request to set time to " + t.getValue());
+                    mediaPlayer.setTime(t.getValue());
+                }
+            } else if (receivedObject.getClass() == LengthCommand.class) {
+                LengthCommand t = (LengthCommand) receivedObject;
+                System.err.println("Request to get length.");
+                t.setValue(mediaPlayer.getLength());
+                oos.writeObject(t);
+            } else if (receivedObject.getClass() == MuteCommand.class) {
+                MuteCommand t = (MuteCommand) receivedObject;
+                if (!t.isSet()) {
+                    System.err.println("request to get mute state.");
+                    t.setValue(mediaPlayer.isMute());
+                    oos.writeObject(t);
+                } else {
+                    System.err.println("Request to set mute to " + t.getValue());
+                    mediaPlayer.mute(t.getValue());
+                }
+            } else if (receivedObject.getClass() == StateCommand.class) {
+                StateCommand t = (StateCommand) receivedObject;
+                if (t.getValue() == StateCommand.PLAYABLE) {
+
+                    t.setValue(0);
+                    if (mediaPlayer.isPlayable()) {
+                        t.setValue(StateCommand.PLAYABLE);
+                    }
+                } else if (t.getValue() == StateCommand.PLAYED) {
+
+                    t.setValue(0);
+                    if (mediaPlayer.isPlaying()) {
+                        t.setValue(StateCommand.PLAYED);
+                    }
+
+                } else {
+                    System.err.println("State not currently managed : " + t.getValue());
+                }
+                oos.writeObject(t);
+            } else {
+                System.err.println("Unknown object : " + receivedObject);
             }
         }
-        
+
         System.exit(0);
+        System.err.println("Flux crées");
+
     }
-    
+
     /**
      * This method should return an array of any options that need to be passed 
      * onto VLCJ and in turn libvlc. If no options are required, an empty array
@@ -102,5 +127,4 @@ public abstract class OutOfProcessPlayer {
      * @return the options required by libvlc.
      */
     public abstract String[] getPrepareOptions();
-
 }
