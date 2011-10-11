@@ -57,7 +57,8 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
             player.read();
             System.err.println("End of process");
         } catch (Exception ex) {
-            System.err.println(ex);
+            ex.printStackTrace(System.err);
+            //System.err.println(ex);
         } finally {
             if (stream != null) {
                 stream.close();

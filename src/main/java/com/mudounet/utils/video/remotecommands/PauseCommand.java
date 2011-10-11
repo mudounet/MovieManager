@@ -8,7 +8,7 @@ package com.mudounet.utils.video.remotecommands;
  *
  * @author gmanciet
  */
-public class PlayCommand extends BooleanCommand {
+public class PauseCommand extends BooleanCommand {
     private static final long serialVersionUID = 1L;
-
+    
 }

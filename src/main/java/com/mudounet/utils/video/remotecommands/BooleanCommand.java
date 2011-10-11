@@ -10,15 +10,43 @@ package com.mudounet.utils.video.remotecommands;
  */
 public abstract class BooleanCommand extends Command {
 
-    private boolean result;
+    private byte result = 127;
 
+    public BooleanCommand() {
+    }
+
+    public BooleanCommand(boolean result) {
+        setValue(result);
+    }
+   
+     /**
+     * Indicate if value has been set previously
+     *
+     * @return the value of result
+     */
+    public boolean isSet() {
+        if(this.result == 127) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+  
+    
+    
     /**
      * Get the value of result
      *
      * @return the value of result
      */
-    public boolean isResult() {
-        return result;
+    public boolean getValue() {
+        if(this.result == 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -26,8 +54,14 @@ public abstract class BooleanCommand extends Command {
      *
      * @param result new value of result
      */
-    public void setResult(boolean result) {
-        this.result = result;
+    public final void setValue(boolean result) {
+        if(result == true) {
+            this.result = 1;
+        } 
+        else {
+            this.result = 0;
+        }
+        
     }
 
 }

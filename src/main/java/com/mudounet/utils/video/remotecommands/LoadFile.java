@@ -54,5 +54,10 @@ public class LoadFile extends Command {
         this.filePath = filePath;
     }
 
+    @Override
+    public String toString() {
+        return "LoadFile{" + "filePath=" + filePath + '}';
+    }
+
 
 }

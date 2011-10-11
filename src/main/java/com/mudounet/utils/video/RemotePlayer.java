@@ -40,8 +40,9 @@ public class RemotePlayer {
      * Internal use only.
      */
     RemotePlayer(StreamWrapper wrapper) throws IOException {
-        out = new ObjectOutputStream(wrapper.getOutputStream());
+        
         in = new ObjectInputStream(wrapper.getInputStream());
+        out = new ObjectOutputStream(wrapper.getOutputStream());
         playing = false;
         open = true;
     }
@@ -87,7 +88,6 @@ public class RemotePlayer {
      */
     public void load(String path) {
         writeOut(new LoadFile(path));
-        logger.error(getInput());
     }
 
     /**
@@ -104,7 +104,7 @@ public class RemotePlayer {
      */
     public void pause() {
         if(!paused) {
-            writeOut("pause");
+            writeOut(new PauseCommand());
             playing = false;
             paused = true;
         }
@@ -114,7 +114,7 @@ public class RemotePlayer {
      * Stop the video.
      */
     public void stop() {
-        writeOut("stop");
+        writeOut(new StopCommand());
         playing = false;
         paused = false;
     }
@@ -125,8 +125,8 @@ public class RemotePlayer {
      * @return true if the video is playable, false otherwise.
      */
     public boolean isPlayable() {
-        writeOut("playable?");
-        return Boolean.parseBoolean(getInput().toString());
+        writeOut(new StateCommand(StateCommand.PLAYABLE));
+        return ((StateCommand)getInput()).getValue() == StateCommand.PLAYABLE;
     }
 
     /**
@@ -134,8 +134,8 @@ public class RemotePlayer {
      * @return the length of the currently loaded video.
      */
     public long getLength() {
-        writeOut("length?");
-        return Long.parseLong(getInput().toString());
+        writeOut(new LengthCommand());
+        return ((LengthCommand)getInput()).getValue();
     }
 
     /**
@@ -143,8 +143,8 @@ public class RemotePlayer {
      * @return the time in milliseconds of the current position in the video.
      */
     public long getTime() {
-        writeOut("time?");
-        return Long.parseLong(getInput().toString());
+        writeOut(new TimeCommand());
+        return ((TimeCommand)getInput()).getValue();
     }
 
     /**
@@ -153,7 +153,7 @@ public class RemotePlayer {
      * video.
      */
     public void setTime(long time) {
-        writeOut("setTime " + time);
+        writeOut(new TimeCommand(time));
     }
 
     /**
@@ -161,8 +161,8 @@ public class RemotePlayer {
      * @return true if it's muted, false if not.
      */
     public boolean getMute() {
-        writeOut("mute?");
-        return Boolean.parseBoolean(getInput().toString());
+        writeOut(new MuteCommand());
+        return ((MuteCommand)getInput()).getValue();
     }
 
     /**
@@ -170,7 +170,7 @@ public class RemotePlayer {
      * @param mute true to mute, false to unmute.
      */
     public void setMute(boolean mute) {
-        writeOut("setMute " + mute);
+        writeOut(new MuteCommand(mute));
     }
 
     /**
@@ -179,7 +179,7 @@ public class RemotePlayer {
      */
     public void close() {
         if (open) {
-            writeOut("close");
+            writeOut(new CloseCommand());
             playing = false;
             open = false;
         }
@@ -190,7 +190,8 @@ public class RemotePlayer {
      * @return true if its playing, false otherwise.
      */
     public boolean isPlaying() {
-        return playing;
+        writeOut(new StateCommand(StateCommand.PLAYED));
+        return ((StateCommand)getInput()).getValue() == StateCommand.PLAYED;
     }
     
     /**
