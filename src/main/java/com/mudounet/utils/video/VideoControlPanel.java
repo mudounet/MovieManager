@@ -197,7 +197,7 @@ public class VideoControlPanel extends JPanel {
             button.setPressedIcon(Utils.getImageIcon(pressedIcon));
         }
         button.setRolloverEnabled(false);
-        button.setEnabled(true);
+        button.setEnabled(false);
         button.setFocusPainted(false);
         return button;
     }
