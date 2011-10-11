@@ -67,11 +67,9 @@ public class VideoControlPanel extends JPanel {
                 pauseVideo();
             }
         });
-        stop = new JButton(Utils.getImageIcon("images/stop.png"));
-        stop.setPressedIcon(Utils.getImageIcon("images/stop-pressed.png"));
-        stop.setRolloverEnabled(false);
-        stop.setFocusPainted(false);
-        stop.setEnabled(false);
+        
+        stop = buildButton("images/stop.png","images/stop-pressed.png");
+
         stop.addActionListener(new ActionListener() {
 
             @Override
@@ -80,8 +78,8 @@ public class VideoControlPanel extends JPanel {
                 positionSlider.setValue(0);
             }
         });
-        mute = new JButton(Utils.getImageIcon("images/volume-high.png"));
-        mute.setEnabled(false);
+
+        mute = buildButton("images/volume-high.png",null);
         mute.addActionListener(new ActionListener() {
 
             @Override
@@ -193,9 +191,11 @@ public class VideoControlPanel extends JPanel {
         
         
         JButton button  = new JButton(Utils.getImageIcon(normalIcon));
-        if(pressedIcon != null) {
+        if(!(pressedIcon == null)) {
             button.setPressedIcon(Utils.getImageIcon(pressedIcon));
         }
+        button.setMinimumSize(new Dimension(40, 40));
+        button.setBorderPainted(false);
         button.setRolloverEnabled(false);
         button.setEnabled(false);
         button.setFocusPainted(false);
