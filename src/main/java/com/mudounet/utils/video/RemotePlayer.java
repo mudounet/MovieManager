@@ -124,9 +124,11 @@ public class RemotePlayer {
      * @return Snapshot is taken 
      */
     public boolean takeSnapshot(long time, String path) {
+
         SnapshotCommand c = new SnapshotCommand();
         c.setTime(time);
         c.setPath(path);
+        logger.debug("Request snapshot :"+c);
         writeOut(c);
         return ((BooleanCommand)getInput()).getValue();
     }

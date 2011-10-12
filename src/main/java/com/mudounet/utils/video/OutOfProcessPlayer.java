@@ -37,9 +37,11 @@ public abstract class OutOfProcessPlayer {
     protected MediaPlayer mediaPlayer;
     private float snapshotPercPosition;
     private long snapshotTimePosition;
+    private long length = 0;
     final CountDownLatch inTimePositionLatch = new CountDownLatch(1);
     final CountDownLatch inPercPositionLatch = new CountDownLatch(1);
     final CountDownLatch snapshotTakenLatch = new CountDownLatch(1);
+    final CountDownLatch operationFinished = new CountDownLatch(1);
 
     /**
      * Start the main loop reading from the standard input stream and writing
@@ -47,7 +49,7 @@ public abstract class OutOfProcessPlayer {
      * @throws IOException if something goes wrong.
      * @throws ClassNotFoundException  
      */
-    public void read() throws IOException, ClassNotFoundException {
+    public void read() throws IOException, ClassNotFoundException, InterruptedException {
 
         //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -64,6 +66,7 @@ public abstract class OutOfProcessPlayer {
             if (receivedObject.getClass() == LoadFile.class) {
                 System.err.println("Load command received : " + receivedObject);
                 mediaPlayer.prepareMedia(((LoadFile) receivedObject).getFilePath(), getPrepareOptions());
+                length = 0;
             } else if (receivedObject.getClass() == CloseCommand.class) {
                 System.err.println("Close command received");
                 close();
@@ -80,16 +83,20 @@ public abstract class OutOfProcessPlayer {
             } else if (receivedObject.getClass() == SnapshotCommand.class) {
                 System.err.println("Snapshot command received");
                 SnapshotCommand t = (SnapshotCommand) receivedObject;
-                
+
                 try {
+                    System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
                     this.moveToTime(t.getTime());
-                    this.takeSnapshot(t.getPath());
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(OutOfProcessPlayer.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                mediaPlayer.stop();
-                
             
+                    this.takeSnapshot(t.getPath());
+                    oos.writeObject(new BooleanCommand(true));
+                    
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace(System.err);
+                }
+                
+                oos.writeObject(new BooleanCommand(false));
+
             } else if (receivedObject.getClass() == TimeCommand.class) {
                 TimeCommand t = (TimeCommand) receivedObject;
                 if (t.getValue() < 0) {
@@ -103,7 +110,10 @@ public abstract class OutOfProcessPlayer {
             } else if (receivedObject.getClass() == LengthCommand.class) {
                 LengthCommand t = (LengthCommand) receivedObject;
                 System.err.println("Request to get length.");
-                t.setValue(mediaPlayer.getLength());
+                while((length = mediaPlayer.getLength()) == 0) {
+                    
+                }
+                t.setValue(length);
                 oos.writeObject(t);
             } else if (receivedObject.getClass() == MuteCommand.class) {
                 MuteCommand t = (MuteCommand) receivedObject;
@@ -138,11 +148,11 @@ public abstract class OutOfProcessPlayer {
                 System.err.println("Unknown object : " + receivedObject);
             }
         }
-        
+
         System.err.println("Flux crées");
         close();
     }
-    
+
     private void close() {
         mediaPlayer.stop();
         mediaPlayer.release();
@@ -155,7 +165,7 @@ public abstract class OutOfProcessPlayer {
             @Override
             public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
 
-                if (newTime == snapshotTimePosition) { 
+                if (newTime >= snapshotTimePosition) {
                     System.err.println("Position reached (time in ms) : " + newTime + ")");
                     inTimePositionLatch.countDown();
                 }
@@ -168,6 +178,11 @@ public abstract class OutOfProcessPlayer {
                     System.err.println("Position reached (%) : " + newPosition + ")");
                     inPercPositionLatch.countDown();
                 }
+            }
+
+            @Override
+            public void lengthChanged(MediaPlayer mediaPlayer, long newLength) {
+                operationFinished.countDown();
             }
 
             @Override
@@ -191,7 +206,7 @@ public abstract class OutOfProcessPlayer {
     }
 
     private void takeSnapshot(File file) throws InterruptedException {
-        mediaPlayer.saveSnapshot(file);
+        mediaPlayer.saveSnapshot(new File(file.getAbsolutePath()));
         snapshotTakenLatch.await(); // Might wait forever if error
     }
 
@@ -204,7 +219,6 @@ public abstract class OutOfProcessPlayer {
     public abstract String[] getPrepareOptions();
 
     private void takeSnapshot(String path) throws InterruptedException {
-        File f = new File(path);
-        this.takeSnapshot(f);
+        this.takeSnapshot(new File(path));
     }
 }

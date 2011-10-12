@@ -57,12 +57,14 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
         NativeLibrary.addSearchPath("vlc", nativeDir.getAbsolutePath());
         PrintStream stream = null;
         try {
-            stream = new PrintStream(new File("ooplog.txt"));
+            stream = new PrintStream(new File("headless-logfile.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessHeadlessPlayer player = new OutOfProcessHeadlessPlayer();
+            System.err.println("Begin of process");
             player.read();
+            System.err.println("End of process");
         } catch (Exception ex) {
-            System.err.println(ex);
+            ex.printStackTrace(System.err);
         } finally {
             if (stream != null) {
                 stream.close();

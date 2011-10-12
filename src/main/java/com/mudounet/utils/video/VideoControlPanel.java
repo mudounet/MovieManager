@@ -48,7 +48,7 @@ public class VideoControlPanel extends JPanel {
     public VideoControlPanel() {
 
         executorService = Executors.newSingleThreadScheduledExecutor();
-        play = buildButton("images/play.png","images/play-pressed.png" );
+        play = buildButton("images/play.png", "images/play-pressed.png");
 
         play.addActionListener(new ActionListener() {
 
@@ -57,8 +57,8 @@ public class VideoControlPanel extends JPanel {
                 playVideo();
             }
         });
-        
-        pause = buildButton("images/pause.png","images/pause-pressed.png");
+
+        pause = buildButton("images/pause.png", "images/pause-pressed.png");
 
         pause.addActionListener(new ActionListener() {
 
@@ -67,8 +67,8 @@ public class VideoControlPanel extends JPanel {
                 pauseVideo();
             }
         });
-        
-        stop = buildButton("images/stop.png","images/stop-pressed.png");
+
+        stop = buildButton("images/stop.png", "images/stop-pressed.png");
 
         stop.addActionListener(new ActionListener() {
 
@@ -79,7 +79,7 @@ public class VideoControlPanel extends JPanel {
             }
         });
 
-        mute = buildButton("images/volume-high.png",null);
+        mute = buildButton("images/volume-high.png", null);
         mute.addActionListener(new ActionListener() {
 
             @Override
@@ -186,12 +186,12 @@ public class VideoControlPanel extends JPanel {
             }
         });
     }
-    
+
     private JButton buildButton(String normalIcon, String pressedIcon) {
-        
-        
-        JButton button  = new JButton(Utils.getImageIcon(normalIcon));
-        if(!(pressedIcon == null)) {
+
+
+        JButton button = new JButton(Utils.getImageIcon(normalIcon));
+        if (!(pressedIcon == null)) {
             button.setPressedIcon(Utils.getImageIcon(pressedIcon));
         }
         button.setBorderPainted(false);
@@ -306,8 +306,12 @@ public class VideoControlPanel extends JPanel {
     public void close() {
         for (RemotePlayer mediaPlayer : mediaPlayers) {
             mediaPlayer.close();
+            executorService.shutdownNow();
         }
-        executorService.shutdownNow();
+    }
+
+    public void takeSnapshot(long time, String path) {
+        mediaPlayers.get(0).takeSnapshot(time, path);
     }
 
     /**
@@ -335,6 +339,24 @@ public class VideoControlPanel extends JPanel {
         frame.setVisible(true);
 
         panel.loadVideo("src/test/resources/sample_video.flv");
+
         panel.playVideo();
+        RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessRemotePlayer();
+
+        headlessRemotePlayer.load("src/test/resources/sample_video.flv");
+        headlessRemotePlayer.play();
+
+        long length = headlessRemotePlayer.getLength();
+        System.out.println("Taking snapshot");
+
+        long snapshots = 9;
+        for (long i = 1; i <= snapshots; i++) {
+            System.out.println((float)i / (snapshots + 1));
+            headlessRemotePlayer.takeSnapshot(length * i / (snapshots + 1), "test-" + i + ".png");
+        }
+
+
+        headlessRemotePlayer.close();
+
     }
 }
