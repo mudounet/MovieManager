@@ -194,11 +194,11 @@ public class VideoControlPanel extends JPanel {
         if(!(pressedIcon == null)) {
             button.setPressedIcon(Utils.getImageIcon(pressedIcon));
         }
-        button.setMinimumSize(new Dimension(40, 40));
         button.setBorderPainted(false);
         button.setRolloverEnabled(false);
         button.setEnabled(false);
         button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
         return button;
     }
 
