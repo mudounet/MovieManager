@@ -19,7 +19,7 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
 
     public OutOfProcessEmbeddedPlayer(final long canvasId) throws IOException {
 
-        MediaPlayerFactory factory = new MediaPlayerFactory("--no-video-title");
+        MediaPlayerFactory factory = new MediaPlayerFactory(getPrepareOptions());
         mediaPlayer = factory.newEmbeddedMediaPlayer();
 
         ComponentIdVideoSurface videoSurfaceById = factory.newVideoSurface(canvasId);

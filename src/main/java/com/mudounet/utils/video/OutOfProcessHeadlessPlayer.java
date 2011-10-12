@@ -32,7 +32,7 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
      * @throws IOException if something went wrong.
      */
     public OutOfProcessHeadlessPlayer() throws IOException {
-        MediaPlayerFactory factory = new MediaPlayerFactory(new String[]{"--no-video-title"});
+        MediaPlayerFactory factory = new MediaPlayerFactory(getPrepareOptions());
         mediaPlayer = factory.newHeadlessMediaPlayer();
     }
 
