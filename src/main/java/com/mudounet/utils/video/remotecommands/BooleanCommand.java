@@ -11,6 +11,11 @@ package com.mudounet.utils.video.remotecommands;
 public class BooleanCommand extends Command {
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        return "BooleanCommand{" + "result=" + this.getValueStr() + '}';
+    }
+
     private byte result = 127;
 
     public BooleanCommand() {
@@ -50,6 +55,13 @@ public class BooleanCommand extends Command {
         }
     }
 
+    protected String getValueStr() {
+        if(result == 127) {
+            return "unset";
+        }
+        return ""+this.getValue();
+    }
+    
     /**
      * Set the value of result
      *

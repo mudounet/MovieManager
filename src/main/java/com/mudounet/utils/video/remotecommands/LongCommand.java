@@ -11,7 +11,7 @@ package com.mudounet.utils.video.remotecommands;
 public class LongCommand extends Command {
     private static final long serialVersionUID = 1L;
  
-    private long value = -1;
+    protected long value = -1;
 
     public LongCommand(long value) {
         this.value = value;
@@ -37,6 +37,11 @@ public class LongCommand extends Command {
      */
     public void setValue(long value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "LongCommand{" + "value=" + value + '}';
     }
 
 }

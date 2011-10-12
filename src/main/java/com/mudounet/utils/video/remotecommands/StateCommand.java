@@ -20,4 +20,33 @@ public class StateCommand extends LongCommand {
     public StateCommand(long requestedInformation) {
         super(requestedInformation);
     }
+
+    @Override
+    public String toString() {
+        return "StateCommand{state=" + stateStr() +'}';
+    }
+
+    public String stateStr() {
+        String str = "";
+        if((value & PLAYABLE) != 0) {
+            str += "PLAYABLE,";
+        }
+        if((value & PLAYED) != 0) {
+            str += "PLAYED,";
+        }
+        if((value & PAUSED) != 0) {
+            str += "PAUSED,";
+        }
+        if((value & STOPPED) != 0) {
+            str += "STOPPED,";
+        }
+        if((value & SEEKABLE) != 0) {
+            str += "SEEKABLE,";
+        }
+        if(value == 0) {
+            str = "UNDEF";
+        }
+        return str;
+    }
+
 }

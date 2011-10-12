@@ -12,7 +12,10 @@ import com.mudounet.hibernate.Image;
  **/
 public class Snapshot extends Image {
 
-    private long time;
+    /**
+     * Time in milliseconds when snapshot was taken
+     */
+    protected long time;
     private static final long serialVersionUID = 1L;
     
 
@@ -26,4 +29,11 @@ public class Snapshot extends Image {
     public void setTime(long time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "Snapshot{" + "time=" + time +",path=" + path + '}';
+    }
+
+
 }

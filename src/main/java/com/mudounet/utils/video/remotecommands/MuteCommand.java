@@ -18,5 +18,11 @@ public class MuteCommand extends BooleanCommand {
     public MuteCommand() {
         super();
     }
+
+    @Override
+    public String toString() {
+        return "MuteCommand{" + this.getValueStr() + '}';
+    }
+    
     
 }

@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 public class Image implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String path;
+    protected String path;
     private String md5sum;
     private long id;
 

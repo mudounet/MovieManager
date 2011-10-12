@@ -17,5 +17,10 @@ public class TimeCommand extends LongCommand {
 
     public TimeCommand() {
     }
+
+    @Override
+    public String toString() {
+        return "TimeCommand{value=" + value + '}';
+    }
     
 }

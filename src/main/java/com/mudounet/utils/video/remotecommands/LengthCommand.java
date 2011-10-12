@@ -17,6 +17,11 @@ public class LengthCommand extends LongCommand {
 
     public LengthCommand() {
     }
+
+    @Override
+    public String toString() {
+        return "LengthCommand{" + value  +'}';
+    }
   
     
 }

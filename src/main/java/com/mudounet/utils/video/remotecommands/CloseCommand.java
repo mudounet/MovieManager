@@ -10,5 +10,10 @@ package com.mudounet.utils.video.remotecommands;
  */
 public class CloseCommand extends BooleanCommand {
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public String toString() {
+        return "CloseCommand{" + this.getValueStr() +'}';
+    }
     
 }

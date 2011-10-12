@@ -10,5 +10,10 @@ package com.mudounet.utils.video.remotecommands;
  */
 public class PauseCommand extends BooleanCommand {
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public String toString() {
+        return "PauseCommand{" + this.getValueStr() + '}';
+    }
     
 }
