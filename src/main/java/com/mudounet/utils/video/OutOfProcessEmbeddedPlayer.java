@@ -33,7 +33,7 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
      * @return an empty string array.
      */
     @Override
-    public String[] getPrepareOptions() {
+    public final String[] getPrepareOptions() {
         return new String[0];
     }
 

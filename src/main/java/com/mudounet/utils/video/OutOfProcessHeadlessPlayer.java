@@ -28,7 +28,6 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
 
     /**
      * Create a new headless player that sits out of process.
-     * @param port the port to run this headless player on.
      * @throws IOException if something went wrong.
      */
     public OutOfProcessHeadlessPlayer() throws IOException {
@@ -42,7 +41,7 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
      * @return the prepare options as a string array.
      */
     @Override
-    public String[] getPrepareOptions() {
+    public final String[] getPrepareOptions() {
        String[]list = VLC_ARGS;
         return list;
     }
