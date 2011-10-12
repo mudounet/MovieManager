@@ -63,11 +63,15 @@ public class Image implements java.io.Serializable {
         this.path = path;
     }
 
+    /**
+     * 
+     * @return image loaded, ready to use.
+     */
     public BufferedImage load() {
         BufferedImage img = null;
 
         try {
-            img = ImageIO.read(new File("strawberry.jpg"));
+            img = ImageIO.read(new File(path));
         } catch (IOException e) {
         }
         return img;
