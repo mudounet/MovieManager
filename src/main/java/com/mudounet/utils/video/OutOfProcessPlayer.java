@@ -18,10 +18,15 @@
 package com.mudounet.utils.video;
 
 import com.mudounet.utils.video.remotecommands.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
 /**
  * Sits out of process so as not to crash the primary VM.
@@ -30,13 +35,17 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 public abstract class OutOfProcessPlayer {
 
     protected MediaPlayer mediaPlayer;
+    private float snapshotPercPosition;
+    private long snapshotTimePosition;
+    final CountDownLatch inTimePositionLatch = new CountDownLatch(1);
+    final CountDownLatch inPercPositionLatch = new CountDownLatch(1);
+    final CountDownLatch snapshotTakenLatch = new CountDownLatch(1);
 
     /**
      * Start the main loop reading from the standard input stream and writing
      * to sout.
-     * @param mediaPlayer the media player to control via the commands 
-     * received.
      * @throws IOException if something goes wrong.
+     * @throws ClassNotFoundException  
      */
     public void read() throws IOException, ClassNotFoundException {
 
@@ -48,6 +57,7 @@ public abstract class OutOfProcessPlayer {
 // Création de l'output stream
 
         Object receivedObject;
+        this.addSnapshotFunction();
 
         while ((receivedObject = ois.readObject()) != null) {
 
@@ -56,7 +66,8 @@ public abstract class OutOfProcessPlayer {
                 mediaPlayer.prepareMedia(((LoadFile) receivedObject).getFilePath(), getPrepareOptions());
             } else if (receivedObject.getClass() == CloseCommand.class) {
                 System.err.println("Close command received");
-                System.exit(0);
+                close();
+
             } else if (receivedObject.getClass() == PlayCommand.class) {
                 System.err.println("Play command received");
                 mediaPlayer.play();
@@ -66,6 +77,19 @@ public abstract class OutOfProcessPlayer {
             } else if (receivedObject.getClass() == StopCommand.class) {
                 System.err.println("Stop command received");
                 mediaPlayer.stop();
+            } else if (receivedObject.getClass() == SnapshotCommand.class) {
+                System.err.println("Snapshot command received");
+                SnapshotCommand t = (SnapshotCommand) receivedObject;
+                
+                try {
+                    this.moveToTime(t.getTime());
+                    this.takeSnapshot(t.getPath());
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(OutOfProcessPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                mediaPlayer.stop();
+                
+            
             } else if (receivedObject.getClass() == TimeCommand.class) {
                 TimeCommand t = (TimeCommand) receivedObject;
                 if (t.getValue() < 0) {
@@ -114,10 +138,61 @@ public abstract class OutOfProcessPlayer {
                 System.err.println("Unknown object : " + receivedObject);
             }
         }
-
-        System.exit(0);
+        
         System.err.println("Flux crées");
+        close();
+    }
+    
+    private void close() {
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        System.exit(0);
+    }
 
+    private void addSnapshotFunction() {
+        mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+
+            @Override
+            public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
+
+                if (newTime == snapshotTimePosition) { 
+                    System.err.println("Position reached (time in ms) : " + newTime + ")");
+                    inTimePositionLatch.countDown();
+                }
+            }
+
+            @Override
+            public void positionChanged(MediaPlayer mediaPlayer, float newPosition) {
+
+                if (newPosition >= snapshotPercPosition * 0.9f) { /* 90% margin */
+                    System.err.println("Position reached (%) : " + newPosition + ")");
+                    inPercPositionLatch.countDown();
+                }
+            }
+
+            @Override
+            public void snapshotTaken(MediaPlayer mediaPlayer, String filename) {
+                System.err.println("snapshotTaken(filename=" + filename + ")");
+                snapshotTakenLatch.countDown();
+            }
+        });
+    }
+
+    private void moveToPerc(float newPosition) throws InterruptedException {
+        this.snapshotPercPosition = newPosition;
+        mediaPlayer.setPosition(newPosition);
+        inPercPositionLatch.await(); // Might wait forever if error
+    }
+
+    private void moveToTime(long newPosition) throws InterruptedException {
+        this.snapshotTimePosition = newPosition;
+        mediaPlayer.setTime(newPosition);
+        inTimePositionLatch.await(); // Might wait forever if error
+    }
+
+    private void takeSnapshot(File file) throws InterruptedException {
+        mediaPlayer.saveSnapshot(file);
+        snapshotTakenLatch.await(); // Might wait forever if error
     }
 
     /**
@@ -127,4 +202,9 @@ public abstract class OutOfProcessPlayer {
      * @return the options required by libvlc.
      */
     public abstract String[] getPrepareOptions();
+
+    private void takeSnapshot(String path) throws InterruptedException {
+        File f = new File(path);
+        this.takeSnapshot(f);
+    }
 }

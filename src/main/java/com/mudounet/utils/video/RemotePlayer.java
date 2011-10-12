@@ -40,7 +40,7 @@ public class RemotePlayer {
      * Internal use only.
      */
     RemotePlayer(StreamWrapper wrapper) throws IOException {
-        
+
         in = new ObjectInputStream(wrapper.getInputStream());
         out = new ObjectOutputStream(wrapper.getOutputStream());
         playing = false;
@@ -57,12 +57,11 @@ public class RemotePlayer {
             throw new IllegalArgumentException("This remote player has been closed!");
         }
         try {
-            logger.debug("Sending command "+command);
+            logger.debug("Sending command " + command);
             out.writeObject(command);
             out.flush();
-        }
-        catch (IOException ex) {
-            
+        } catch (IOException ex) {
+
             throw new RuntimeException("Couldn't perform operation", ex);
         }
     }
@@ -74,10 +73,9 @@ public class RemotePlayer {
     private Object getInput() {
         try {
             Object returnedInfo = in.readObject();
-            logger.debug("received command : "+returnedInfo);
+            logger.debug("received command : " + returnedInfo);
             return returnedInfo;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new RuntimeException("Couldn't perform operation", ex);
         }
     }
@@ -103,7 +101,7 @@ public class RemotePlayer {
      * Pause the video.
      */
     public void pause() {
-        if(!paused) {
+        if (!paused) {
             writeOut(new PauseCommand());
             playing = false;
             paused = true;
@@ -120,13 +118,27 @@ public class RemotePlayer {
     }
 
     /**
+     * Take a snapshot.
+     * @param time
+     * @param path
+     * @return Snapshot is taken 
+     */
+    public boolean takeSnapshot(long time, String path) {
+        SnapshotCommand c = new SnapshotCommand();
+        c.setTime(time);
+        c.setPath(path);
+        writeOut(c);
+        return ((BooleanCommand)getInput()).getValue();
+    }
+
+    /**
      * Determine if the current video is playable, i.e. one is loaded and 
      * ready to start playing when play() is called.
      * @return true if the video is playable, false otherwise.
      */
     public boolean isPlayable() {
         writeOut(new StateCommand(StateCommand.PLAYABLE));
-        return ((StateCommand)getInput()).getValue() == StateCommand.PLAYABLE;
+        return ((StateCommand) getInput()).getValue() == StateCommand.PLAYABLE;
     }
 
     /**
@@ -135,7 +147,7 @@ public class RemotePlayer {
      */
     public long getLength() {
         writeOut(new LengthCommand());
-        return ((LengthCommand)getInput()).getValue();
+        return ((LengthCommand) getInput()).getValue();
     }
 
     /**
@@ -144,7 +156,7 @@ public class RemotePlayer {
      */
     public long getTime() {
         writeOut(new TimeCommand());
-        return ((TimeCommand)getInput()).getValue();
+        return ((TimeCommand) getInput()).getValue();
     }
 
     /**
@@ -162,7 +174,7 @@ public class RemotePlayer {
      */
     public boolean getMute() {
         writeOut(new MuteCommand());
-        return ((MuteCommand)getInput()).getValue();
+        return ((MuteCommand) getInput()).getValue();
     }
 
     /**
@@ -191,9 +203,9 @@ public class RemotePlayer {
      */
     public boolean isPlaying() {
         writeOut(new StateCommand(StateCommand.PLAYED));
-        return ((StateCommand)getInput()).getValue() == StateCommand.PLAYED;
+        return ((StateCommand) getInput()).getValue() == StateCommand.PLAYED;
     }
-    
+
     /**
      * Determine whether the remote player is paused.
      * @return true if its paused, false otherwise.
@@ -201,5 +213,4 @@ public class RemotePlayer {
     public boolean isPaused() {
         return paused;
     }
-    
 }

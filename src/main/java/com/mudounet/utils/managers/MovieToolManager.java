@@ -36,7 +36,6 @@ public class MovieToolManager {
     private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
     private File file;
     private MediaPlayer mediaPlayer;
-    
     final CountDownLatch inPositionLatch = new CountDownLatch(1);
     final CountDownLatch snapshotTakenLatch = new CountDownLatch(1);
 
@@ -78,7 +77,7 @@ public class MovieToolManager {
         mediaPlayer = factory.newHeadlessMediaPlayer();
         mediaPlayer.prepareMedia(file.getPath());
         mediaPlayer.parseMedia();
-        
+
 
 
         mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
@@ -99,12 +98,12 @@ public class MovieToolManager {
 
 
     }
-    
+
     public void moveTo(float newPosition) throws InterruptedException {
-         mediaPlayer.setPosition(newPosition);
-            inPositionLatch.await(); // Might wait forever if error
+        mediaPlayer.setPosition(newPosition);
+        inPositionLatch.await(); // Might wait forever if error
     }
-    
+
     public void takeSnapshot(File file) throws InterruptedException {
         mediaPlayer.saveSnapshot(file);
         snapshotTakenLatch.await(); // Might wait forever if error

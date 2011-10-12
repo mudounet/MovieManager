@@ -8,7 +8,8 @@ package com.mudounet.utils.video.remotecommands;
  *
  * @author gmanciet
  */
-public abstract class BooleanCommand extends Command {
+public class BooleanCommand extends Command {
+    private static final long serialVersionUID = 1L;
 
     private byte result = 127;
 
