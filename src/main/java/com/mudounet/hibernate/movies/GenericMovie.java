@@ -6,9 +6,12 @@ package com.mudounet.hibernate.movies;
 
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.hibernate.tags.GenericTag;
+import com.mudounet.utils.Md5Generator;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.log4j.Logger;
+
 
 /**
  * @hibernate.class
@@ -19,11 +22,13 @@ import java.util.Set;
  **/
 public abstract class GenericMovie {
 
-    private Long id;
-    private String title;
-    private String path;
-    private Set<GenericTag> tags = new HashSet<GenericTag>(0);
-    private TechData techData;
+     protected static final Logger logger = Logger.getLogger(GenericMovie.class.getName());
+    protected Long id;
+    protected String title;
+    protected String path;
+    protected String md5;
+    protected Set<GenericTag> tags = new HashSet<GenericTag>(0);
+    protected TechData techData;
 
     /**
      * Tags describing this movie
@@ -46,6 +51,33 @@ public abstract class GenericMovie {
 
     protected void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * Get the value of md5
+     * @hibernate.property
+     * @return the value of md5
+     */
+    public String getMd5() {
+        if(md5 == null) {
+            try {
+                md5 = Md5Generator.computeMD5(path);
+            } catch (Exception ex) {
+                md5 = "";
+                logger.error(ex);
+            }
+        }
+        
+        return md5;
+    }
+
+    /**
+     * Set the value of md5
+     *
+     * @param md5 new value of md5
+     */
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 
     /**
