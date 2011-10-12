@@ -37,8 +37,12 @@ public class MovieToolManager {
     public static Set<Snapshot> genSnapshots(GenericMovie movie , File directory, int nbOfSnapshots) throws Exception {
         Set<Snapshot> list = new HashSet<Snapshot>();
         
-        if(!directory.isDirectory()) throw new Exception("Directory doesn't exists");
-        if(nbOfSnapshots < 1 || nbOfSnapshots > 9) throw new Exception("Number of snapshots has to be defined between 1 and 9.");
+        if(!directory.isDirectory()) {
+            throw new Exception("Directory doesn't exists");
+        }
+        if(nbOfSnapshots < 1 || nbOfSnapshots > 9) {
+            throw new Exception("Number of snapshots has to be defined between 1 and 9.");
+        }
         
         String prefix = movie.getMd5()+"-";
         
