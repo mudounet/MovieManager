@@ -54,12 +54,10 @@ public class MovieToolManager {
         
         for (long i = 1; i <= nbOfSnapshots; i++) {
             Snapshot s = new Snapshot();
-            s.setPath(directory.getAbsolutePath()+File.pathSeparator+prefix + i + ".png");
+            s.setPath(directory.getAbsolutePath()+File.separator+prefix + i + ".png");
             s.setTime(length * i / (nbOfSnapshots + 1));
-            System.out.println((float) i / (nbOfSnapshots + 1));
-            headlessRemotePlayer.takeSnapshot(s.getTime(), s.getPath());
-            File f = new File(s.getPath());
-            if(f.isFile()) {
+
+            if(headlessRemotePlayer.takeSnapshot(s.getTime(), s.getPath())) {
                 list.add(s);
             }
             else {

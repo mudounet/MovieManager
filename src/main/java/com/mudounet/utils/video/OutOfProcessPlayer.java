@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
@@ -88,14 +86,16 @@ public abstract class OutOfProcessPlayer {
                     System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
                     this.moveToTime(t.getTime());
             
-                    this.takeSnapshot(t.getPath());
-                    oos.writeObject(new BooleanCommand(true));
+                    if(this.takeSnapshot(t.getPath())) {
+                        oos.writeObject(new BooleanCommand(true));
+                    } else {
+                        oos.writeObject(new BooleanCommand(false));
+                    }
                     
                 } catch (InterruptedException ex) {
                     ex.printStackTrace(System.err);
+                    oos.writeObject(new BooleanCommand(false));
                 }
-                
-                oos.writeObject(new BooleanCommand(false));
 
             } else if (receivedObject.getClass() == TimeCommand.class) {
                 TimeCommand t = (TimeCommand) receivedObject;
@@ -205,9 +205,22 @@ public abstract class OutOfProcessPlayer {
         inTimePositionLatch.await(); // Might wait forever if error
     }
 
-    private void takeSnapshot(File file) throws InterruptedException {
+    private boolean takeSnapshot(File file) throws InterruptedException {
+        
         mediaPlayer.saveSnapshot(new File(file.getAbsolutePath()));
         snapshotTakenLatch.await(); // Might wait forever if error
+        
+        for(int i = 0; i < 10;i++) {
+            if(file.exists()) {
+                System.err.println("File found : "+file.getAbsolutePath());
+                
+                return true;
+            }
+            System.err.println("File is not found : "+file.getAbsolutePath());
+            Thread.sleep(500);
+        }
+        
+        return false;
     }
 
     /**
@@ -218,7 +231,7 @@ public abstract class OutOfProcessPlayer {
      */
     public abstract String[] getPrepareOptions();
 
-    private void takeSnapshot(String path) throws InterruptedException {
-        this.takeSnapshot(new File(path));
+    private boolean takeSnapshot(String path) throws InterruptedException {
+        return this.takeSnapshot(new File(path));
     }
 }

@@ -5,6 +5,7 @@
 package com.mudounet.hibernate.tags;
 
 import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.movies.Movie;
 import com.mudounet.hibernate.movies.ProcessedMovie;
 import com.mudounet.hibernate.movies.QueuedMovie;
 import org.hibernate.Transaction;
@@ -22,6 +23,7 @@ import org.hibernate.Hibernate;
  * @author gmanciet
  */
 public class GenericTagTest extends ProjectDatabaseTestCase {
+
     protected static Logger logger = Logger.getLogger(GenericTagTest.class.getName());
     private Transaction tx;
 
@@ -33,8 +35,8 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
      * Test of getId method, of class GenericTag.
      */
     @Test
-    public void testPersists() throws Exception { 
-        
+    public void testPersists() throws Exception {
+
         logger.info("Test persistance");
 
         assertEquals("Specified event not found.", 0, this.getNbResults("select * from GENERICTAG where KEY='TestKey'"));
@@ -57,7 +59,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     @Test
     public void testList() throws Exception {
         logger.info("Test retrieval");
-        
+
         assertEquals(template.findList(GenericTag.class).size(), this.getNbResults("select * from GENERICTAG"));
 
         assertEquals(template.findList(SimpleTag.class).size(), this.getNbResults("select * from GENERICTAG inner join SIMPLETAG ON id = fk_tag"));
@@ -79,20 +81,27 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
             GenericMovie t = (GenericMovie) i.next();
             logger.debug(t.toString());
 
-            Set taglist = t.getTags();
+            if (t.getClass() == Movie.class) {
+                Movie m = (Movie) t;
+                Set taglist = m.getTags();
 
-            refList = this.getResults("select * from MOVIES_TAGS WHERE fk_movie=" + t.getId());
-            assertEquals(taglist.size(), refList.getRowCount());
+                refList = this.getResults("select * from MOVIES_TAGS WHERE fk_movie=" + t.getId());
+                assertEquals(taglist.size(), refList.getRowCount());
 
-            for (Object obj : taglist) {
-                GenericTag tag = (GenericTag) obj;
+                for (Object obj : taglist) {
+                    GenericTag tag = (GenericTag) obj;
 
-                String classType = "";
-                
-                if(this.getResults("select FK_TAG from TAGVALUE WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) classType = com.mudounet.hibernate.tags.TagValue.class.getCanonicalName();
-                if(this.getResults("select FK_TAG from SIMPLETAG WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) classType = com.mudounet.hibernate.tags.SimpleTag.class.getCanonicalName();
+                    String classType = "";
 
-                assertEquals(classType, Hibernate.getClass(tag).getCanonicalName());
+                    if (this.getResults("select FK_TAG from TAGVALUE WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
+                        classType = com.mudounet.hibernate.tags.TagValue.class.getCanonicalName();
+                    }
+                    if (this.getResults("select FK_TAG from SIMPLETAG WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
+                        classType = com.mudounet.hibernate.tags.SimpleTag.class.getCanonicalName();
+                    }
+
+                    assertEquals(classType, Hibernate.getClass(tag).getCanonicalName());
+                }
             }
         }
         template.closeConnection();
@@ -161,37 +170,36 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         Iterator i = list.iterator();
         while (i.hasNext()) {
             QueuedMovie q = (QueuedMovie) i.next();
-            refList = this.getResults("select * from GENERICMOVIE where id="+q.getId());
-
-            
+            refList = this.getResults("select * from GENERICMOVIE where id=" + q.getId());
 
 
-            ProcessedMovie p = new ProcessedMovie();
-            p.setTitle(q.getTitle());
-            p.setTags(q.getTags());
+
+
+            Movie m = new Movie();
+            m.setTitle(q.getTitle());
 
             template.keepConnectionOpened();
-            template.saveOrUpdate(p);
+            template.saveOrUpdate(m);
             template.delete(q);
             template.closeConnection();
 
             // Checking that object has been deleted
-            assertEquals(0,this.getResults("select * from GENERICMOVIE where id="+q.getId()).getRowCount());
+            assertEquals(0, this.getResults("select * from GENERICMOVIE where id=" + q.getId()).getRowCount());
 
             // And also its associated tag
-            assertEquals(0,this.getResults("select * from MOVIES_TAGS where fk_movie="+q.getId()).getRowCount());
+            assertEquals(0, this.getResults("select * from MOVIES_TAGS where fk_movie=" + q.getId()).getRowCount());
 
 
-            ITable refList2 = this.getResults("select * from GENERICMOVIE where id="+p.getId());
+            ITable refList2 = this.getResults("select * from GENERICMOVIE where id=" + m.getId());
             // Checking that new object exist
-            assertEquals(1,refList2.getRowCount());
+            assertEquals(1, refList2.getRowCount());
 
             // And also its associated tag
-            assertEquals(q.getTags().size(),this.getResults("select * from MOVIES_TAGS where fk_movie="+p.getId()).getRowCount());
+            assertEquals(m.getTags().size(), this.getResults("select * from MOVIES_TAGS where fk_movie=" + m.getId()).getRowCount());
 
-            
 
-            
+
+
 
 
         }
@@ -205,30 +213,30 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         template.keepConnectionOpened();
         template.saveOrUpdate(newTag);
         long newTagId = newTag.getId();
-        logger.debug("ID of new tag is"+newTagId);
+        logger.debug("ID of new tag is" + newTagId);
         template.closeConnection();
-        assertEquals(1,this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where KEY='"+newKeyDescription+"'").getRowCount());
+        assertEquals(1, this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where KEY='" + newKeyDescription + "'").getRowCount());
         template.keepConnectionOpened();
-        newTag = (SimpleTag)template.find(SimpleTag.class, newTagId);
+        newTag = (SimpleTag) template.find(SimpleTag.class, newTagId);
         template.closeConnection();
         template.keepConnectionOpened();
         template.delete(newTag);
         template.closeConnection();
-        
+
     }
-    
+
     @Test
     public void testDeleteTag() throws Exception {
         template.keepConnectionOpened();
         long idToDelete = 10;
         SimpleTag foundItem = (SimpleTag) template.find(SimpleTag.class, idToDelete);
         assertEquals("simpleKey3", foundItem.getKey());
-        assertEquals(1,this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where ID="+idToDelete+"").getRowCount());
+        assertEquals(1, this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
 
         template.closeConnection();
-        logger.debug("Tring to delete "+foundItem);
+        logger.debug("Tring to delete " + foundItem);
         template.delete(foundItem);
-        assertEquals(0,this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where ID="+idToDelete+"").getRowCount());
+        assertEquals(0, this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
     }
 
     @Override
