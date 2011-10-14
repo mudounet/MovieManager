@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
@@ -33,13 +34,13 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 public abstract class OutOfProcessPlayer {
 
     protected MediaPlayer mediaPlayer;
-    private float snapshotPercPosition;
     private long snapshotTimePosition;
     private long length = 0;
-    final CountDownLatch inTimePositionLatch = new CountDownLatch(1);
-    final CountDownLatch inPercPositionLatch = new CountDownLatch(1);
-    final CountDownLatch snapshotTakenLatch = new CountDownLatch(1);
-    final CountDownLatch operationFinished = new CountDownLatch(1);
+    protected ObjectOutputStream oos;
+    protected ObjectInputStream ois;
+    protected CountDownLatch inTimePositionLatch;
+    protected CountDownLatch snapshotTakenLatch;
+    protected CountDownLatch operationFinished;
 
     /**
      * Start the main loop reading from the standard input stream and writing
@@ -52,14 +53,16 @@ public abstract class OutOfProcessPlayer {
         //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
         System.err.println("Création des flux");
-        ObjectOutputStream oos = new ObjectOutputStream(System.out);
-        ObjectInputStream ois = new ObjectInputStream(System.in);
+        oos = new ObjectOutputStream(System.out);
+        ois = new ObjectInputStream(System.in);
 // Création de l'output stream
 
         Object receivedObject;
+        Object returnObject;
         this.addSnapshotFunction();
 
         while ((receivedObject = ois.readObject()) != null) {
+            returnObject = new BooleanCommand();
 
             if (receivedObject.getClass() == LoadFile.class) {
                 System.err.println("Load command received : " + receivedObject);
@@ -79,30 +82,31 @@ public abstract class OutOfProcessPlayer {
                 System.err.println("Stop command received");
                 mediaPlayer.stop();
             } else if (receivedObject.getClass() == SnapshotCommand.class) {
-                System.err.println("Snapshot command received");
                 SnapshotCommand t = (SnapshotCommand) receivedObject;
-
+                System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
+                
+                
+            
+                boolean result = false;
+                
                 try {
-                    System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
+                    
                     this.moveToTime(t.getTime());
             
-                    if(this.takeSnapshot(t.getPath())) {
-                        oos.writeObject(new BooleanCommand(true));
-                    } else {
-                        oos.writeObject(new BooleanCommand(false));
-                    }
+                    result = this.takeSnapshot(t.getPath());
                     
                 } catch (InterruptedException ex) {
                     ex.printStackTrace(System.err);
-                    oos.writeObject(new BooleanCommand(false));
                 }
 
+                returnObject = new BooleanCommand(result);
+                
             } else if (receivedObject.getClass() == TimeCommand.class) {
                 TimeCommand t = (TimeCommand) receivedObject;
                 if (t.getValue() < 0) {
                     System.err.println("request to get time.");
                     t.setValue(mediaPlayer.getTime());
-                    oos.writeObject(t);
+                    returnObject(t);
                 } else {
                     System.err.println("Request to set time to " + t.getValue());
                     mediaPlayer.setTime(t.getValue());
@@ -114,13 +118,13 @@ public abstract class OutOfProcessPlayer {
                     
                 }
                 t.setValue(length);
-                oos.writeObject(t);
+                returnObject = t;
             } else if (receivedObject.getClass() == MuteCommand.class) {
                 MuteCommand t = (MuteCommand) receivedObject;
                 if (!t.isSet()) {
                     System.err.println("request to get mute state.");
                     t.setValue(mediaPlayer.isMute());
-                    oos.writeObject(t);
+                    returnObject(t);
                 } else {
                     System.err.println("Request to set mute to " + t.getValue());
                     mediaPlayer.mute(t.getValue());
@@ -143,14 +147,22 @@ public abstract class OutOfProcessPlayer {
                 } else {
                     System.err.println("State not currently managed : " + t.getValue());
                 }
-                oos.writeObject(t);
+                returnObject = t;
             } else {
                 System.err.println("Unknown object : " + receivedObject);
             }
+            
+            returnObject(returnObject);
         }
 
         System.err.println("Flux crées");
         close();
+    }
+    
+    private void returnObject(Object o) throws IOException {
+        System.err.println("Answer : "+o);
+        oos.writeObject(o);
+        oos.flush();
     }
 
     private void close() {
@@ -165,18 +177,9 @@ public abstract class OutOfProcessPlayer {
             @Override
             public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
 
-                if (newTime >= snapshotTimePosition) {
+                if (inTimePositionLatch.getCount() > 0 && newTime >= snapshotTimePosition) {
                     System.err.println("Position reached (time in ms) : " + newTime + ")");
                     inTimePositionLatch.countDown();
-                }
-            }
-
-            @Override
-            public void positionChanged(MediaPlayer mediaPlayer, float newPosition) {
-
-                if (newPosition >= snapshotPercPosition * 0.9f) { /* 90% margin */
-                    System.err.println("Position reached (%) : " + newPosition + ")");
-                    inPercPositionLatch.countDown();
                 }
             }
 
@@ -193,22 +196,22 @@ public abstract class OutOfProcessPlayer {
         });
     }
 
-    private void moveToPerc(float newPosition) throws InterruptedException {
-        this.snapshotPercPosition = newPosition;
-        mediaPlayer.setPosition(newPosition);
-        inPercPositionLatch.await(); // Might wait forever if error
-    }
-
     private void moveToTime(long newPosition) throws InterruptedException {
         this.snapshotTimePosition = newPosition;
+        inTimePositionLatch = new CountDownLatch(1);
         mediaPlayer.setTime(newPosition);
-        inTimePositionLatch.await(); // Might wait forever if error
+        System.err.println("Going to specified time (ms) : "+newPosition);
+        inTimePositionLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
+        System.err.println("Latch reached.");
     }
 
     private boolean takeSnapshot(File file) throws InterruptedException {
+        System.err.println("Snapshot @ "+mediaPlayer.getTime());
         
+        snapshotTakenLatch = new CountDownLatch(1);
         mediaPlayer.saveSnapshot(new File(file.getAbsolutePath()));
-        snapshotTakenLatch.await(); // Might wait forever if error
+        System.err.println("Waiting latch.");
+        snapshotTakenLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
         
         for(int i = 0; i < 10;i++) {
             if(file.exists()) {

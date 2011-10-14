@@ -51,7 +51,7 @@ public class RemotePlayer {
      * Write a given command out to the remote VM player.
      * @param command the command to send.
      */
-    private void writeOut(Object command) {
+    private Object writeOut(Object command) {
         if (!open) {
             logger.error("This remote player has been closed!");
             throw new IllegalArgumentException("This remote player has been closed!");
@@ -60,6 +60,7 @@ public class RemotePlayer {
             logger.debug("Sending command " + command);
             out.writeObject(command);
             out.flush();
+            return getInput();
         } catch (IOException ex) {
 
             throw new RuntimeException("Couldn't perform operation", ex);
@@ -72,6 +73,7 @@ public class RemotePlayer {
      */
     private Object getInput() {
         try {
+            logger.debug("Awaiting command.");
             Object returnedInfo = in.readObject();
             logger.debug("received command : " + returnedInfo);
             return returnedInfo;
@@ -129,8 +131,7 @@ public class RemotePlayer {
         c.setTime(time);
         c.setPath(path);
         logger.debug("Request snapshot :"+c);
-        writeOut(c);
-        return ((BooleanCommand)getInput()).getValue();
+        return ((BooleanCommand)writeOut(c)).getValue();
     }
 
     /**
@@ -139,8 +140,7 @@ public class RemotePlayer {
      * @return true if the video is playable, false otherwise.
      */
     public boolean isPlayable() {
-        writeOut(new StateCommand(StateCommand.PLAYABLE));
-        return ((StateCommand) getInput()).getValue() == StateCommand.PLAYABLE;
+        return ((StateCommand) writeOut(new StateCommand(StateCommand.PLAYABLE))).getValue() == StateCommand.PLAYABLE;
     }
 
     /**
@@ -148,8 +148,7 @@ public class RemotePlayer {
      * @return the length of the currently loaded video.
      */
     public long getLength() {
-        writeOut(new LengthCommand());
-        return ((LengthCommand) getInput()).getValue();
+        return ((LengthCommand) writeOut(new LengthCommand())).getValue();
     }
 
     /**
@@ -157,8 +156,7 @@ public class RemotePlayer {
      * @return the time in milliseconds of the current position in the video.
      */
     public long getTime() {
-        writeOut(new TimeCommand());
-        return ((TimeCommand) getInput()).getValue();
+        return ((TimeCommand) writeOut(new TimeCommand())).getValue();
     }
 
     /**
@@ -175,8 +173,7 @@ public class RemotePlayer {
      * @return true if it's muted, false if not.
      */
     public boolean getMute() {
-        writeOut(new MuteCommand());
-        return ((MuteCommand) getInput()).getValue();
+        return ((MuteCommand) writeOut(new MuteCommand())).getValue();
     }
 
     /**
@@ -204,8 +201,7 @@ public class RemotePlayer {
      * @return true if its playing, false otherwise.
      */
     public boolean isPlaying() {
-        writeOut(new StateCommand(StateCommand.PLAYED));
-        return ((StateCommand) getInput()).getValue() == StateCommand.PLAYED;
+        return ((StateCommand) writeOut(new StateCommand(StateCommand.PLAYED))).getValue() == StateCommand.PLAYED;
     }
 
     /**
