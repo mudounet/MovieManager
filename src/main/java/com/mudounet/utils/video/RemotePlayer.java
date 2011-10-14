@@ -31,6 +31,7 @@ public class RemotePlayer {
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    private Process process;
     private boolean open;
     private boolean playing;
     protected static Logger logger = Logger.getLogger(RemotePlayer.class.getName());

@@ -67,7 +67,7 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
         } finally {
             if (stream != null) {
                 stream.close();
-            }
-        }
+    }
+}
     }
 }
