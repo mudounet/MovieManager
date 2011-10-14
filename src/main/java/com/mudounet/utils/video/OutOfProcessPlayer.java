@@ -62,105 +62,112 @@ public abstract class OutOfProcessPlayer {
         this.addSnapshotFunction();
 
         while ((receivedObject = ois.readObject()) != null) {
-            returnObject = new BooleanCommand();
 
-            if (receivedObject.getClass() == LoadFile.class) {
-                System.err.println("Load command received : " + receivedObject);
-                mediaPlayer.prepareMedia(((LoadFile) receivedObject).getFilePath(), getPrepareOptions());
-                length = 0;
-            } else if (receivedObject.getClass() == CloseCommand.class) {
-                System.err.println("Close command received");
-                close();
 
-            } else if (receivedObject.getClass() == PlayCommand.class) {
-                System.err.println("Play command received");
-                mediaPlayer.play();
-            } else if (receivedObject.getClass() == PauseCommand.class) {
-                System.err.println("Pause command received");
-                mediaPlayer.pause();
-            } else if (receivedObject.getClass() == StopCommand.class) {
-                System.err.println("Stop command received");
-                mediaPlayer.stop();
-            } else if (receivedObject.getClass() == SnapshotCommand.class) {
-                SnapshotCommand t = (SnapshotCommand) receivedObject;
-                System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
-                
-                
-            
-                boolean result = false;
-                
-                try {
-                    
-                    this.moveToTime(t.getTime());
-            
-                    result = this.takeSnapshot(t.getPath());
-                    
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace(System.err);
-                }
+            returnObject = execReqstdAction(receivedObject);
 
-                returnObject = new BooleanCommand(result);
-                
-            } else if (receivedObject.getClass() == TimeCommand.class) {
-                TimeCommand t = (TimeCommand) receivedObject;
-                if (t.getValue() < 0) {
-                    System.err.println("request to get time.");
-                    t.setValue(mediaPlayer.getTime());
-                    returnObject(t);
-                } else {
-                    System.err.println("Request to set time to " + t.getValue());
-                    mediaPlayer.setTime(t.getValue());
-                }
-            } else if (receivedObject.getClass() == LengthCommand.class) {
-                LengthCommand t = (LengthCommand) receivedObject;
-                System.err.println("Request to get length.");
-                while((length = mediaPlayer.getLength()) == 0) {
-                    
-                }
-                t.setValue(length);
-                returnObject = t;
-            } else if (receivedObject.getClass() == MuteCommand.class) {
-                MuteCommand t = (MuteCommand) receivedObject;
-                if (!t.isSet()) {
-                    System.err.println("request to get mute state.");
-                    t.setValue(mediaPlayer.isMute());
-                    returnObject(t);
-                } else {
-                    System.err.println("Request to set mute to " + t.getValue());
-                    mediaPlayer.mute(t.getValue());
-                }
-            } else if (receivedObject.getClass() == StateCommand.class) {
-                StateCommand t = (StateCommand) receivedObject;
-                if (t.getValue() == StateCommand.PLAYABLE) {
-
-                    t.setValue(0);
-                    if (mediaPlayer.isPlayable()) {
-                        t.setValue(StateCommand.PLAYABLE);
-                    }
-                } else if (t.getValue() == StateCommand.PLAYED) {
-
-                    t.setValue(0);
-                    if (mediaPlayer.isPlaying()) {
-                        t.setValue(StateCommand.PLAYED);
-                    }
-
-                } else {
-                    System.err.println("State not currently managed : " + t.getValue());
-                }
-                returnObject = t;
-            } else {
-                System.err.println("Unknown object : " + receivedObject);
-            }
-            
-            returnObject(returnObject);
+            execReturnObject(returnObject);
         }
 
         System.err.println("Flux crées");
         close();
     }
-    
-    private void returnObject(Object o) throws IOException {
-        System.err.println("Answer : "+o);
+
+    private Object execReqstdAction(Object receivedObject) {
+        Object returnObject = new BooleanCommand();
+
+        if (receivedObject.getClass() == LoadFile.class) {
+            System.err.println("Load command received : " + receivedObject);
+            mediaPlayer.prepareMedia(((LoadFile) receivedObject).getFilePath(), getPrepareOptions());
+            length = 0;
+        } else if (receivedObject.getClass() == CloseCommand.class) {
+            System.err.println("Close command received");
+            close();
+
+        } else if (receivedObject.getClass() == PlayCommand.class) {
+            System.err.println("Play command received");
+            mediaPlayer.play();
+        } else if (receivedObject.getClass() == PauseCommand.class) {
+            System.err.println("Pause command received");
+            mediaPlayer.pause();
+        } else if (receivedObject.getClass() == StopCommand.class) {
+            System.err.println("Stop command received");
+            mediaPlayer.stop();
+        } else if (receivedObject.getClass() == SnapshotCommand.class) {
+            SnapshotCommand t = (SnapshotCommand) receivedObject;
+            System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
+
+
+
+            boolean result = false;
+
+            try {
+
+                this.moveToTime(t.getTime());
+
+                result = this.takeSnapshot(t.getPath());
+
+            } catch (InterruptedException ex) {
+                ex.printStackTrace(System.err);
+            }
+
+            returnObject = new BooleanCommand(result);
+
+        } else if (receivedObject.getClass() == TimeCommand.class) {
+            TimeCommand t = (TimeCommand) receivedObject;
+            if (t.getValue() < 0) {
+                System.err.println("request to get time.");
+                t.setValue(mediaPlayer.getTime());
+                returnObject = t;
+            } else {
+                System.err.println("Request to set time to " + t.getValue());
+                mediaPlayer.setTime(t.getValue());
+            }
+        } else if (receivedObject.getClass() == LengthCommand.class) {
+            LengthCommand t = (LengthCommand) receivedObject;
+            System.err.println("Request to get length.");
+            while ((length = mediaPlayer.getLength()) == 0) {
+            }
+            t.setValue(length);
+            returnObject = t;
+        } else if (receivedObject.getClass() == MuteCommand.class) {
+            MuteCommand t = (MuteCommand) receivedObject;
+            if (!t.isSet()) {
+                System.err.println("request to get mute state.");
+                t.setValue(mediaPlayer.isMute());
+                returnObject = t;
+            } else {
+                System.err.println("Request to set mute to " + t.getValue());
+                mediaPlayer.mute(t.getValue());
+            }
+        } else if (receivedObject.getClass() == StateCommand.class) {
+            StateCommand t = (StateCommand) receivedObject;
+            if (t.getValue() == StateCommand.PLAYABLE) {
+
+                t.setValue(0);
+                if (mediaPlayer.isPlayable()) {
+                    t.setValue(StateCommand.PLAYABLE);
+                }
+            } else if (t.getValue() == StateCommand.PLAYED) {
+
+                t.setValue(0);
+                if (mediaPlayer.isPlaying()) {
+                    t.setValue(StateCommand.PLAYED);
+                }
+
+            } else {
+                System.err.println("State not currently managed : " + t.getValue());
+            }
+            returnObject = t;
+        } else {
+            System.err.println("Unknown object : " + receivedObject);
+        }
+
+        return returnObject;
+    }
+
+    private void execReturnObject(Object o) throws IOException {
+        System.err.println("Answer : " + o);
         oos.writeObject(o);
         oos.flush();
     }
@@ -200,29 +207,29 @@ public abstract class OutOfProcessPlayer {
         this.snapshotTimePosition = newPosition;
         inTimePositionLatch = new CountDownLatch(1);
         mediaPlayer.setTime(newPosition);
-        System.err.println("Going to specified time (ms) : "+newPosition);
+        System.err.println("Going to specified time (ms) : " + newPosition);
         inTimePositionLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
         System.err.println("Latch reached.");
     }
 
     private boolean takeSnapshot(File file) throws InterruptedException {
-        System.err.println("Snapshot @ "+mediaPlayer.getTime());
-        
+        System.err.println("Snapshot @ " + mediaPlayer.getTime());
+
         snapshotTakenLatch = new CountDownLatch(1);
         mediaPlayer.saveSnapshot(new File(file.getAbsolutePath()));
         System.err.println("Waiting latch.");
         snapshotTakenLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
-        
-        for(int i = 0; i < 10;i++) {
-            if(file.exists()) {
-                System.err.println("File found : "+file.getAbsolutePath());
-                
+
+        for (int i = 0; i < 10; i++) {
+            if (file.exists()) {
+                System.err.println("File found : " + file.getAbsolutePath());
+
                 return true;
             }
-            System.err.println("File is not found : "+file.getAbsolutePath());
+            System.err.println("File is not found : " + file.getAbsolutePath());
             Thread.sleep(500);
         }
-        
+
         return false;
     }
 
