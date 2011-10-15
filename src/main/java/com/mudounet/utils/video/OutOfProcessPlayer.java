@@ -24,6 +24,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
@@ -64,12 +66,12 @@ public abstract class OutOfProcessPlayer {
 
             operationFinished = t.requestNewOperation(receivedObject);
             ;
-            
-            if(operationFinished.await(10L, TimeUnit.SECONDS)) {
+
+            if (operationFinished.await(10L, TimeUnit.SECONDS)) {
                 execReturnObject(t.getResult());
             } else {
                 System.err.println("TimeOut Exception");
-                 execReturnObject(new RemotePlayerException("Operation has timed-out."));
+                execReturnObject(new RemotePlayerException("Operation has timed-out."));
             }
         }
 
@@ -97,11 +99,12 @@ public abstract class OutOfProcessPlayer {
         private volatile boolean stop = false;
         private Object command;
         private Object result;
+        private long length = -1;
         private CountDownLatch inTimePositionLatch;
+        private CountDownLatch lengthUpdatedLatch  = new CountDownLatch(1);
         private CountDownLatch snapshotTakenLatch;
         private CountDownLatch newOperationLatch;
         private long snapshotTimePosition;
-
 
         private ThreadedAction() {
 
@@ -112,7 +115,7 @@ public abstract class OutOfProcessPlayer {
         @Override
         public void run() {
             while (!stop) {
-                if(newOperationLatch != null && newOperationLatch.getCount() > 0) {
+                if (newOperationLatch != null && newOperationLatch.getCount() > 0) {
                     result = execReqstdAction(command);
                     newOperationLatch.countDown();
                 }
@@ -121,9 +124,9 @@ public abstract class OutOfProcessPlayer {
         }
 
         public CountDownLatch requestNewOperation(Object receivedObject) {
-                command = receivedObject;
-                newOperationLatch = new CountDownLatch(1);
-                return newOperationLatch;
+            command = receivedObject;
+            newOperationLatch = new CountDownLatch(1);
+            return newOperationLatch;
         }
 
         public boolean operationInProgress() {
@@ -187,9 +190,11 @@ public abstract class OutOfProcessPlayer {
             } else if (receivedObject.getClass() == LengthCommand.class) {
                 LengthCommand t = (LengthCommand) receivedObject;
                 System.err.println("Request to get length.");
-                while ((length = mediaPlayer.getLength()) == 0) {
+                try {
+                    t.setValue(getLength());
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace(System.err);
                 }
-                t.setValue(length);
                 returnObject = t;
             } else if (receivedObject.getClass() == MuteCommand.class) {
                 MuteCommand t = (MuteCommand) receivedObject;
@@ -240,8 +245,21 @@ public abstract class OutOfProcessPlayer {
                 }
 
                 @Override
+                public void error(MediaPlayer mediaPlayer) {
+                    System.err.println("Unknown error occured");
+                }
+
+                @Override
                 public void lengthChanged(MediaPlayer mediaPlayer, long newLength) {
-                    operationFinished.countDown();
+                    if (lengthUpdatedLatch != null) {
+                        lengthUpdatedLatch.countDown();
+                        
+                    }
+                    
+                    if(newLength > 0) {
+                        System.err.println("Length updated : from " + length + " to " + newLength);
+                        length = newLength;
+                    }
                 }
 
                 @Override
@@ -250,6 +268,22 @@ public abstract class OutOfProcessPlayer {
                     snapshotTakenLatch.countDown();
                 }
             });
+        }
+
+        private long getLength() throws InterruptedException {
+            if (length <= 0) {
+                mediaPlayer.getLength();
+                this.lengthUpdatedLatch = new CountDownLatch(1);
+                
+                if (lengthUpdatedLatch.await(10L, TimeUnit.SECONDS)) {
+                    return this.length;
+                } else {
+                    return -1;
+                }
+
+            } else {
+                return this.length;
+            }
         }
 
         private void moveToTime(long newPosition) throws InterruptedException {
