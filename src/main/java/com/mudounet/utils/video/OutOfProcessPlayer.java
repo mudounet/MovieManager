@@ -60,7 +60,7 @@ public abstract class OutOfProcessPlayer {
         t.start();
 
         while ((receivedObject = ois.readObject()) != null) {
-            Object returnObject = new Object();
+
 
             operationFinished = t.requestNewOperation(receivedObject);
             ;
@@ -68,11 +68,9 @@ public abstract class OutOfProcessPlayer {
             if(operationFinished.await(10L, TimeUnit.SECONDS)) {
                 execReturnObject(t.getResult());
             } else {
-                System.err.println("Hara-kiri!");
-                System.exit(-1);
+                System.err.println("TimeOut Exception");
+                 execReturnObject(new RemotePlayerException("Operation has timed-out."));
             }
-
-            
         }
 
         System.err.println("Flux crées");

@@ -21,6 +21,7 @@ import com.mudounet.utils.video.remotecommands.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -52,7 +53,7 @@ public class RemotePlayer {
      * Write a given command out to the remote VM player.
      * @param command the command to send.
      */
-    private Object writeOut(Object command, boolean requireAnswer) {
+    private Object writeOut(Object command, boolean requireAnswer) throws RemotePlayerException {
         if (!open) {
             logger.error("This remote player has been closed!");
             throw new IllegalArgumentException("This remote player has been closed!");
@@ -71,7 +72,7 @@ public class RemotePlayer {
         }
     }
 
-    private Object writeOut(Object command) {
+    private Object writeOut(Object command) throws RemotePlayerException {
         return writeOut(command, true);
     }
 
@@ -79,29 +80,38 @@ public class RemotePlayer {
      * Block until receiving input from the remote VM player.
      * @return the input string received.
      */
-    private Object getInput() {
+    private Object getInput() throws RemotePlayerException {
         try {
             logger.debug("Awaiting command.");
             Object returnedInfo = in.readObject();
-            logger.debug("received command : " + returnedInfo);
-            return returnedInfo;
-        } catch (Exception ex) {
-            throw new RuntimeException("Couldn't perform operation", ex);
+            if (returnedInfo.getClass() == RemotePlayerException.class) {
+                throw new RemotePlayerException((RemotePlayerException) returnedInfo);
+            } else {
+                logger.debug("received command : " + returnedInfo);
+                return returnedInfo;
+            }
+        } catch (IOException ex) {
+            logger.error(ex);
+        } catch (ClassNotFoundException ex) {
+            logger.error(ex);
         }
+        return null;
     }
 
     /**
      * Load the given path into the remote player.
      * @param path the path to load.
+     * @throws RemotePlayerException  
      */
-    public void load(String path) {
+    public void load(String path) throws RemotePlayerException {
         writeOut(new LoadFile(path));
     }
 
     /**
      * Play the loaded video.
+     * @throws RemotePlayerException 
      */
-    public void play() {
+    public void play() throws RemotePlayerException {
         writeOut(new PlayCommand());
         playing = true;
         paused = false;
@@ -109,8 +119,9 @@ public class RemotePlayer {
 
     /**
      * Pause the video.
+     * @throws RemotePlayerException 
      */
-    public void pause() {
+    public void pause() throws RemotePlayerException {
         if (!paused) {
             writeOut(new PauseCommand());
             playing = false;
@@ -120,8 +131,9 @@ public class RemotePlayer {
 
     /**
      * Stop the video.
+     * @throws RemotePlayerException 
      */
-    public void stop() {
+    public void stop() throws RemotePlayerException {
         writeOut(new StopCommand());
         playing = false;
         paused = false;
@@ -131,9 +143,10 @@ public class RemotePlayer {
      * Take a snapshot.
      * @param time
      * @param path
-     * @return Snapshot is taken 
+     * @return Snapshot is taken
+     * @throws RemotePlayerException  
      */
-    public boolean takeSnapshot(long time, String path) {
+    public boolean takeSnapshot(long time, String path) throws RemotePlayerException {
 
         SnapshotCommand c = new SnapshotCommand();
         c.setTime(time);
@@ -146,24 +159,27 @@ public class RemotePlayer {
      * Determine if the current video is playable, i.e. one is loaded and 
      * ready to start playing when play() is called.
      * @return true if the video is playable, false otherwise.
+     * @throws RemotePlayerException  
      */
-    public boolean isPlayable() {
+    public boolean isPlayable() throws RemotePlayerException {
         return ((StateCommand) writeOut(new StateCommand(StateCommand.PLAYABLE))).getValue() == StateCommand.PLAYABLE;
     }
 
     /**
      * Get the length of the currently loaded video.
      * @return the length of the currently loaded video.
+     * @throws RemotePlayerException  
      */
-    public long getLength() {
+    public long getLength() throws RemotePlayerException {
         return ((LengthCommand) writeOut(new LengthCommand())).getValue();
     }
 
     /**
      * Get the time in milliseconds of the current position in the video.
      * @return the time in milliseconds of the current position in the video.
+     * @throws RemotePlayerException  
      */
-    public long getTime() {
+    public long getTime() throws RemotePlayerException {
         return ((TimeCommand) writeOut(new TimeCommand())).getValue();
     }
 
@@ -171,32 +187,36 @@ public class RemotePlayer {
      * Set the time in milliseconds of the current position in the video.
      * @param time the time in milliseconds of the current position in the
      * video.
+     * @throws RemotePlayerException  
      */
-    public void setTime(long time) {
+    public void setTime(long time) throws RemotePlayerException {
         writeOut(new TimeCommand(time));
     }
 
     /**
      * Determine if this video is muted.
      * @return true if it's muted, false if not.
+     * @throws RemotePlayerException  
      */
-    public boolean getMute() {
+    public boolean getMute() throws RemotePlayerException {
         return ((MuteCommand) writeOut(new MuteCommand())).getValue();
     }
 
     /**
      * Set whether this video is muted.
      * @param mute true to mute, false to unmute.
+     * @throws RemotePlayerException  
      */
-    public void setMute(boolean mute) {
+    public void setMute(boolean mute) throws RemotePlayerException {
         writeOut(new MuteCommand(mute));
     }
 
     /**
      * Terminate the OutOfProcessPlayer. MUST be called before closing, otherwise
      * the player won't quit!
+     * @throws RemotePlayerException 
      */
-    public void close() {
+    public void close() throws RemotePlayerException {
         if (open) {
             writeOut(new CloseCommand(), false);
             playing = false;
@@ -207,8 +227,9 @@ public class RemotePlayer {
     /**
      * Determine whether the remote player is playing.
      * @return true if its playing, false otherwise.
+     * @throws RemotePlayerException  
      */
-    public boolean isPlaying() {
+    public boolean isPlaying() throws RemotePlayerException {
         return ((StateCommand) writeOut(new StateCommand(StateCommand.PLAYED))).getValue() == StateCommand.PLAYED;
     }
 
