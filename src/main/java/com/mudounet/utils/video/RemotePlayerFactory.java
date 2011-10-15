@@ -3,6 +3,9 @@ package com.mudounet.utils.video;
 import com.sun.jna.Native;
 import java.awt.Canvas;
 import java.io.IOException;
+import java.util.logging.Level;
+import org.apache.log4j.Logger;
+
 
 /**
  * Factory class responsible for creating the out of process video players and
@@ -10,7 +13,7 @@ import java.io.IOException;
  * @author gmanciet
  */
 public class RemotePlayerFactory {
-    
+    protected static Logger logger = Logger.getLogger(RemotePlayerFactory.class.getName());
     private static int portCounter = 5555;
 
     /**
@@ -28,7 +31,11 @@ public class RemotePlayerFactory {
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
-                    player.close();
+                    try {
+                        player.close();
+                    } catch (RemotePlayerException ex) {
+                        logger.error(ex);
+                    }
                 }
             });
             return player;
@@ -58,7 +65,11 @@ public class RemotePlayerFactory {
 
                 @Override
                 public void run() {
-                    player.close();
+                    try {
+                        player.close();
+                    } catch (RemotePlayerException ex) {
+                        logger.error(ex);
+                    }
                 }
             });
             return player;

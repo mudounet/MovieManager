@@ -16,13 +16,14 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicSliderUI;
+import org.apache.log4j.Logger;
 
 /**
  * The control panel for displaying the video.
@@ -30,6 +31,7 @@ import javax.swing.plaf.basic.BasicSliderUI;
  */
 public class VideoControlPanel extends JPanel {
 
+    protected static Logger logger = Logger.getLogger(VideoControlPanel.class.getName());
     private static final long serialVersionUID = 1L;
     private JButton play;
     private JButton pause;
@@ -54,7 +56,11 @@ public class VideoControlPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                playVideo();
+                try {
+                    playVideo();
+                } catch (RemotePlayerException ex) {
+                    logger.error(ex);
+                }
             }
         });
 
@@ -64,7 +70,11 @@ public class VideoControlPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                pauseVideo();
+                try {
+                    pauseVideo();
+                } catch (RemotePlayerException ex) {
+                    logger.error(ex);
+                }
             }
         });
 
@@ -74,7 +84,11 @@ public class VideoControlPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                stopVideo();
+                try {
+                    stopVideo();
+                } catch (RemotePlayerException ex) {
+                    logger.error(ex);
+                }
                 positionSlider.setValue(0);
             }
         });
@@ -84,7 +98,11 @@ public class VideoControlPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                setMute(!getMute());
+                try {
+                    setMute(!getMute());
+                } catch (RemotePlayerException ex) {
+                    logger.error(ex);
+                }
             }
         });
         positionSlider = new JSlider(0, 1000);
@@ -95,11 +113,15 @@ public class VideoControlPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 for (RemotePlayer mediaPlayer : mediaPlayers) {
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.pause();
-                        pauseCheck = false;
-                    } else {
-                        pauseCheck = true;
+                    try {
+                        if (mediaPlayer.isPlaying()) {
+                            mediaPlayer.pause();
+                            pauseCheck = false;
+                        } else {
+                            pauseCheck = true;
+                        }
+                    } catch (RemotePlayerException ex) {
+                        logger.error(ex);
                     }
                 }
             }
@@ -107,9 +129,13 @@ public class VideoControlPanel extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 for (RemotePlayer mediaPlayer : mediaPlayers) {
-                    mediaPlayer.setTime((long) ((positionSlider.getValue() / (double) 1000) * mediaPlayer.getLength()));
-                    if (!pauseCheck) {
-                        mediaPlayer.play();
+                    try {
+                        mediaPlayer.setTime((long) ((positionSlider.getValue() / (double) 1000) * mediaPlayer.getLength()));
+                        if (!pauseCheck) {
+                            mediaPlayer.play();
+                        }
+                    } catch (RemotePlayerException ex) {
+                        logger.error(ex);
                     }
                 }
             }
@@ -172,7 +198,11 @@ public class VideoControlPanel extends JPanel {
                             RemotePlayer player = RemotePlayerFactory.getEmbeddedRemotePlayer(videoArea);
                             mediaPlayers.add(0, player);
                             if (videoPath != null) {
-                                player.load(videoPath);
+                                try {
+                                    player.load(videoPath);
+                                } catch (RemotePlayerException ex) {
+                                    logger.debug(ex);
+                                }
                             }
                             play.setEnabled(true);
                             pause.setEnabled(true);
@@ -205,8 +235,9 @@ public class VideoControlPanel extends JPanel {
     /**
      * Load the given video to be controlled via this panel.
      * @param videoPath the video path to load.
+     * @throws RemotePlayerException  
      */
-    public void loadVideo(String videoPath) {
+    public void loadVideo(String videoPath) throws RemotePlayerException {
         this.videoPath = videoPath;
         for (RemotePlayer mediaPlayer : mediaPlayers) {
             mediaPlayer.load(videoPath);
@@ -215,8 +246,9 @@ public class VideoControlPanel extends JPanel {
 
     /**
      * Play the loaded video.
+     * @throws RemotePlayerException 
      */
-    public void playVideo() {
+    public void playVideo() throws RemotePlayerException {
         for (int i = 0; i < mediaPlayers.size(); i++) {
             final RemotePlayer mediaPlayer = mediaPlayers.get(i);
             if (i > 0) {
@@ -227,15 +259,23 @@ public class VideoControlPanel extends JPanel {
 
                 @Override
                 public void run() {
-                    if (mediaPlayer.isPlaying()) {
-                        SwingUtilities.invokeLater(new Runnable() {
+                    try {
+                        if (mediaPlayer.isPlaying()) {
+                            SwingUtilities.invokeLater(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                int timeVal = (int) ((mediaPlayer.getTime() / (double) mediaPlayer.getLength()) * 1000);
-                                positionSlider.setValue(timeVal);
-                            }
-                        });
+                                @Override
+                                public void run() {
+                                    try {
+                                        int timeVal = (int) ((mediaPlayer.getTime() / (double) mediaPlayer.getLength()) * 1000);
+                                        positionSlider.setValue(timeVal);
+                                    } catch (RemotePlayerException ex) {
+                                        logger.error(ex);
+                                    }
+                                }
+                            });
+                        }
+                    } catch (RemotePlayerException ex) {
+                        logger.error(ex);
                     }
                 }
             }, 0, 500, TimeUnit.MILLISECONDS);
@@ -245,16 +285,18 @@ public class VideoControlPanel extends JPanel {
     /**
      * Get the current time of the video.
      * @return the current time of the video.
+     * @throws RemotePlayerException  
      */
-    public long getTime() {
+    public long getTime() throws RemotePlayerException {
         return mediaPlayers.get(0).getTime();
     }
 
     /**
      * Set the current time of the video.
      * @param time the current time of the video.
+     * @throws RemotePlayerException  
      */
-    public void setTime(long time) {
+    public void setTime(long time) throws RemotePlayerException {
         for (RemotePlayer mediaPlayer : mediaPlayers) {
             mediaPlayer.setTime(time);
         }
@@ -262,8 +304,9 @@ public class VideoControlPanel extends JPanel {
 
     /**
      * Pause the currently playing video.
+     * @throws RemotePlayerException 
      */
-    public void pauseVideo() {
+    public void pauseVideo() throws RemotePlayerException {
         for (RemotePlayer mediaPlayer : mediaPlayers) {
             mediaPlayer.pause();
         }
@@ -271,8 +314,9 @@ public class VideoControlPanel extends JPanel {
 
     /**
      * Stop the currently playing video.
+     * @throws RemotePlayerException 
      */
-    public void stopVideo() {
+    public void stopVideo() throws RemotePlayerException {
         for (RemotePlayer mediaPlayer : mediaPlayers) {
             mediaPlayer.stop();
         }
@@ -281,8 +325,9 @@ public class VideoControlPanel extends JPanel {
     /**
      * Set whether the video is muted.
      * @param muteState true to mute, false to unmute.
+     * @throws RemotePlayerException  
      */
-    public void setMute(boolean muteState) {
+    public void setMute(boolean muteState) throws RemotePlayerException {
         mediaPlayers.get(0).setMute(muteState);
         if (getMute()) {
             mute.setIcon(Utils.getImageIcon("images/volume-low.png"));
@@ -294,23 +339,25 @@ public class VideoControlPanel extends JPanel {
     /**
      * Determine if this video is muted.
      * @return true if muted, false if not.
+     * @throws RemotePlayerException  
      */
-    public boolean getMute() {
+    public boolean getMute() throws RemotePlayerException {
         return mediaPlayers.get(0).getMute();
     }
 
     /**
      * Close down all the players controlled via this control panel and stop
      * the external VM's / remote players it controls.
+     * @throws RemotePlayerException 
      */
-    public void close() {
+    public void close() throws RemotePlayerException {
         for (RemotePlayer mediaPlayer : mediaPlayers) {
             mediaPlayer.close();
             executorService.shutdownNow();
         }
     }
 
-    public void takeSnapshot(long time, String path) {
+    public void takeSnapshot(long time, String path) throws RemotePlayerException {
         mediaPlayers.get(0).takeSnapshot(time, path);
     }
 
@@ -330,33 +377,37 @@ public class VideoControlPanel extends JPanel {
      * @param args 
      */
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        VideoControlPanel panel = new VideoControlPanel();
-        frame.setLayout(new BorderLayout());
-        frame.add(panel, BorderLayout.CENTER);
-        frame.pack();
-        frame.setVisible(true);
+        try {
+            //JFrame frame = new JFrame();
+            //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            //VideoControlPanel panel = new VideoControlPanel();
+            //frame.setLayout(new BorderLayout());
+            //frame.add(panel, BorderLayout.CENTER);
+            //frame.setVisible(true);
+            //frame.setVisible(true);
 
-        panel.loadVideo("src/test/resources/sample_video.flv");
+            //panel.loadVideo("src/test/resources/sample_video.flv");
 
-        panel.playVideo();
-        RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessRemotePlayer();
+            //panel.playVideo();
+            RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessRemotePlayer();
 
-        headlessRemotePlayer.load("src/test/resources/sample_video.flv");
-        headlessRemotePlayer.play();
+            headlessRemotePlayer.load("src/test/resources/sample_video.flv");
+            headlessRemotePlayer.play();
 
-        long length = headlessRemotePlayer.getLength();
-        System.out.println("Taking snapshot");
+            long length = headlessRemotePlayer.getLength();
+            System.out.println("Taking snapshot");
 
-        long snapshots = 9;
-        for (long i = 1; i <= snapshots; i++) {
-            System.out.println((float)i / (snapshots + 1));
-            headlessRemotePlayer.takeSnapshot(length * i / (snapshots + 1), "test-" + i + ".png");
+            long snapshots = 9;
+            for (long i = 1; i <= snapshots; i++) {
+                System.out.println((float) i / (snapshots + 1));
+                headlessRemotePlayer.takeSnapshot(length * i / (snapshots + 1), "test-" + i + ".png");
+            }
+
+            System.out.println("All snapshots taken");
+            headlessRemotePlayer.close();
+        } catch (RemotePlayerException ex) {
+            logger.error(ex);
         }
-
-
-        headlessRemotePlayer.close();
 
     }
 }
