@@ -52,7 +52,7 @@ public class RemotePlayer {
      * Write a given command out to the remote VM player.
      * @param command the command to send.
      */
-    private Object writeOut(Object command) {
+    private Object writeOut(Object command, boolean requireAnswer) {
         if (!open) {
             logger.error("This remote player has been closed!");
             throw new IllegalArgumentException("This remote player has been closed!");
@@ -61,11 +61,18 @@ public class RemotePlayer {
             logger.debug("Sending command " + command);
             out.writeObject(command);
             out.flush();
+            if (!requireAnswer) {
+                return null;
+            }
             return getInput();
         } catch (IOException ex) {
 
             throw new RuntimeException("Couldn't perform operation", ex);
         }
+    }
+
+    private Object writeOut(Object command) {
+        return writeOut(command, true);
     }
 
     /**
@@ -131,8 +138,8 @@ public class RemotePlayer {
         SnapshotCommand c = new SnapshotCommand();
         c.setTime(time);
         c.setPath(path);
-        logger.debug("Request snapshot :"+c);
-        return ((BooleanCommand)writeOut(c)).getValue();
+        logger.debug("Request snapshot :" + c);
+        return ((BooleanCommand) writeOut(c)).getValue();
     }
 
     /**
@@ -191,7 +198,7 @@ public class RemotePlayer {
      */
     public void close() {
         if (open) {
-            writeOut(new CloseCommand());
+            writeOut(new CloseCommand(), false);
             playing = false;
             open = false;
         }
