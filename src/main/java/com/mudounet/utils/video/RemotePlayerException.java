@@ -15,7 +15,7 @@ public class RemotePlayerException extends Exception {
         super(string);
     }
     
-    RemotePlayerException(RemotePlayerException exception) {
+    RemotePlayerException(Exception exception) {
         super(exception);
     }
     

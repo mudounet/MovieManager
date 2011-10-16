@@ -44,40 +44,42 @@ public abstract class OutOfProcessPlayer {
     /**
      * Start the main loop reading from the standard input stream and writing
      * to sout.
-     * @throws IOException if something goes wrong.
-     * @throws ClassNotFoundException  
      */
-    public void read() throws IOException, ClassNotFoundException, InterruptedException {
+    public void read() {
+        try {
+            System.err.println("Création des flux");
+            oos = new ObjectOutputStream(System.out);
+            ois = new ObjectInputStream(System.in);
+            // Création de l'output stream
 
-        //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            Object receivedObject;
 
-        System.err.println("Création des flux");
-        oos = new ObjectOutputStream(System.out);
-        ois = new ObjectInputStream(System.in);
-// Création de l'output stream
+            ThreadedAction t = new ThreadedAction();
+            t.start();
 
-        Object receivedObject;
-
-        ThreadedAction t = new ThreadedAction();
-        t.start();
-
-        while ((receivedObject = ois.readObject()) != null) {
-
-
-            operationFinished = t.requestNewOperation(receivedObject);
-            ;
-
-            if (operationFinished.await(10L, TimeUnit.SECONDS)) {
-                execReturnObject(t.getResult());
-            } else {
-                System.err.println("TimeOut Exception");
-                execReturnObject(new RemotePlayerException("Operation has timed-out."));
+            while ((receivedObject = ois.readObject()) != null) {
+                operationFinished = t.requestNewOperation(receivedObject);
+                try {
+                    if (operationFinished.await(10L, TimeUnit.SECONDS)) {
+                        execReturnObject(t.getResult());
+                    } else {
+                        System.err.println("TimeOut Exception");
+                        execReturnObject(new RemotePlayerException("Operation has timed-out."));
+                    }
+                } catch (InterruptedException ex) {
+                    execReturnObject(new RemotePlayerException(ex));
+                }
             }
+
+            t.requestStop();
+            System.err.println("Flux crées");
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace(System.err);
+        } catch (IOException ex) {
+            ex.printStackTrace(System.err);
         }
-
-        System.err.println("Flux crées");
-        System.exit(1);
-
+        System.err.println();
+        System.exit(-1);
     }
 
     private void execReturnObject(Object o) throws IOException {
@@ -101,7 +103,7 @@ public abstract class OutOfProcessPlayer {
         private Object result;
         private long length = -1;
         private CountDownLatch inTimePositionLatch;
-        private CountDownLatch lengthUpdatedLatch  = new CountDownLatch(1);
+        private CountDownLatch lengthUpdatedLatch = new CountDownLatch(1);
         private CountDownLatch snapshotTakenLatch;
         private CountDownLatch newOperationLatch;
         private long snapshotTimePosition;
@@ -109,6 +111,7 @@ public abstract class OutOfProcessPlayer {
         private ThreadedAction() {
 
             this.addSnapshotFunction();
+            this.length = -1;
 
         }
 
@@ -116,7 +119,11 @@ public abstract class OutOfProcessPlayer {
         public void run() {
             while (!stop) {
                 if (newOperationLatch != null && newOperationLatch.getCount() > 0) {
-                    result = execReqstdAction(command);
+                    try {
+                        result = execReqstdAction(command);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace(System.err);
+                    }
                     newOperationLatch.countDown();
                 }
             }
@@ -126,6 +133,7 @@ public abstract class OutOfProcessPlayer {
         public CountDownLatch requestNewOperation(Object receivedObject) {
             command = receivedObject;
             newOperationLatch = new CountDownLatch(1);
+            result = null;
             return newOperationLatch;
         }
 
@@ -137,17 +145,16 @@ public abstract class OutOfProcessPlayer {
             return result;
         }
 
-        private Object execReqstdAction(Object receivedObject) {
+        private Object execReqstdAction(Object receivedObject) throws InterruptedException {
             Object returnObject = new BooleanCommand();
 
             if (receivedObject.getClass() == LoadFile.class) {
                 System.err.println("Load command received : " + receivedObject);
                 mediaPlayer.prepareMedia(((LoadFile) receivedObject).getFilePath(), getPrepareOptions());
-                length = 0;
+                this.length = -1;
             } else if (receivedObject.getClass() == CloseCommand.class) {
                 System.err.println("Close command received");
                 close();
-
             } else if (receivedObject.getClass() == PlayCommand.class) {
                 System.err.println("Play command received");
                 mediaPlayer.play();
@@ -161,21 +168,16 @@ public abstract class OutOfProcessPlayer {
                 SnapshotCommand t = (SnapshotCommand) receivedObject;
                 System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
 
-
-
-                boolean result = false;
+                boolean result2 = false;
 
                 try {
-
                     this.moveToTime(t.getTime());
-
-                    result = this.takeSnapshot(t.getPath());
-
+                    result2 = this.takeSnapshot(t.getPath());
                 } catch (InterruptedException ex) {
                     ex.printStackTrace(System.err);
                 }
 
-                returnObject = new BooleanCommand(result);
+                returnObject = new BooleanCommand(result2);
 
             } else if (receivedObject.getClass() == TimeCommand.class) {
                 TimeCommand t = (TimeCommand) receivedObject;
@@ -190,11 +192,9 @@ public abstract class OutOfProcessPlayer {
             } else if (receivedObject.getClass() == LengthCommand.class) {
                 LengthCommand t = (LengthCommand) receivedObject;
                 System.err.println("Request to get length.");
-                try {
-                    t.setValue(getLength());
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace(System.err);
-                }
+
+                t.setValue(getLength());
+
                 returnObject = t;
             } else if (receivedObject.getClass() == MuteCommand.class) {
                 MuteCommand t = (MuteCommand) receivedObject;
@@ -253,10 +253,10 @@ public abstract class OutOfProcessPlayer {
                 public void lengthChanged(MediaPlayer mediaPlayer, long newLength) {
                     if (lengthUpdatedLatch != null) {
                         lengthUpdatedLatch.countDown();
-                        
+
                     }
-                    
-                    if(newLength > 0) {
+
+                    if (newLength > 0) {
                         System.err.println("Length updated : from " + length + " to " + newLength);
                         length = newLength;
                     }
@@ -271,16 +271,13 @@ public abstract class OutOfProcessPlayer {
         }
 
         private long getLength() throws InterruptedException {
-            if (length <= 0) {
-                mediaPlayer.getLength();
+            if (this.length <= 0) {
                 this.lengthUpdatedLatch = new CountDownLatch(1);
-                
                 if (lengthUpdatedLatch.await(10L, TimeUnit.SECONDS)) {
                     return this.length;
                 } else {
                     return -1;
                 }
-
             } else {
                 return this.length;
             }
@@ -303,17 +300,17 @@ public abstract class OutOfProcessPlayer {
             System.err.println("Waiting latch.");
             snapshotTakenLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
 
-            for (int i = 0; i < 10; i++) {
-                if (file.exists()) {
-                    System.err.println("File found : " + file.getAbsolutePath());
-
-                    return true;
-                }
+            if (file.exists()) {
+                System.err.println("File found : " + file.getAbsolutePath());
+                return true;
+            } else {
                 System.err.println("File is not found : " + file.getAbsolutePath());
                 Thread.sleep(500);
+                return false;
             }
 
-            return false;
+
+
         }
 
         private boolean takeSnapshot(String path) throws InterruptedException {
