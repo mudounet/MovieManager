@@ -18,14 +18,13 @@
 package com.mudounet.utils.video;
 
 import com.mudounet.utils.video.remotecommands.*;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
@@ -75,9 +74,11 @@ public abstract class OutOfProcessPlayer {
             System.err.println("Flux crées");
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace(System.err);
+        }catch (EOFException ex) {
+            System.err.println("Remote player has been closed");
         } catch (IOException ex) {
             ex.printStackTrace(System.err);
-        }
+        } 
         System.err.println();
         System.exit(-1);
     }
