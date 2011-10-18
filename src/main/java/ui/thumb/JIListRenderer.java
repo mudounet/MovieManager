@@ -15,7 +15,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 
 public class JIListRenderer extends JPanel implements ListCellRenderer {
-	//private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JIListRenderer.class);
+	//private static final org.apache.log4j.Logger log = org.apache.log4j.LoggerFactory.getLogger(JIListRenderer.class);
 
 	/**
 	 *

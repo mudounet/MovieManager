@@ -10,7 +10,8 @@ import com.mudounet.hibernate.movies.Movie;
 import com.mudounet.hibernate.movies.GenericMovie;
 import com.mudounet.utils.Utils;
 import java.util.Set;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -23,7 +24,7 @@ import static org.junit.Assert.*;
  */
 public class MovieToolManagerTest {
 
-    protected static Logger logger = Logger.getLogger(SimpleTagManager.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(SimpleTagManager.class.getName());
 
     public MovieToolManagerTest() {
     }

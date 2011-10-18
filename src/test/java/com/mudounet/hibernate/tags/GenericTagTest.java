@@ -14,7 +14,8 @@ import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.dbunit.dataset.ITable;
 import org.hibernate.Hibernate;
 
@@ -24,7 +25,7 @@ import org.hibernate.Hibernate;
  */
 public class GenericTagTest extends ProjectDatabaseTestCase {
 
-    protected static Logger logger = Logger.getLogger(GenericTagTest.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(GenericTagTest.class.getName());
     private Transaction tx;
 
     public GenericTagTest(String name) {

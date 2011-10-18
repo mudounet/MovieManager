@@ -21,7 +21,8 @@ import com.mudounet.utils.video.remotecommands.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Controls an OutOfProcessPlayer via input / output process streams.
@@ -34,7 +35,7 @@ public class RemotePlayer {
     private Process process;
     private boolean open;
     private boolean playing;
-    protected static Logger logger = Logger.getLogger(RemotePlayer.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(RemotePlayer.class.getName());
     private boolean paused;
 
     /**
@@ -90,9 +91,9 @@ public class RemotePlayer {
                 return returnedInfo;
             }
         } catch (IOException ex) {
-            logger.error(ex);
+            logger.error("IO error", ex);
         } catch (ClassNotFoundException ex) {
-            logger.error(ex);
+            logger.error("Class not found", ex);
         }
         return null;
     }

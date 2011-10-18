@@ -6,7 +6,8 @@ package com.mudounet.utils.hibernate;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 
 /**
@@ -15,7 +16,7 @@ import org.hibernate.HibernateException;
  */
 public class DataAccessLayerException extends Exception {
 
-    protected static Logger logger = Logger.getLogger(DataAccessLayerException.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(DataAccessLayerException.class.getName());
     private static final long serialVersionUID = 1L;
 
     public DataAccessLayerException() {

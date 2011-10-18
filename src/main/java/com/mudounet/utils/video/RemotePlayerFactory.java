@@ -4,7 +4,8 @@ import com.sun.jna.Native;
 import java.awt.Canvas;
 import java.io.IOException;
 import java.util.logging.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -13,7 +14,7 @@ import org.apache.log4j.Logger;
  * @author gmanciet
  */
 public class RemotePlayerFactory {
-    protected static Logger logger = Logger.getLogger(RemotePlayerFactory.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(RemotePlayerFactory.class.getName());
     private static int portCounter = 5555;
 
     /**
@@ -34,7 +35,7 @@ public class RemotePlayerFactory {
                     try {
                         player.close();
                     } catch (RemotePlayerException ex) {
-                        logger.error(ex);
+                        logger.error("Remote player error : " , ex);
                     }
                 }
             });
@@ -68,7 +69,7 @@ public class RemotePlayerFactory {
                     try {
                         player.close();
                     } catch (RemotePlayerException ex) {
-                        logger.error(ex);
+                        logger.error("Remote player error : ", ex);
                     }
                 }
             });

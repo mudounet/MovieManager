@@ -12,14 +12,15 @@
 package ui;
 
 import javax.swing.JList;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author gmanciet
  */
 public class MainFrame1 extends javax.swing.JFrame {
-    private static Logger logger = Logger.getLogger(MainFrame1.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(MainFrame1.class.getName());
 
     /** Creates new form MainFrame */
     public MainFrame1() {

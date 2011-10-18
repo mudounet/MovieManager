@@ -16,14 +16,14 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicSliderUI;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The control panel for displaying the video.
@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  */
 public class VideoControlPanel extends JPanel {
 
-    protected static Logger logger = Logger.getLogger(VideoControlPanel.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(VideoControlPanel.class.getName());
     private static final long serialVersionUID = 1L;
     private JButton play;
     private JButton pause;
@@ -59,7 +59,7 @@ public class VideoControlPanel extends JPanel {
                 try {
                     playVideo();
                 } catch (RemotePlayerException ex) {
-                    logger.error(ex);
+                    logger.error("Remote player error : " , ex);
                 }
             }
         });
@@ -73,7 +73,7 @@ public class VideoControlPanel extends JPanel {
                 try {
                     pauseVideo();
                 } catch (RemotePlayerException ex) {
-                    logger.error(ex);
+                    logger.error("Remote player error : " , ex);
                 }
             }
         });
@@ -87,7 +87,7 @@ public class VideoControlPanel extends JPanel {
                 try {
                     stopVideo();
                 } catch (RemotePlayerException ex) {
-                    logger.error(ex);
+                    logger.error("Remote player error : " , ex);
                 }
                 positionSlider.setValue(0);
             }
@@ -101,7 +101,7 @@ public class VideoControlPanel extends JPanel {
                 try {
                     setMute(!getMute());
                 } catch (RemotePlayerException ex) {
-                    logger.error(ex);
+                    logger.error("Remote player error : " , ex);
                 }
             }
         });
@@ -121,7 +121,7 @@ public class VideoControlPanel extends JPanel {
                             pauseCheck = true;
                         }
                     } catch (RemotePlayerException ex) {
-                        logger.error(ex);
+                        logger.error("Remote player error : " , ex);
                     }
                 }
             }
@@ -135,7 +135,7 @@ public class VideoControlPanel extends JPanel {
                             mediaPlayer.play();
                         }
                     } catch (RemotePlayerException ex) {
-                        logger.error(ex);
+                        logger.error("Remote player error : " , ex);
                     }
                 }
             }
@@ -201,7 +201,7 @@ public class VideoControlPanel extends JPanel {
                                 try {
                                     player.load(videoPath);
                                 } catch (RemotePlayerException ex) {
-                                    logger.debug(ex);
+                                    logger.error("Remote player error : " , ex);
                                 }
                             }
                             play.setEnabled(true);
@@ -269,13 +269,13 @@ public class VideoControlPanel extends JPanel {
                                         int timeVal = (int) ((mediaPlayer.getTime() / (double) mediaPlayer.getLength()) * 1000);
                                         positionSlider.setValue(timeVal);
                                     } catch (RemotePlayerException ex) {
-                                        logger.error(ex);
+                                        logger.error("Remote player error : " , ex);
                                     }
                                 }
                             });
                         }
                     } catch (RemotePlayerException ex) {
-                        logger.error(ex);
+                        logger.error("Remote player error : " , ex);
                     }
                 }
             }, 0, 500, TimeUnit.MILLISECONDS);
@@ -406,7 +406,7 @@ public class VideoControlPanel extends JPanel {
             System.out.println("All snapshots taken");
             headlessRemotePlayer.close();
         } catch (RemotePlayerException ex) {
-            logger.error(ex);
+            logger.error("Remote player error : " , ex);
         }
 
     }

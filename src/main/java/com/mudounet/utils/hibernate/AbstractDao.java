@@ -5,7 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import org.hibernate.Criteria;
@@ -19,7 +20,7 @@ import org.hibernate.criterion.Restrictions;
  */
 public class AbstractDao {
 
-    protected static Logger logger = Logger.getLogger(AbstractDao.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(AbstractDao.class.getName());
     private Session session;
     private boolean keepConnectionOpened = false;
     private boolean oldKeepConnectionOpened = false;

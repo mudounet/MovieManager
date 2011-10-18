@@ -11,7 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.TransferHandler;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 class FileDropHandler extends TransferHandler {
 
-    protected static Logger logger = Logger.getLogger(FileDropHandler.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(FileDropHandler.class.getName());
     private static final long serialVersionUID = 1L;
 
     @Override

@@ -4,7 +4,8 @@ import com.sun.jna.NativeLibrary;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
 /**
@@ -14,7 +15,7 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
  */
 public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
 
-    protected static Logger logger = Logger.getLogger(OutOfProcessEmbeddedPlayer.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(OutOfProcessEmbeddedPlayer.class.getName());
     private static final String[] VLC_ARGS = {
         "--intf", "dummy", /* no interface */
         "--vout", "dummy", /* we don't want video (output) */

@@ -7,7 +7,8 @@ package com.mudounet.utils.dbunit;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -15,7 +16,7 @@ import org.apache.log4j.Logger;
  */
 public class TestTools {
 
-protected static Logger logger = Logger.getLogger(TestTools.class.getName());
+protected static Logger logger = LoggerFactory.getLogger(TestTools.class.getName());
     
     public static InputStream loadFromClasspath(String s) throws Exception {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();

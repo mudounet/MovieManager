@@ -4,7 +4,8 @@
  */
 package com.mudounet.utils.hibernate;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -16,7 +17,7 @@ import org.hibernate.cfg.Configuration;
  * @author gmanciet
  */
 public class HibernateFactory {
-    protected static Logger logger = Logger.getLogger(HibernateFactory.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(HibernateFactory.class.getName());
     private static SessionFactory sessionFactory;
     private static Configuration configuration;
 /*    private static Log log =

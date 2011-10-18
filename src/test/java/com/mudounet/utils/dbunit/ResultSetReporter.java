@@ -7,7 +7,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;  
 import java.sql.SQLException;
 import java.util.ArrayList;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
@@ -19,7 +20,7 @@ import org.dbunit.dataset.ITableMetaData;
  */
 public class ResultSetReporter {
     
-    protected static Logger logger = Logger.getLogger(ResultSetReporter.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(ResultSetReporter.class.getName());
 
     public static void dump(ITable rs) throws SQLException, DataSetException {
 

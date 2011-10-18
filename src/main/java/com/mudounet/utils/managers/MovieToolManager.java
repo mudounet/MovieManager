@@ -15,7 +15,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -23,7 +24,7 @@ import org.apache.log4j.Logger;
  */
 public class MovieToolManager {
 
-    protected static Logger logger = Logger.getLogger(MovieToolManager.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(MovieToolManager.class.getName());
 
     private static RemotePlayer createHeadlessPlayer(GenericMovie movie) throws RemotePlayerException {
         RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessRemotePlayer();
@@ -38,7 +39,7 @@ public class MovieToolManager {
         File file = new File(movie.getPath());
         techData.setSize(file.length());
 
-        logger.info(techData);
+        logger.info("Technical data : ", techData);
 
         return null;
     }
@@ -88,7 +89,7 @@ public class MovieToolManager {
                     }
                 } catch (RemotePlayerException ex) {
                     logger.warn("Retry " + retry + " / " + nbOfTries);
-                    logger.warn(ex);
+                    logger.warn("Remote player error : ", ex);
                     headlessRemotePlayer.close();
                     headlessRemotePlayer = createHeadlessPlayer(movie);
 

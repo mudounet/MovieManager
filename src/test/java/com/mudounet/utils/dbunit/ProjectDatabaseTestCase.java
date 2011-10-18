@@ -10,7 +10,8 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.dbunit.DefaultOperationListener;
 import org.dbunit.IOperationListener;
 import org.dbunit.database.DatabaseConfig;
@@ -24,7 +25,7 @@ import org.junit.Before;
 public abstract class ProjectDatabaseTestCase
         extends DatabaseTestCase {
 
-    protected static Logger logger = Logger.getLogger(ProjectDatabaseTestCase.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(ProjectDatabaseTestCase.class.getName());
     private static String driver = "hibernate.connection.driver_class";
     private static String url = "hibernate.connection.url";
     private static String username = "hibernate.connection.username";
@@ -78,7 +79,7 @@ public abstract class ProjectDatabaseTestCase
             InputStream fileStream = loadFromTestPath(file);
             InputStream dtdStream = TestTools.loadFromClasspath("database.dtd");
             if (dtdStream == null) {
-                logger.fatal("Database-schema loading failed");
+                logger.error("Database-schema loading failed");
 
                 throw new Exception("Database-schema loading failed");
             } else {

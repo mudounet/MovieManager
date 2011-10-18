@@ -10,7 +10,8 @@ import com.mudounet.utils.Md5Generator;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,7 +23,7 @@ import org.apache.log4j.Logger;
  **/
 public abstract class GenericMovie {
 
-     protected static final Logger logger = Logger.getLogger(GenericMovie.class.getName());
+     protected static final Logger logger = LoggerFactory.getLogger(GenericMovie.class.getName());
     protected Long id;
     protected String title;
     protected String path;
@@ -64,7 +65,7 @@ public abstract class GenericMovie {
                 md5 = Md5Generator.computeMD5(path);
             } catch (Exception ex) {
                 md5 = "";
-                logger.error(ex);
+                logger.error("Exception found : ", ex);
             }
         }
         

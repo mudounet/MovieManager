@@ -49,7 +49,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * General utility class containing a bunch of static methods.
@@ -57,7 +58,7 @@ import org.apache.log4j.Logger;
  */
 public final class Utils {
 
-    protected static final Logger logger = Logger.getLogger(Utils.class.getName());
+    protected static final Logger logger = LoggerFactory.getLogger(Utils.class.getName());
 
     /**
      * Don't instantiate me. I bite.
@@ -279,7 +280,7 @@ public final class Utils {
                 try {
                     reader.close();
                 } catch (IOException ex) {
-                    logger.warn(ex);
+                    logger.warn("I/O error : ", ex);
                 }
             }
         }
