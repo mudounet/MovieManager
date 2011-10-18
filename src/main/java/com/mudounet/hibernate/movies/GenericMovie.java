@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  **/
 public abstract class GenericMovie {
 
-     protected static final Logger logger = LoggerFactory.getLogger(GenericMovie.class.getName());
+         protected static final Logger logger = LoggerFactory.getLogger(GenericMovie.class.getName());
     protected Long id;
     protected String title;
     protected String path;
