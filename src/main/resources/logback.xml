@@ -1,31 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <configuration>
-
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- encoders are assigned the type
-         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
-         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-      <level>INFO</level>
-      <onMatch>ACCEPT</onMatch>
-      <onMismatch>DENY</onMismatch>
-    </filter>
-  </appender>
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>testFile.log.txt</file>
-    <append>false</append>
-    <prudent>true</prudent>
-    <!-- encoders are assigned the type
-         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
-    <encoder>
-      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
-    </encoder>
-  </appender>
-
-  
-
-  <root level="DEBUG">
-    <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE" />
-  </root>
+    <appender name="ConsoleFileAppender" class="ch.qos.logback.core.FileAppender">
+        <file>allEvents.log.htm</file>
+        <append>false</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+        <layout class="ch.qos.logback.classic.html.HTMLLayout">
+            <pattern>%p%C{1}%L%t%r%m</pattern>
+        </layout>
+    </appender>
+    <appender name="AllEventsLogFileAppender" class="ch.qos.logback.core.FileAppender">
+        <file>mylog.htm</file>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <layout class="ch.qos.logback.classic.html.HTMLLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss}%p%C{1}%t%m</pattern>
+        </layout>
+    </appender>
+    <appender name="RootConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%p, %c, %t %m%n</pattern>
+        </layout>
+    </appender>
+    <root>
+        <level value="info"/>
+        <appender-ref ref="ConsoleFileAppender"/>
+        <appender-ref ref="AllEventsLogFileAppender"/>
+        <appender-ref ref="RootConsoleAppender"/>
+    </root>
 </configuration>

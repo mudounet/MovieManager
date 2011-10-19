@@ -76,6 +76,8 @@ public class RemotePlayerFactory {
             return player;
         }
         catch (IOException ex) {
+            logger.error("Couldn't create headless remote player : "+ex);
+                    
             throw new RuntimeException("Couldn't create headless remote player", ex);
         }
     }
@@ -93,8 +95,11 @@ public class RemotePlayerFactory {
         String classpath = System.getProperty("java.class.path");
         String path = System.getProperty("java.home")
                 + separator + "bin" + separator + "java";
+        logger.debug("Creating process in external JVM");
         ProcessBuilder processBuilder = new ProcessBuilder(path, "-cp", classpath, "-Djna.library.path=" + System.getProperty("jna.library.path"), clazz.getName(), option);
+        logger.debug("Starting process in external JVM");
         Process process = processBuilder.start();
+        logger.debug("Linking processes");
         return new StreamWrapper(process.getInputStream(), process.getOutputStream());
     }
 }
