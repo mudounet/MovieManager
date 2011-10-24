@@ -64,7 +64,6 @@ public class Image implements java.io.Serializable {
     }
 
     /**
-     * @hibernate.property
      * @return File represented by this image
      */
     public File getFile() {
