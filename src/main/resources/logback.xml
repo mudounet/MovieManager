@@ -1,36 +1,31 @@
+
 <configuration>
-    <appender name="ConsoleFileAppender" class="ch.qos.logback.core.FileAppender">
-        <file>allEvents.log.htm</file>
+    <appender name="DebugAppender" class="ch.qos.logback.core.FileAppender">
+        <file>last-exec.log.htm</file>
         <append>false</append>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>debug</level>
-        </filter>
         <layout class="ch.qos.logback.classic.html.HTMLLayout">
-            <pattern>%p%C{1}%L%t%r%m</pattern>
+            <pattern>%r%C{1}%L%t%p%m</pattern>
         </layout>
     </appender>
-    <appender name="AllEventsLogFileAppender" class="ch.qos.logback.core.FileAppender">
-        <file>mylog.htm</file>
-        <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>info</level>
-        </filter>
+    <appender name="HistoryAppender" class="ch.qos.logback.core.FileAppender">
+        <file>history.log.htm</file>
+        <append>false</append>
         <layout class="ch.qos.logback.classic.html.HTMLLayout">
             <pattern>%d{yyyy-MM-dd HH:mm:ss}%p%C{1}%t%m</pattern>
         </layout>
     </appender>
-    <appender name="RootConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>info</level>
-        </filter>
+    <appender name="ConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%p, %c, %t %m%n</pattern>
+            <pattern>[%p %C{1}:%L %t] %m%n</pattern>
         </layout>
     </appender>
-    <root>
-        <level value="info"/>
-        <appender-ref ref="ConsoleFileAppender"/>
-        <appender-ref ref="AllEventsLogFileAppender"/>
-        <appender-ref ref="RootConsoleAppender"/>
+    <logger level="DEBUG" name="com.mudounet">
+         <appender-ref ref="DebugAppender"/>       
+    </logger>
+    <root level="INFO">
+
+        <appender-ref ref="HistoryAppender"/>
+        <appender-ref ref="ConsoleAppender"/>
     </root>
 </configuration>

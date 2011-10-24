@@ -3,7 +3,6 @@ package com.mudounet.utils.video;
 import com.sun.jna.Native;
 import java.awt.Canvas;
 import java.io.IOException;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,8 +58,10 @@ public class RemotePlayerFactory {
      * @return a headless remote player interface to a player in a separate VM.
      */
     public static RemotePlayer getHeadlessRemotePlayer() {
+  logger.debug("Creating process in external JVM");
         try {
-            StreamWrapper wrapper = startSecondPlayerJVM(OutOfProcessHeadlessPlayer.class, "");
+            
+            StreamWrapper wrapper = startSecondPlayerJVM(OutOfProcessHeadlessPlayer.class, Long.toString(0L));
             final RemotePlayer player = new RemotePlayer(wrapper);
             Runtime.getRuntime().addShutdownHook(new Thread() {
 
@@ -95,11 +96,12 @@ public class RemotePlayerFactory {
         String classpath = System.getProperty("java.class.path");
         String path = System.getProperty("java.home")
                 + separator + "bin" + separator + "java";
-        logger.debug("Creating process in external JVM");
         ProcessBuilder processBuilder = new ProcessBuilder(path, "-cp", classpath, "-Djna.library.path=" + System.getProperty("jna.library.path"), clazz.getName(), option);
         logger.debug("Starting process in external JVM");
         Process process = processBuilder.start();
         logger.debug("Linking processes");
-        return new StreamWrapper(process.getInputStream(), process.getOutputStream());
+        StreamWrapper wrapper = new StreamWrapper(process.getInputStream(), process.getOutputStream());
+        logger.debug("Streamwrapper created");
+        return wrapper;
     }
 }

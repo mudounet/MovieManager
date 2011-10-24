@@ -18,6 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
@@ -378,15 +379,16 @@ public class VideoControlPanel extends JPanel {
      */
     public static void main(String[] args) {
         try {
-            //JFrame frame = new JFrame();
-            //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            //VideoControlPanel panel = new VideoControlPanel();
-            //frame.setLayout(new BorderLayout());
-            //frame.add(panel, BorderLayout.CENTER);
-            //frame.setVisible(true);
-            //frame.setVisible(true);
+//            JFrame frame = new JFrame();
+//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            frame.setSize(300, 300);
+//            VideoControlPanel panel = new VideoControlPanel();
+//            frame.setLayout(new BorderLayout());
+//            frame.add(panel, BorderLayout.CENTER);
+//            frame.setVisible(true);
+//            frame.setVisible(true);
 
-            //panel.loadVideo("src/test/resources/sample_video.flv");
+//            panel.loadVideo("src/test/resources/sample_video.flv");
 
             //panel.playVideo();
             RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessRemotePlayer();
@@ -395,15 +397,15 @@ public class VideoControlPanel extends JPanel {
             headlessRemotePlayer.play();
 
             long length = headlessRemotePlayer.getLength();
-            System.out.println("Taking snapshot");
+            logger.info("Taking snapshot");
 
             long snapshots = 9;
             for (long i = 1; i <= snapshots; i++) {
-                System.out.println((float) i / (snapshots + 1));
+                logger.debug("Snapshot index : "+i+" / "+snapshots);
                 headlessRemotePlayer.takeSnapshot(length * i / (snapshots + 1), "test-" + i + ".png");
             }
 
-            System.out.println("All snapshots taken");
+            logger.info("All snapshots taken");
             headlessRemotePlayer.close();
         } catch (RemotePlayerException ex) {
             logger.error("Remote player error : " , ex);

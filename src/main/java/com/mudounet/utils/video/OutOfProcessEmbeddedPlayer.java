@@ -48,7 +48,6 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
         PrintStream stream = null;
 
         try {
-           
             stream = new PrintStream(new File("logfile.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessEmbeddedPlayer player = new OutOfProcessEmbeddedPlayer(Integer.parseInt(args[0]));

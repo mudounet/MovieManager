@@ -66,7 +66,6 @@ public class MovieToolManager {
 
         RemotePlayer headlessRemotePlayer = createHeadlessPlayer(movie);
 
-
         long length = headlessRemotePlayer.getLength();
 
         if (length == -1) {

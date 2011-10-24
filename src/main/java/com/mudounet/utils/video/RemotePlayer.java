@@ -32,7 +32,6 @@ public class RemotePlayer {
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private Process process;
     private boolean open;
     private boolean playing;
     protected static Logger logger = LoggerFactory.getLogger(RemotePlayer.class.getName());
@@ -42,9 +41,11 @@ public class RemotePlayer {
      * Internal use only.
      */
     RemotePlayer(StreamWrapper wrapper) throws IOException {
-
+        logger.debug("Begin to associate input stream");
         in = new ObjectInputStream(wrapper.getInputStream());
+        logger.debug("Begin to associate output stream");
         out = new ObjectOutputStream(wrapper.getOutputStream());
+        logger.debug("End of streams association");
         playing = false;
         open = true;
     }
