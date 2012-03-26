@@ -8,6 +8,7 @@ import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.utils.dbunit.TestTools;
 import com.mudounet.hibernate.movies.Movie;
 import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.Utils;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -45,14 +46,16 @@ public class MovieToolManagerTest {
         logger.info("getMovieInformations");
         File movieFile = Utils.getFileFromClasspath("sample_video.flv");
 
-        TechData result = MovieToolManager.getMovieInformations(movieFile);
+        GenericMovie m = MovieToolManager.buildMovie(movieFile);
+        TechData result = MovieToolManager.getMovieInformations(m);
 
-        //movieFile = TestTools.getFileFromClasspath("sample_video.mp4");
+        assertNotNull(result.getCodecName());
+        assertEquals(result.getCodecName().length() > 0, true);
+        assertEquals(result.getPlayTime() > 0, true);
+        assertEquals(result.getHeight() > 0, true);
+        assertEquals(result.getWidth() > 0, true);  
+        assertEquals(result.getSize() > 0, true);
 
-        //result = MovieToolManager.getMovieInformations(movieFile);
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
