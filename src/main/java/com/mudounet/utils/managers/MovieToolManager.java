@@ -5,6 +5,7 @@
 package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.movies.Movie;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.RemotePlayer;
@@ -14,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,15 +33,39 @@ public class MovieToolManager {
         return headlessRemotePlayer;
     }
 
+
+    public static GenericMovie buildMovie(String path) throws InterruptedException, IOException {
+        File file = new File(path);
+        return buildMovie(file);
+    }
+    
+    public static GenericMovie buildMovie(File file) throws InterruptedException, IOException {
+        Movie m = new Movie();
+        m.setPath(file.getPath());
+        m.setMd5(m.getMd5());
+
+        return m;
+    }
+    
     public static TechData getMovieInformations(GenericMovie movie) throws InterruptedException, IOException {
         TechData techData = new TechData();
 
-        File file = new File(movie.getPath());
-        techData.setSize(file.length());
+     
+        RemotePlayer headlessRemotePlayer;
+        try {
+            headlessRemotePlayer = createHeadlessPlayer(movie);
+            
+            techData = headlessRemotePlayer.retrieveTechData();
+            headlessRemotePlayer.close();
+
+            
+        } catch (RemotePlayerException ex) {
+            logger.error("Exception found : "+ex);
+        }
 
         logger.info("Technical data : ", techData);
 
-        return null;
+        return techData;
     }
 
     /**
