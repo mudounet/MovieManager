@@ -65,7 +65,7 @@ public abstract class GenericMovie {
                 md5 = Md5Generator.computeMD5(path);
             } catch (Exception ex) {
                 md5 = "";
-                logger.error("Exception found : ", ex);
+                logger.error("Exception found with file \""+path+"\" : ", ex);
             }
         }
         
