@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A headless player that sits out of process in a separate VM, feeding one or
@@ -12,6 +14,7 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
  * @author gmanciet
  */
 public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
+    protected static Logger logger = LoggerFactory.getLogger(OutOfProcessHeadlessPlayer.class.getName());
 
     private static final String[] VLC_ARGS = {
         "--intf", "dummy", /* no interface */
@@ -54,12 +57,12 @@ public class OutOfProcessHeadlessPlayer extends OutOfProcessPlayer {
         NativeLibrary.addSearchPath("vlc", nativeDir.getAbsolutePath());
         PrintStream stream = null;
         try {
-            stream = new PrintStream(new File("headless-logfile.txt"));
+            stream = new PrintStream(new File("tmp.txt"));
             System.setErr(stream); //Important, MUST redirect err stream
             OutOfProcessHeadlessPlayer player = new OutOfProcessHeadlessPlayer();
-            System.err.println("Begin of process");
+            logger.info("Begin of process");
             player.read();
-            System.err.println("End of process");
+            logger.info("End of process");
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
         } finally {

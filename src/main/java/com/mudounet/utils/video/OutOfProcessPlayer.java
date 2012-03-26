@@ -23,7 +23,12 @@ import java.io.*;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import uk.co.caprica.vlcj.player.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcj.player.TrackInfo;
+import uk.co.caprica.vlcj.player.VideoTrackInfo;
 
 /**
  * Sits out of process so as not to crash the primary VM.
@@ -31,7 +36,7 @@ import uk.co.caprica.vlcj.player.*;
  * @author Michael
  */
 public abstract class OutOfProcessPlayer {
-
+    protected static Logger logger = LoggerFactory.getLogger(OutOfProcessPlayer.class.getName());
     protected ObjectOutputStream oos;
     protected ObjectInputStream ois;
     private long length = 0;
@@ -44,7 +49,7 @@ public abstract class OutOfProcessPlayer {
      */
     public void read() {
         try {
-            System.err.println("Création des flux");
+            logger.debug("Création des flux");
             oos = new ObjectOutputStream(System.out);
             ois = new ObjectInputStream(System.in);
             // Création de l'output stream
@@ -60,7 +65,7 @@ public abstract class OutOfProcessPlayer {
                     if (operationFinished.await(10L, TimeUnit.SECONDS)) {
                         execReturnObject(t.getResult());
                     } else {
-                        System.err.println("TimeOut Exception");
+                        logger.error("TimeOut Exception");
                         execReturnObject(new RemotePlayerException("Operation has timed-out."));
                     }
                 } catch (InterruptedException ex) {
@@ -69,20 +74,19 @@ public abstract class OutOfProcessPlayer {
             }
 
             t.requestStop();
-            System.err.println("Flux crées");
+            logger.debug("Flux crées");
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace(System.err);
+            logger.error("Class not found Exception" + ex);
         } catch (EOFException ex) {
-            System.err.println("Remote player has been closed");
+            logger.error("Remote player has been closed" + ex);
         } catch (IOException ex) {
-            ex.printStackTrace(System.err);
+            logger.error("IO Exception" + ex);
         }
-        System.err.println();
         System.exit(-1);
     }
 
     private void execReturnObject(Object o) throws IOException {
-        System.err.println("Answer : " + o);
+        logger.debug("Answer : " + o);
         oos.writeObject(o);
         oos.flush();
     }
@@ -152,7 +156,7 @@ public abstract class OutOfProcessPlayer {
             Object returnObject = new BooleanCommand();
 
             if (receivedObject.getClass() == LoadFile.class) {
-                System.err.println("Load command received : " + receivedObject);
+                logger.debug("Load command received : " + receivedObject);
                 fileRead = new File(((LoadFile) receivedObject).getFilePath());
                 techData = new TechData();
                 
@@ -169,19 +173,19 @@ public abstract class OutOfProcessPlayer {
                 mediaPlayer.stop();
                 
             } else if (receivedObject.getClass() == CloseCommand.class) {
-                System.err.println("Close command received");
+                logger.debug("Close command received");
                 close();
             } else if (receivedObject.getClass() == PlayCommand.class) {
-                System.err.println("Play command received");
+                logger.debug("Play command received");
                 mediaPlayer.play();
             } else if (receivedObject.getClass() == PauseCommand.class) {
-                System.err.println("Pause command received");
+                logger.debug("Pause command received");
                 mediaPlayer.pause();
             } else if (receivedObject.getClass() == StopCommand.class) {
-                System.err.println("Stop command received");
+                logger.debug("Stop command received");
                 mediaPlayer.stop();
             } else if (receivedObject.getClass() == TechDataCommand.class) {
-                System.err.println("Tech Data command received");
+                logger.debug("Tech Data command received");
                 TechDataCommand t = (TechDataCommand) receivedObject;
 
                 if (techData.getPlayTime() == 0 || techData.getHeight() == 0) {
@@ -191,7 +195,7 @@ public abstract class OutOfProcessPlayer {
 
             } else if (receivedObject.getClass() == SnapshotCommand.class) {
                 SnapshotCommand t = (SnapshotCommand) receivedObject;
-                System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
+                logger.debug("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
 
                 boolean result2 = false;
 
@@ -199,7 +203,6 @@ public abstract class OutOfProcessPlayer {
                     this.moveToTime(t.getTime());
                     result2 = this.takeSnapshot(t.getPath());
                 } catch (InterruptedException ex) {
-                    ex.printStackTrace(System.err);
                 }
 
                 returnObject = new BooleanCommand(result2);
@@ -207,16 +210,16 @@ public abstract class OutOfProcessPlayer {
             } else if (receivedObject.getClass() == TimeCommand.class) {
                 TimeCommand t = (TimeCommand) receivedObject;
                 if (t.getValue() < 0) {
-                    System.err.println("request to get time.");
+                    logger.debug("request to get time.");
                     t.setValue(mediaPlayer.getTime());
                     returnObject = t;
                 } else {
-                    System.err.println("Request to set time to " + t.getValue());
+                    logger.debug("Request to set time to " + t.getValue());
                     mediaPlayer.setTime(t.getValue());
                 }
             } else if (receivedObject.getClass() == LengthCommand.class) {
                 LengthCommand t = (LengthCommand) receivedObject;
-                System.err.println("Request to get length.");
+                logger.debug("Request to get length.");
 
                 t.setValue(getLength());
 
@@ -224,11 +227,11 @@ public abstract class OutOfProcessPlayer {
             } else if (receivedObject.getClass() == MuteCommand.class) {
                 MuteCommand t = (MuteCommand) receivedObject;
                 if (!t.isSet()) {
-                    System.err.println("request to get mute state.");
+                    logger.debug("request to get mute state.");
                     t.setValue(mediaPlayer.isMute());
                     returnObject = t;
                 } else {
-                    System.err.println("Request to set mute to " + t.getValue());
+                    logger.debug("Request to set mute to " + t.getValue());
                     mediaPlayer.mute(t.getValue());
                 }
             } else if (receivedObject.getClass() == StateCommand.class) {
@@ -247,11 +250,11 @@ public abstract class OutOfProcessPlayer {
                     }
 
                 } else {
-                    System.err.println("State not currently managed : " + t.getValue());
+                    logger.error("State not currently managed : " + t.getValue());
                 }
                 returnObject = t;
             } else {
-                System.err.println("Unknown object : " + receivedObject);
+                logger.error("Unknown object : " + receivedObject);
             }
 
             return returnObject;
@@ -264,14 +267,14 @@ public abstract class OutOfProcessPlayer {
                 public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
 
                     if (inTimePositionLatch.getCount() > 0 && newTime >= snapshotTimePosition) {
-                        System.err.println("Position reached (time in ms) : " + newTime + ")");
+                        logger.debug("Position reached (time in ms) : " + newTime + ")");
                         inTimePositionLatch.countDown();
                     }
                 }
 
                 @Override
                 public void error(MediaPlayer mediaPlayer) {
-                    System.err.println("Unknown error occured");
+                   logger.error("Unknown error occured");
                 }
 
                 @Override
@@ -281,7 +284,7 @@ public abstract class OutOfProcessPlayer {
                     }
 
                     if (newLength > 0) {
-                        System.err.println("Length updated : from " + length + " to " + newLength);
+                        logger.debug("Length updated : from " + length + " to " + newLength);
                         length = newLength;
                         techData.setPlayTime(newLength);
                     }
@@ -289,7 +292,7 @@ public abstract class OutOfProcessPlayer {
 
                 @Override
                 public void snapshotTaken(MediaPlayer mediaPlayer, String filename) {
-                    System.err.println("snapshotTaken(filename=" + filename + ")");
+                    logger.debug("snapshotTaken(filename=" + filename + ")");
                     snapshotTakenLatch.countDown();
                 }
             });
@@ -313,7 +316,7 @@ public abstract class OutOfProcessPlayer {
                             break;
                         }
                     }
-                    System.err.println("track properties : " + techData);
+                    logger.debug("track properties : " + techData);
                 }
             });
 
@@ -336,24 +339,24 @@ public abstract class OutOfProcessPlayer {
             this.snapshotTimePosition = newPosition;
             inTimePositionLatch = new CountDownLatch(1);
             mediaPlayer.setTime(newPosition);
-            System.err.println("Going to specified time (ms) : " + newPosition);
+            logger.debug("Going to specified time (ms) : " + newPosition);
             inTimePositionLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
-            System.err.println("Latch reached.");
+            logger.debug("Latch reached.");
         }
 
         private boolean takeSnapshot(File file) throws InterruptedException {
-            System.err.println("Snapshot @ " + mediaPlayer.getTime());
+            logger.debug("Snapshot @ " + mediaPlayer.getTime());
 
             snapshotTakenLatch = new CountDownLatch(1);
             mediaPlayer.saveSnapshot(new File(file.getAbsolutePath()));
-            System.err.println("Waiting latch.");
+            logger.debug("Waiting latch.");
             snapshotTakenLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
 
             if (file.exists()) {
-                System.err.println("File found : " + file.getAbsolutePath());
+                logger.debug("File found : " + file.getAbsolutePath());
                 return true;
             } else {
-                System.err.println("File is not found : " + file.getAbsolutePath());
+                logger.debug("File is not found : " + file.getAbsolutePath());
                 Thread.sleep(500);
                 return false;
             }

@@ -7,6 +7,8 @@ import java.io.PrintStream;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentIdVideoSurface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An embedded player that sits out of process in a separate VM. In process
@@ -16,7 +18,7 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentIdVideoSurface;
  * @author Michael
  */
 public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
-
+    protected static Logger logger = LoggerFactory.getLogger(OutOfProcessEmbeddedPlayer.class.getName());
     public OutOfProcessEmbeddedPlayer(final long canvasId) throws IOException {
 
         MediaPlayerFactory factory = new MediaPlayerFactory(getPrepareOptions());
@@ -48,16 +50,16 @@ public class OutOfProcessEmbeddedPlayer extends OutOfProcessPlayer {
         PrintStream stream = null;
 
         try {
-            stream = new PrintStream(new File("logfile.txt"));
-            System.setErr(stream); //Important, MUST redirect err stream
+            //stream = new PrintStream(new File("logfile.txt"));
+            System.setErr(null); //Important, MUST redirect err stream
             OutOfProcessEmbeddedPlayer player = new OutOfProcessEmbeddedPlayer(Integer.parseInt(args[0]));
             
-            System.err.println("Begin of process");
+           logger.info("Begin of process");
             player.read();
-            System.err.println("End of process");
+            logger.info("End of process");
         } catch (Exception ex) {
-            ex.printStackTrace(System.err);
-            //System.err.println(ex);
+            logger.error("Exception occured : "+ex);
+
         } finally {
             if (stream != null) {
                 stream.close();
