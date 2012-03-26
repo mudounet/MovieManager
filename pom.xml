@@ -14,11 +14,11 @@
     </properties>
 	
     <repositories>
-        <repository>
+<!--        <repository>
             <id>xuggleRepository</id>
             <name>Xuggle Repository</name>
             <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java</url>
-        </repository>
+        </repository>-->
         <repository>
             <id>Java 2</id>
             <url>http://download.java.net/maven/2/</url>
@@ -119,11 +119,11 @@
             <artifactId>hibernate-tools</artifactId>
             <version>3.2.4.GA</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>xuggle</groupId>
             <artifactId>xuggle-xuggler</artifactId>
             <version>3.4.1012.201001312056</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
     
     <build>

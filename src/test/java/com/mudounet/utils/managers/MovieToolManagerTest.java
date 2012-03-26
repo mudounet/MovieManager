@@ -64,6 +64,7 @@ public class MovieToolManagerTest {
         GenericMovie movie = new Movie();
 
         File directory = TestTools.createTempDirectory();
+        logger.info("Temporary directory is : "+directory);
 
         movie.setPath(Utils.getFileFromClasspath("sample_video.flv").getAbsolutePath());
 
