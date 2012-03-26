@@ -17,6 +17,7 @@
  */
 package com.mudounet.utils.video;
 
+import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.remotecommands.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -154,6 +155,19 @@ public class RemotePlayer {
         c.setPath(path);
         logger.debug("Request snapshot :" + c);
         return ((BooleanCommand) writeOut(c)).getValue();
+    }
+    
+        /**
+     * Retrieve technical data.
+     * @return technical Data
+     * @throws RemotePlayerException  
+     */
+    public TechData retrieveTechData() throws RemotePlayerException {
+
+        TechDataCommand c = new TechDataCommand();
+
+        logger.debug("Request tech data :" + c);
+        return ((TechData) writeOut(c));
     }
 
     /**
