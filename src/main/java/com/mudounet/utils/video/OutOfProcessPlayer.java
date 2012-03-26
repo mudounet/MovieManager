@@ -17,19 +17,17 @@
  */
 package com.mudounet.utils.video;
 
+import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.remotecommands.*;
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcj.player.*;
 
 /**
  * Sits out of process so as not to crash the primary VM.
+ *
  * @author Michael
  */
 public abstract class OutOfProcessPlayer {
@@ -41,8 +39,8 @@ public abstract class OutOfProcessPlayer {
     protected MediaPlayer mediaPlayer;
 
     /**
-     * Start the main loop reading from the standard input stream and writing
-     * to sout.
+     * Start the main loop reading from the standard input stream and writing to
+     * sout.
      */
     public void read() {
         try {
@@ -74,11 +72,11 @@ public abstract class OutOfProcessPlayer {
             System.err.println("Flux crées");
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace(System.err);
-        }catch (EOFException ex) {
+        } catch (EOFException ex) {
             System.err.println("Remote player has been closed");
         } catch (IOException ex) {
             ex.printStackTrace(System.err);
-        } 
+        }
         System.err.println();
         System.exit(-1);
     }
@@ -90,9 +88,10 @@ public abstract class OutOfProcessPlayer {
     }
 
     /**
-     * This method should return an array of any options that need to be passed 
+     * This method should return an array of any options that need to be passed
      * onto VLCJ and in turn libvlc. If no options are required, an empty array
      * should be returned rather than null.
+     *
      * @return the options required by libvlc.
      */
     public abstract String[] getPrepareOptions();
@@ -103,6 +102,8 @@ public abstract class OutOfProcessPlayer {
         private Object command;
         private Object result;
         private long length = -1;
+        private File fileRead;
+        private TechData techData;
         private CountDownLatch inTimePositionLatch;
         private CountDownLatch lengthUpdatedLatch = new CountDownLatch(1);
         private CountDownLatch snapshotTakenLatch;
@@ -112,6 +113,7 @@ public abstract class OutOfProcessPlayer {
         private ThreadedAction() {
 
             this.addSnapshotFunction();
+            this.addTechDataFunction();
             this.length = -1;
 
         }
@@ -151,8 +153,21 @@ public abstract class OutOfProcessPlayer {
 
             if (receivedObject.getClass() == LoadFile.class) {
                 System.err.println("Load command received : " + receivedObject);
-                mediaPlayer.prepareMedia(((LoadFile) receivedObject).getFilePath(), getPrepareOptions());
+                fileRead = new File(((LoadFile) receivedObject).getFilePath());
+                techData = new TechData();
+                
                 this.length = -1;
+                techData.setSize(fileRead.length());
+                mediaPlayer.prepareMedia(fileRead.getAbsolutePath(), getPrepareOptions());
+                mediaPlayer.start();
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                }
+                
+                mediaPlayer.stop();
+                
             } else if (receivedObject.getClass() == CloseCommand.class) {
                 System.err.println("Close command received");
                 close();
@@ -165,6 +180,15 @@ public abstract class OutOfProcessPlayer {
             } else if (receivedObject.getClass() == StopCommand.class) {
                 System.err.println("Stop command received");
                 mediaPlayer.stop();
+            } else if (receivedObject.getClass() == TechDataCommand.class) {
+                System.err.println("Tech Data command received");
+                TechDataCommand t = (TechDataCommand) receivedObject;
+
+                if (techData.getPlayTime() == 0 || techData.getHeight() == 0) {
+                } else {
+                    returnObject = techData;
+                }
+
             } else if (receivedObject.getClass() == SnapshotCommand.class) {
                 SnapshotCommand t = (SnapshotCommand) receivedObject;
                 System.err.println("Snapshot command received : " + t.getTime() + "@path : " + t.getPath());
@@ -254,12 +278,12 @@ public abstract class OutOfProcessPlayer {
                 public void lengthChanged(MediaPlayer mediaPlayer, long newLength) {
                     if (lengthUpdatedLatch != null) {
                         lengthUpdatedLatch.countDown();
-
                     }
 
                     if (newLength > 0) {
                         System.err.println("Length updated : from " + length + " to " + newLength);
                         length = newLength;
+                        techData.setPlayTime(newLength);
                     }
                 }
 
@@ -269,6 +293,30 @@ public abstract class OutOfProcessPlayer {
                     snapshotTakenLatch.countDown();
                 }
             });
+        }
+
+        private void addTechDataFunction() {
+            mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+
+                @Override
+                public void videoOutput(MediaPlayer mediaPlayer, int newCount) {
+                    List<TrackInfo> trackInfo = mediaPlayer.getTrackInfo();
+
+                    for (int i = 0; i < trackInfo.size(); i++) {
+                        Object track = trackInfo.get(i);
+
+                        if (track.getClass() == VideoTrackInfo.class) {
+                            VideoTrackInfo t = (VideoTrackInfo) track;
+                            techData.setCodecName(t.codecName());
+                            techData.setHeight(t.height());
+                            techData.setWidth(t.width());
+                            break;
+                        }
+                    }
+                    System.err.println("track properties : " + techData);
+                }
+            });
+
         }
 
         private long getLength() throws InterruptedException {
