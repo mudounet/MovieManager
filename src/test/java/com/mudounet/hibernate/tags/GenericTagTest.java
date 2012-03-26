@@ -6,18 +6,17 @@ package com.mudounet.hibernate.tags;
 
 import com.mudounet.hibernate.movies.GenericMovie;
 import com.mudounet.hibernate.movies.Movie;
-import com.mudounet.hibernate.movies.ProcessedMovie;
 import com.mudounet.hibernate.movies.QueuedMovie;
-import org.hibernate.Transaction;
-import org.junit.Test;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.dbunit.dataset.ITable;
 import org.hibernate.Hibernate;
+import org.hibernate.Transaction;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -178,6 +177,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
             Movie m = new Movie();
             m.setTitle(q.getTitle());
+            m.setMd5("1");
 
             template.keepConnectionOpened();
             template.saveOrUpdate(m);
