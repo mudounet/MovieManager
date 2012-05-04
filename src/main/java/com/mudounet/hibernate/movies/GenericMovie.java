@@ -13,17 +13,14 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * @hibernate.class
- * discriminator-value="G"
- * @hibernate.discriminator
- * column="TYPE"
- * type="char"
- **/
+ * @hibernate.class discriminator-value="G" @hibernate.discriminator
+ * column="TYPE" type="char"
+ *
+ */
 public abstract class GenericMovie {
 
-         protected static final Logger logger = LoggerFactory.getLogger(GenericMovie.class.getName());
+    protected static final Logger logger = LoggerFactory.getLogger(GenericMovie.class.getName());
     protected Long id;
     protected String title;
     protected String path;
@@ -42,8 +39,8 @@ public abstract class GenericMovie {
     }
 
     /**
-     * @hibernate.id
-     * generator-class="native"
+     * @hibernate.id generator-class="native"
+     *
      * @return Identifier of movie
      */
     public Long getId() {
@@ -55,20 +52,20 @@ public abstract class GenericMovie {
     }
 
     /**
-     * Get the value of md5
-     * @hibernate.property
+     * Get the value of md5 @hibernate.property
+     *
      * @return the value of md5
      */
     public String getMd5() {
-        if(md5 == null) {
+        if (md5 == null) {
             try {
                 md5 = Md5Generator.computeMD5(path);
             } catch (Exception ex) {
                 md5 = "";
-                logger.error("Exception found with file \""+path+"\" : ", ex);
+                logger.error("Exception found with file \"" + path + "\" : ", ex);
             }
         }
-        
+
         return md5;
     }
 
@@ -83,6 +80,7 @@ public abstract class GenericMovie {
 
     /**
      * @hibernate.property
+     *
      * @return path of movie
      */
     public String getPath() {
@@ -95,6 +93,7 @@ public abstract class GenericMovie {
 
     /**
      * @hibernate.property
+     *
      * @return movie title
      */
     public String getTitle() {
@@ -108,6 +107,7 @@ public abstract class GenericMovie {
     /**
      * @hibernate.many-to-one
      * class="com.mudounet.hibernate.movies.others.TechData"
+     *
      * @return technical data
      */
     public TechData getTechData() {
@@ -119,15 +119,11 @@ public abstract class GenericMovie {
     }
 
     /**
-     * @hibernate.set
-     * table="movies_tags"
-     * cascade="save-update"
-     * lazy="false"
-     * @hibernate.many-to-many
-     * column="fk_tag"
-     * class="com.mudounet.hibernate.tags.GenericTag"
-     * @hibernate.key
+     * @hibernate.set table="movies_tags" cascade="save-update" lazy="false"
+     * @hibernate.many-to-many column="fk_tag"
+     * class="com.mudounet.hibernate.tags.GenericTag" @hibernate.key
      * column="fk_movie"
+     *
      * @return list of tags applied to movie
      */
     public Set<GenericTag> getTags() {
@@ -140,6 +136,7 @@ public abstract class GenericMovie {
 
     /**
      * toString
+     *
      * @return String
      */
     @Override
