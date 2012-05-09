@@ -24,7 +24,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
 
-    protected static Logger logger = LoggerFactory.getLogger(SimpleTagManagerTest.class.getName());
+    //protected static Logger logger = LoggerFactory.getLogger(SimpleTagManagerTest.class.getName());
+    protected  Logger logger = LoggerFactory.getLogger(getClass().getName());
     private Transaction tx;
 
     public SimpleTagManagerTest(String name) {

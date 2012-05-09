@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
  */
 public class MovieToolManagerTest {
 
-    protected static Logger logger = LoggerFactory.getLogger(SimpleTagManager.class.getName());
+    protected Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     public MovieToolManagerTest() {
     }

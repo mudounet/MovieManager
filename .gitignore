@@ -1,6 +1,5 @@
 /target/
 *.txt
-/lib
 *.sh
 *.png
 /log
