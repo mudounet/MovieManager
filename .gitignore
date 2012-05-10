@@ -1,5 +1,6 @@
 /target/
 *.txt
 *.sh
-*.png
 /log
+/lib/native
+*.htm
