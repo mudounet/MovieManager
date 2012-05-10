@@ -32,6 +32,10 @@
             <name>Caprica Software</name>
             <url>http://www.capricasoftware.co.uk/repo</url>
         </repository>
+        <repository>
+            <id>my-local-repo</id>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
     </repositories>
     <dependencies>
 <!--    
@@ -172,29 +176,16 @@
             <groupId>org.dotuseful</groupId>
             <artifactId>dotuseful</artifactId>
             <version>0.36b</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/useful.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.lobobrowser</groupId>
-            <artifactId>Cobra</artifactId>
-            <version>0.98.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cobra-0.98.2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>info.clearthought</groupId>
-            <artifactId>Clearthought</artifactId>
-            <version>0.98.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/TableLayout.jar</systemPath>
+            <artifactId>TableLayout</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>net.sf.networktools</groupId>
             <artifactId>ProportionLayout</artifactId>
-            <version>0.98.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ProportionLayout.jar</systemPath>
+            <version>1.0</version>
         </dependency>
     </dependencies>
     

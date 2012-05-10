@@ -15,9 +15,6 @@ import javax.xml.xpath.XPathFactory;
 import net.sf.xmm.moviemanager.models.imdb.ModelIMDbEntry;
 import net.sf.xmm.moviemanager.util.StringUtil;
 
-import org.lobobrowser.html.parser.DocumentBuilderImpl;
-import org.lobobrowser.html.parser.InputSourceImpl;
-import org.lobobrowser.html.test.SimpleUserAgentContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,15 +25,15 @@ public class XPathParser {
 
 	
 	static Document parseXPath(StringBuffer data, String uri) throws SAXException, IOException, XPathExpressionException {
-		SimpleUserAgentContext context = new SimpleUserAgentContext();
-		context.setScriptingEnabled(false);
-		context.setExternalCSSEnabled(false);
+		//SimpleUserAgentContext context = new SimpleUserAgentContext();
+		//context.setScriptingEnabled(false);
+		//context.setExternalCSSEnabled(false);
 		
-		DocumentBuilderImpl dbi = new DocumentBuilderImpl(context);
+		//DocumentBuilderImpl dbi = new DocumentBuilderImpl(nulll);
 		//Document document = dbi.parse(new StringReader(data.toString()));
 		
 		//Document document = dbi.parse(new InputSourceImpl(in, url, "ISO-8859-1")) ;
-		Document document = dbi.parse(new InputSourceImpl(new StringReader(data.toString()), "http://akas.imdb.com/title/tt" + uri)) ;
+		Document document = null; //dbi.parse(new InputSourceImpl(new StringReader(data.toString()), "http://akas.imdb.com/title/tt" + uri)) ;
 		
 		return document;
 	}

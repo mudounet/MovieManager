@@ -60,8 +60,6 @@ import net.sf.xmm.moviemanager.util.events.NewDatabaseLoadedEventListener;
 import net.sf.xmm.moviemanager.util.plugins.MovieManagerPlayHandler;
 import org.dotuseful.ui.tree.AutomatedTreeModel;
 import org.dotuseful.ui.tree.AutomatedTreeNode;
-import org.lobobrowser.html.gui.HtmlPanel;
-import org.lobobrowser.html.test.SimpleHtmlRendererContext;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
@@ -123,7 +121,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
     ArrayList<ModelMovie> currentMovieList;
     ArrayList<ModelEpisode> currentEpisodeList;
     ExtendedTreeCellRenderer extendedTreeCellRenderer;
-    public HtmlPanel htmlPanel;
     public static JApplet applet = null;
 
     public DialogMovieManager() {
@@ -1075,8 +1072,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
         tabbedMovieInfo.add(config.sysSettings.getLookAndFeelTitle(), createStandardMovieInfo()); //$NON-NLS-1$
 
         if (!MovieManager.isApplet() && !config.getInternalConfig().getDisableHTMLView()) {
-            htmlPanel = new HtmlPanel();
-            tabbedMovieInfo.add(htmlPanel); //$NON-NLS-1$
             setTabbedMovieInfoTitle();
             tabbedMovieInfo.setSelectedIndex(config.getLastMovieInfoTabIndex());
             final JTabbedPane finalMovieInfo = tabbedMovieInfo;
@@ -1105,10 +1100,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
             });
         }
         return tabbedMovieInfo;
-    }
-
-    public void setHTMLData(Document document, SimpleHtmlRendererContext rcontext) {
-        htmlPanel.setDocument(document, rcontext);
     }
 
     protected JPanel createStandardMovieInfo() {

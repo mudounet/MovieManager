@@ -85,12 +85,6 @@ import net.sf.xmm.moviemanager.util.SysUtil;
 import net.sf.xmm.moviemanager.util.tools.BrowserOpener;
 
 import org.dotuseful.ui.tree.AutomatedTreeNode;
-import org.lobobrowser.html.HttpRequest;
-import org.lobobrowser.html.UserAgentContext;
-import org.lobobrowser.html.parser.DocumentBuilderImpl;
-import org.lobobrowser.html.parser.InputSourceImpl;
-import org.lobobrowser.html.test.SimpleHtmlRendererContext;
-import org.lobobrowser.html.test.SimpleUserAgentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -733,55 +727,7 @@ public class MovieManagerCommandSelect extends KeyAdapter implements TreeSelecti
 				lastTemplateFile = templateFile;
 			}
 			
-			// Copy previous template data
-			StringBuffer template = new StringBuffer(lastTemplate);
-			
-			processTemplateData(template, model);
-			
-		
-			String coverPath = null;
-			
-			if (coverFile != null)
-				coverPath = coverFile.toURI().toString();
-			
-			// If coverPath is null, the cover will be set to $coverSmall$ and loaded from memory
-			processTemplateCover(template, coverPath, coverDim, nocover);
-			//processTemplateBigCover(template, coverPath, coverDim);
-			
-			processTemplateCssStyle(template);
-							
-			template = HttpUtil.getHtmlNiceFormat(template);
-			
-			if (MovieManager.getConfig().getHTMLViewDebugMode()) {
-				
-				String debugName = "debug_template.html";
-				
-				File path;
-								
-				if (SysUtil.isMac() || SysUtil.isWindowsVista() || SysUtil.isWindows7())
-					path = new File(SysUtil.getConfigDir(), debugName);
-				else
-					path = new File(templateFile.getParentFile(), debugName); 
-					
-				FileUtil.writeToFile(path, template.toString());
-			}
-			
-			Reader r = new StringReader(template.toString());
-			InputSourceImpl impl = new InputSourceImpl(r, templateFile.getParentFile().toURI().toString());
-						
-			final SimpleHtmlRendererContext rcontext = new SimpleHtmlRendererContext(MovieManager.getDialog().htmlPanel, new XMMUserAgentContext(coverData)) {
-				// Opens browser when link is clicked
-				public void navigate(java.net.URL url, java.lang.String target) {
-					BrowserOpener opener = new BrowserOpener(url.toString());
-					opener.executeOpenBrowser(MovieManager.getConfig().getSystemWebBrowser(), MovieManager.getConfig().getBrowserPath());
-				}
-			};
-			UserAgentContext ucontext = rcontext.getUserAgentContext();
-			DocumentBuilderImpl dbi = new DocumentBuilderImpl(ucontext, rcontext);
-			Document document = dbi.parse(impl);
-			
-			if (document != null)
-				MovieManager.getDialog().setHTMLData(document, rcontext);
+
 			
 		}
 		catch (Exception e) {
@@ -1245,52 +1191,5 @@ public class MovieManagerCommandSelect extends KeyAdapter implements TreeSelecti
 		if (!MovieManager.getIt().isDeleting()) {
 			execute();
 		}
-	}
-}
-
-/**
- * This class is used to make loading cover image from memory instead of disk from HTML panel
- * @author Bro
- */
-class XMMUserAgentContext extends SimpleUserAgentContext {
-	
-	byte [] imageData;
-	
-	XMMUserAgentContext(byte [] imageData) {
-		this.imageData = imageData;
-	}
-	
-	public HttpRequest createHttpRequest() {
-		return new XMMHttpRequest(this, this.getProxy(), imageData);
-	}	
-}
-
-/**
- * This class is used to make loading cover image from memory instead of disk from HTML panel
- * @author Bro
- */
-class XMMHttpRequest extends net.sf.xmm.moviemanager.swing.extentions.XMMSimpleHttpRequest {
-		
-	URL url;
-	byte [] imageData;
-	
-	public XMMHttpRequest(UserAgentContext context, Proxy proxy, byte [] imageData) {
-		super(context, proxy);
-		this.imageData = imageData;
-	}
-	
-	public void open(String method,  java.net.URL url, boolean asyncFlag,
-			 String userName, String password) throws java.io.IOException {
-		super.open(method, url, asyncFlag, userName, password);
-		this.url = url;
-	}
-	
-	protected void sendSync(String content) throws IOException {
-			
-		if (url.toString().endsWith("$CoverSmall$")) {	
-			changeState(HttpRequest.STATE_COMPLETE, 0, "", imageData);
-		}
-		else
-			super.sendSync(content);
 	}
 }
