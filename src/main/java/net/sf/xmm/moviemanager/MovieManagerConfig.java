@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import net.sf.xmm.moviemanager.LookAndFeelManager.LookAndFeelType;
 import net.sf.xmm.moviemanager.database.Database;
 import net.sf.xmm.moviemanager.gui.DialogMovieManager;
 import net.sf.xmm.moviemanager.http.HttpSettings;
@@ -2367,37 +2366,12 @@ public class MovieManagerConfig implements NewDatabaseLoadedEventListener {
 			setDatabasePathPermanent(getBooleanValue("databasePathPermanent:", config, getDatabasePathPermanent()));
 			setUseDisplayQueriesInTree(getBooleanValue("useDisplayQueriesInTree:", config, getUseDisplayQueriesInTree()));
 
-			LookAndFeelManager lafManager =  MovieManager.getLookAndFeelManager();
+
 			
-			lafManager.setCustomLookAndFeel(getStringValue("lookAndFeel:", config, lafManager.getCustomLookAndFeel()));
-			lafManager.setSkinlfThemePack(getStringValue("skinlfTheme:", config, lafManager.getSkinlfThemePack()));
-			lafManager.setSubstanceSkin(getStringValue("substanceSkin:", config, lafManager.getSubstanceSkin()));
-			lafManager.setNimRODTheme(getStringValue("nimRODTheme:", config, lafManager.getNimRODTheme()));
+
 						
-			value = (String) config.get("lookAndFeelType:");
-
-			if (value != null) {
-
-				LookAndFeelType laf = null;
-
-				// Old setting using ints
-				try {
-					int val = Integer.parseInt(value);
-					laf = val == 1 ? LookAndFeelType.SkinlfLaF : LookAndFeelType.CustomLaF;
-				} catch (Exception e) {
-				}
-
-				try {
-					laf  = LookAndFeelType.valueOf(value);
-				} catch (Exception e) {
-				}
-
-				if (laf != null)
-					MovieManager.getLookAndFeelManager().setLookAndFeelType(laf);
-			}
 
 			setUseRegularSeenIcon(getBooleanValue("useRegularSeenIcon:", config, getUseRegularSeenIcon()));
-			lafManager.setDefaultLookAndFeelDecorated(getBooleanValue("defaultLookAndFeelDecorated:", config, lafManager.getDefaultLookAndFeelDecorated()));
 			setPlotCastMiscellaneousIndex(getIntValue("plotCastMiscellaneousIndex:", config, getPlotCastMiscellaneousIndex()));
 									
 			htmlTemplateHandler.setHTMLTemplateName(getStringValue("HTMLTemplateName:", config));
@@ -2862,15 +2836,8 @@ public class MovieManagerConfig implements NewDatabaseLoadedEventListener {
 		 appendToConfig("useDisplayQueriesInTree:", getUseDisplayQueriesInTree(), settings);
 		 appendToConfig("locale:", getLocale(), settings);
 		 
-		 LookAndFeelManager lafManager =  MovieManager.getLookAndFeelManager();
 		 
 		 // GUI/L&F settings
-		 appendToConfig("lookAndFeel:", lafManager.getCustomLookAndFeel(), settings);
-		 appendToConfig("skinlfTheme:", lafManager.getSkinlfThemePack(), settings);
-		 appendToConfig("substanceSkin:", lafManager.getSubstanceSkin(), settings);
-		 appendToConfig("nimRODTheme:", lafManager.getNimRODTheme(), settings);
-		 appendToConfig("lookAndFeelType:", lafManager.getLookAndFeelType().toString(), settings);
-		 appendToConfig("defaultLookAndFeelDecorated:", lafManager.getDefaultLookAndFeelDecorated(), settings);
 		 appendToConfig("useRegularSeenIcon:", getUseRegularSeenIcon(), settings);
 		 appendToConfig("plotCastMiscellaneousIndex:", getPlotCastMiscellaneousIndex(), settings);
 		 appendToConfig("seenEditableInMainWindow:", getSeenEditable(), settings);

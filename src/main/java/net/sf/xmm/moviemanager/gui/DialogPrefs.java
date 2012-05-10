@@ -79,10 +79,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import net.sf.xmm.moviemanager.LookAndFeelManager;
 import net.sf.xmm.moviemanager.MovieManager;
 import net.sf.xmm.moviemanager.MovieManagerConfig;
-import net.sf.xmm.moviemanager.LookAndFeelManager.LookAndFeelType;
 import net.sf.xmm.moviemanager.MovieManagerConfig.InternalConfig;
 import net.sf.xmm.moviemanager.MovieManagerConfig.NoCoverType;
 import net.sf.xmm.moviemanager.commands.MovieManagerCommandSelect;
@@ -115,21 +113,12 @@ public class DialogPrefs extends JDialog implements ActionListener, ItemListener
 	JButton buttonSave;
 	JButton buttonCancel;
 	
-	private JCheckBox enableLafChooser;
-	private JCheckBox enableSkinlf;
-	private JCheckBox enableSubstanceChooser;
-	private JCheckBox enableNimrodChooser;
+
 	
-	private JComboBox lafChooser;
-	private JComboBox skinlfThemePackChooser;
-	private JComboBox substanceChooser;
-	private JComboBox nimrodChooser;
 	
 	private JRadioButton regularSeenIcon;
 	private JRadioButton currentLookAndFeelIcon;
 
-	private JRadioButton regularDecoratedButton;
-	private JRadioButton defaultLafDecoratedButton;
 
 	private JCheckBox enableProxyButton;
 	private JCheckBox enableAuthenticationButton;
@@ -225,7 +214,6 @@ public class DialogPrefs extends JDialog implements ActionListener, ItemListener
 
 	KeyboardShortcutManager shortcutManager = new KeyboardShortcutManager(this);
 
-	LookAndFeelManager lafManager = MovieManager.getLookAndFeelManager();
 	
 	public DialogPrefs() {
 		/* Dialog creation...*/
@@ -249,9 +237,6 @@ public class DialogPrefs extends JDialog implements ActionListener, ItemListener
 				handleMouseScrolling(e);			
 			}
 		});
-
-		if (!disabledFeatures.isPreferencesLookAndFeelDisabled())
-			tabbedPane.add(Localizer.get("DialogPrefs.panel.look-and-feel.title"), createLookAndFeelPanel()); //$NON-NLS-1$
 
 		if (!disabledFeatures.isPreferencesProxySettingsDisabled())
 			tabbedPane.add(Localizer.get("DialogPrefs.panel.proxy.title"), createProxyPanel()); //$NON-NLS-1$
@@ -298,245 +283,6 @@ public class DialogPrefs extends JDialog implements ActionListener, ItemListener
 	}
 	
 
-	JPanel createLookAndFeelPanel() {	
-
-		/* LookAndFeel panel */
-		JPanel lafPanel = new JPanel(new BorderLayout());
-
-		lafPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),Localizer.get("DialogPrefs.panel.look-and-feel.title")), BorderFactory.createEmptyBorder(12,0,16,0))); //$NON-NLS-1$
-
-		/* Seen button icon */
-		JLabel seenIconLabel = new JLabel(Localizer.get("DialogPrefs.panel.look-and-feel.seen-unseen-icon")); //$NON-NLS-1$
-		regularSeenIcon = new JRadioButton(Localizer.get("DialogPrefs.panel.look-and-feel.seen-unseen-icon.regular")); //$NON-NLS-1$
-		currentLookAndFeelIcon = new JRadioButton(Localizer.get("DialogPrefs.panel.look-and-feel.seen-unseen-icon.look-and-feel") + ": "); //$NON-NLS-1$ //$NON-NLS-2$
-		regularSeenIcon.setActionCommand("SeenIcon"); //$NON-NLS-1$
-		currentLookAndFeelIcon.setActionCommand("SeenIcon"); //$NON-NLS-1$
-
-		ButtonGroup seenIconGroup = new ButtonGroup();
-		seenIconGroup.add(regularSeenIcon);
-		seenIconGroup.add(currentLookAndFeelIcon);
-
-		regularSeenIcon.addActionListener(this);
-		currentLookAndFeelIcon.addActionListener(this);
-
-		if (config.getUseRegularSeenIcon())
-			regularSeenIcon.setSelected(true);
-		else
-			currentLookAndFeelIcon.setSelected(true);
-
-		JPanel seenIconPanel = new JPanel(new BorderLayout());
-		seenIconPanel.setBorder(BorderFactory.createEmptyBorder(0,20,7,20));
-
-
-		JPanel buttonOptions = new JPanel(new GridLayout(2, 3));
-		buttonOptions.setBorder(BorderFactory.createEmptyBorder(0,30,50,20));
-
-		buttonOptions.add(seenIconLabel);
-		buttonOptions.add(regularSeenIcon);
-		buttonOptions.add(currentLookAndFeelIcon);
-
-
-		/* DefaultLookAndFeelDecorated */
-		JLabel defaultLafDecoratedLabel = new JLabel(Localizer.get("DialogPrefs.panel.look-and-feel.title-bar-decoration") + ": "); //$NON-NLS-1$ //$NON-NLS-2$
-		regularDecoratedButton = new JRadioButton(Localizer.get("DialogPrefs.panel.look-and-feel.title-bar-decoration.regular")); //$NON-NLS-1$
-		defaultLafDecoratedButton = new JRadioButton(Localizer.get("DialogPrefs.panel.look-and-feel.title-bar-decoration.look-and-feel")); //$NON-NLS-1$
-		regularDecoratedButton.setActionCommand("DefaultLafDecorated"); //$NON-NLS-1$
-		defaultLafDecoratedButton.setActionCommand("DefaultLafDecorated"); //$NON-NLS-1$
-
-		ButtonGroup defaultLafDecoratedGroup = new ButtonGroup();
-		defaultLafDecoratedGroup.add(regularDecoratedButton);
-		defaultLafDecoratedGroup.add(defaultLafDecoratedButton);
-
-		regularDecoratedButton.addActionListener(this);
-		defaultLafDecoratedButton.addActionListener(this);
-
-		if (lafManager.getDefaultLookAndFeelDecorated())
-			defaultLafDecoratedButton.setSelected(true);
-		else
-			regularDecoratedButton.setSelected(true);
-
-		JPanel defaultLafDecoratedPanel = new JPanel(new BorderLayout());
-		defaultLafDecoratedPanel.setBorder(BorderFactory.createEmptyBorder(0,20,7,20));
-
-		buttonOptions.add(defaultLafDecoratedLabel);
-		buttonOptions.add(regularDecoratedButton);
-		buttonOptions.add(defaultLafDecoratedButton);
-
-		lafPanel.add(buttonOptions, BorderLayout.NORTH);
-
-		
-		JLabel noteLabel = new JLabel();
-		noteLabel.setText("<html><center><p>After changing the Look & Feel, the user interface might<br> not look exactly as it will after restarting the application.</p></center></html>");
-		JPanel noteLabelPanel = new JPanel();
-		noteLabelPanel.add(noteLabel);
-		
-		lafPanel.add(noteLabelPanel, BorderLayout.CENTER);
-		
-		/* Laf choosers */
-
-		JPanel lafChooserPanel = new JPanel(new GridLayout(4, 1));
-		
-		String [] lookAndFeelStrings = lafManager.getLaFListArray();
-		
-		lafChooser = new JComboBox(lookAndFeelStrings);
-		enableLafChooser = new JCheckBox(Localizer.get("DialogPrefs.panel.look-and-feel.enable-custom-laf.text")); //$NON-NLS-1$
-		enableLafChooser.setActionCommand("Enable LookAndFeel"); //$NON-NLS-1$
-		
-		String currentLookAndFeel = lafManager.getCustomLookAndFeel();
-
-		lafChooser.setSelectedItem(currentLookAndFeel);
-		lafChooser.setEnabled(false);
-		lafChooser.addActionListener(this);
-		enableLafChooser.addActionListener(this);
-
-		lafChooser.setPreferredSize(new Dimension(250, (int) lafChooser.getPreferredSize().getHeight()));
-
-		JPanel customLafChooserPanel = new JPanel(new BorderLayout());
-		customLafChooserPanel.setBorder(BorderFactory.createEmptyBorder(4,20,4,20));
-
-		customLafChooserPanel.add(enableLafChooser, BorderLayout.WEST);
-		customLafChooserPanel.add(lafChooser, BorderLayout.EAST);
-
-		customLafChooserPanel.setMaximumSize(new Dimension(250,30));
-		customLafChooserPanel.setPreferredSize(new Dimension(250,30));
-
-		lafChooserPanel.add(customLafChooserPanel);
-
-
-		/* Skinlf */
-
-		String [] skinlfThemePackList = lafManager.getSkinlfThemepackList();
-
-		if (skinlfThemePackList != null) {
-			enableSkinlf = new JCheckBox(Localizer.get("DialogPrefs.panel.look-and-feel.enable-skinlf.text")); //$NON-NLS-1$
-			enableSkinlf.setActionCommand("Enable LookAndFeel"); //$NON-NLS-1$
-			
-			// Prettify the names by removing zip
-			for (int i = 0; i < skinlfThemePackList.length; i++) {
-				skinlfThemePackList[i] = skinlfThemePackList[i].replace(".zip", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-			Arrays.sort(skinlfThemePackList);
-
-			skinlfThemePackChooser = new JComboBox(skinlfThemePackList);
-			skinlfThemePackChooser.setEnabled(false);
-
-			String currentSkinlfThemePack = lafManager.getSkinlfThemePack().replace(".zip", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			skinlfThemePackChooser.setSelectedItem(currentSkinlfThemePack);
-
-			if (skinlfThemePackChooser.getSelectedIndex() == -1)
-				skinlfThemePackChooser.setSelectedIndex(0);
-
-
-			JPanel skinlfPanel = new JPanel(new BorderLayout());
-			skinlfPanel.setBorder(BorderFactory.createEmptyBorder(4,20,4,20));
-
-			skinlfPanel.add(enableSkinlf, BorderLayout.WEST);
-			skinlfPanel.add(skinlfThemePackChooser, BorderLayout.EAST);
-
-			lafChooserPanel.add(skinlfPanel);
-			skinlfThemePackChooser.addActionListener(this);
-			enableSkinlf.addActionListener(this);
-		}
-
-		// Add substance
-
-		String [] substanceSkins = lafManager.getSubstanceSkinListArray();
-
-		substanceChooser = new JComboBox(substanceSkins);
-		enableSubstanceChooser = new JCheckBox("Substance"); //$NON-NLS-1$
-		enableSubstanceChooser.setActionCommand("Enable LookAndFeel"); //$NON-NLS-1$
-		
-
-		String currentSubstance = lafManager.getSubstanceSkin();
-
-		substanceChooser.setSelectedItem(currentSubstance);
-		substanceChooser.setEnabled(false);
-		substanceChooser.addActionListener(this);
-		enableSubstanceChooser.addActionListener(this);
-
-		substanceChooser.setPreferredSize(new Dimension(250, (int) lafChooser.getPreferredSize().getHeight()));
-
-		/* Group the radio buttons. */
-		ButtonGroup lafGroup = new ButtonGroup();
-		lafGroup.add(enableSubstanceChooser);
-		lafGroup.add(enableSkinlf);
-		lafGroup.add(enableLafChooser);
-		
-
-		JPanel substanceLafChooserPanel = new JPanel(new BorderLayout());
-		substanceLafChooserPanel.setBorder(BorderFactory.createEmptyBorder(4,20,4,20));
-
-		substanceLafChooserPanel.add(enableSubstanceChooser, BorderLayout.WEST);
-		substanceLafChooserPanel.add(substanceChooser, BorderLayout.EAST);
-
-		substanceLafChooserPanel.setMaximumSize(new Dimension(250,30));
-		substanceLafChooserPanel.setPreferredSize(new Dimension(250,30));
-
-		if (substanceSkins.length > 0) {
-			lafChooserPanel.add(substanceLafChooserPanel);
-		}
-		
-		
-		// Nimrod
-		
-		String [] nimrodThemes = lafManager.getNimrodThemeList();
-
-		nimrodChooser = new JComboBox(nimrodThemes);
-		enableNimrodChooser = new JCheckBox("NimRod"); //$NON-NLS-1$
-		enableNimrodChooser.setActionCommand("Enable LookAndFeel"); //$NON-NLS-1$
-		lafGroup.add(enableNimrodChooser);
-
-		String currentNimrod = lafManager.getNimRODTheme();
-		
-		nimrodChooser.setSelectedItem(currentNimrod);
-		nimrodChooser.setEnabled(false);
-		nimrodChooser.addActionListener(this);
-		enableNimrodChooser.addActionListener(this);
-
-		nimrodChooser.setPreferredSize(new Dimension(250, (int) lafChooser.getPreferredSize().getHeight()));
-
-		JPanel nimrodLafChooserPanel = new JPanel(new BorderLayout());
-		nimrodLafChooserPanel.setBorder(BorderFactory.createEmptyBorder(4,20,4,20));
-
-		nimrodLafChooserPanel.add(enableNimrodChooser, BorderLayout.WEST);
-		nimrodLafChooserPanel.add(nimrodChooser, BorderLayout.EAST);
-
-		nimrodLafChooserPanel.setMaximumSize(new Dimension(250,30));
-		nimrodLafChooserPanel.setPreferredSize(new Dimension(250,30));
-
-		if (nimrodThemes.length > 0) {
-			lafChooserPanel.add(nimrodLafChooserPanel);
-		}
-				
-		
-		setLafChooserPreferredSize();
-
-		
-		if ((skinlfThemePackList != null) && (lafManager.getLookAndFeelType() == LookAndFeelType.SkinlfLaF)) {
-			enableSkinlf.setSelected(true);
-			skinlfThemePackChooser.setEnabled(true);
-		}
-		else if (lafManager.getLookAndFeelType() == LookAndFeelType.Substance && substanceChooser != null) {
-			enableSubstanceChooser.setSelected(true);
-			substanceChooser.setEnabled(true);
-		}
-		else if (lafManager.getLookAndFeelType() == LookAndFeelType.NimROD && nimrodChooser != null) {
-			enableNimrodChooser.setSelected(true);
-			nimrodChooser.setEnabled(true);
-		}
-		else {
-			enableLafChooser.setSelected(true);
-			lafChooser.setEnabled(true);
-			
-			if (skinlfThemePackList == null)
-				skinlfThemePackChooser.setEnabled(false);
-		}
-
-		lafPanel.add(lafChooserPanel, BorderLayout.SOUTH);
-
-		return lafPanel;
-	}
 
 	JPanel createProxyPanel() {
 
@@ -1970,100 +1716,6 @@ public class DialogPrefs extends JDialog implements ActionListener, ItemListener
 		GUIUtil.showAndWait(alert, true);
 	}
 
-	void setLookAndFeel(final LookAndFeelType type) {
-
-		final DialogPrefs prefs = this;
-		
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				prefs.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-
-				switch (type) {
-				case CustomLaF: {setCustomLookAndFeel(0); break;}
-				case SkinlfLaF: {setSkinlfLookAndFeel(); break;}
-				case Substance: {setSubstanceLookAndFeel(); break;}
-				case NimROD:    {setNimRODLookAndFeel(); break;}
-				}
-				MovieManager.getDialog().updateLookAndFeelValues();
-				prefs.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			}
-		});
-	}
-
-
-	void setCustomLookAndFeel(int counter) {
-
-		String selectedLaf = (String) lafChooser.getSelectedItem();
-		
-		try {
-			
-			lafManager.setCustomLaf(selectedLaf);
-			updateLookAndFeel();
-
-		} catch (Exception e) {
-			log.error("Exception:" + e.getMessage(), e); //$NON-NLS-1$
-
-			String lafName = (String) lafChooser.getSelectedItem();
-			lafChooser.setSelectedItem(lafManager.getCustomLookAndFeel());
-
-			/* Calls itself recursively to restore the old look and feel */
-			if (counter < 1) {
-				showErrorMessage(e.getMessage(), lafName);
-				setCustomLookAndFeel(counter+1);
-			}
-			else {
-				showErrorMessage("You're advised to restart the application",""); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			return;
-		}
-		lafManager.setCustomLookAndFeel(selectedLaf);
-	}
-	
-
-	void setSkinlfLookAndFeel() {
-		String selectedItem = (String) skinlfThemePackChooser.getSelectedItem() + ".zip"; //$NON-NLS-1$
-	
-		try {
-			lafManager.setSkinlfLookAndFeel(selectedItem);
-			updateLookAndFeel();
-		} catch (Exception e) {
-			log.error("Exception: "+ e.getMessage()); //$NON-NLS-1$
-			showErrorMessage(e.getMessage(), "SkinLF"); //$NON-NLS-1$
-			return;
-		}
-		lafManager.setSkinlfThemePack(selectedItem);
-	}
-
-	void setNimRODLookAndFeel() {
-		String selectedItem = (String) nimrodChooser.getSelectedItem(); //$NON-NLS-1$
-	
-		try {
-			lafManager.setNimRODLookAndFeel(selectedItem);
-			updateLookAndFeel();
-		} catch (Exception e) {
-			log.error("Exception: "+ e.getMessage()); //$NON-NLS-1$
-			showErrorMessage(e.getMessage(), "NimROD"); //$NON-NLS-1$
-			return;
-		}
-		lafManager.setNimRODTheme(selectedItem);
-	}
-
-	
-	void setSubstanceLookAndFeel() {
-		String selectedItem = (String) substanceChooser.getSelectedItem(); //$NON-NLS-1$
-	
-		try {
-			lafManager.setSubstanceLookAndFeel(selectedItem);
-			updateLookAndFeel();
-
-		} catch (Exception e) {
-			log.error("Exception: "+ e.getMessage(), e); //$NON-NLS-1$
-			showErrorMessage(e.getMessage(), "Substance"); //$NON-NLS-1$
-			return;
-		}
-		lafManager.setSubstanceSkin(selectedItem);
-	}
-
 	
 	void showErrorMessage(String error, String name) {
 
@@ -2089,109 +1741,6 @@ public class DialogPrefs extends JDialog implements ActionListener, ItemListener
 		GUIUtil.showAndWait(alert, true);
 	}
 
-
-	void setLafChooserPreferredSize() {
-
-		if (skinlfThemePackChooser != null)
-			skinlfThemePackChooser.setPreferredSize(new Dimension(lafChooser.getPreferredSize()));
-	}
-
-	void updateLookAndFeel() throws Exception {
-		updateLookAndFeel(this);
-	}
-	
-	public static void updateLookAndFeel(final DialogPrefs pref) throws Exception {
-
-		Runnable r = new Runnable() {
-
-			public void run() {
-				MovieManager.getDialog().updateLookAndFeelValues();
-
-				SwingUtilities.updateComponentTreeUI(MovieManager.getDialog());
-
-				MovieManager.getDialog().resetInfoFieldsDisplay();
-				MovieManager.getDialog().validate();
-
-				/*If the search dialog is opened it will be updated*/
-				if (DialogSearch.getDialogSearch() != null) {
-					SwingUtilities.updateComponentTreeUI(DialogSearch.getDialogSearch());
-					DialogSearch.getDialogSearch().pack();
-				}
-
-				if (pref != null) {
-					SwingUtilities.updateComponentTreeUI(pref);
-					pref.pack();
-					pref.setLafChooserPreferredSize();
-				}
-			}
-		};
-		
-		if (SwingUtilities.isEventDispatchThread())
-			r.run();
-		else
-			SwingUtilities.invokeLater(r);
-	}
-
-
-	void setDefaultLookAndFeelDecoration(boolean decorated) {
-
-		if (decorated) {
-			lafManager.setDefaultLookAndFeelDecorated(true);
-
-			javax.swing.JFrame.setDefaultLookAndFeelDecorated(true);
-			javax.swing.JDialog.setDefaultLookAndFeelDecorated(true);
-
-			MovieManager.getDialog().dispose();
-			MovieManager.getDialog().setUndecorated(true);
-			MovieManager.getDialog().getRootPane().setWindowDecorationStyle(javax.swing.JRootPane.FRAME);
-			GUIUtil.show(MovieManager.getDialog(), true);
-
-			/* Updating DialogSearch if open */
-			if (DialogSearch.getDialogSearch() != null) {
-				DialogSearch.getDialogSearch().dispose();
-				DialogSearch.getDialogSearch().setUndecorated(true);
-				DialogSearch.getDialogSearch().getRootPane().setWindowDecorationStyle(javax.swing.JRootPane.PLAIN_DIALOG);
-				DialogSearch.getDialogSearch().pack();
-
-				GUIUtil.show(DialogSearch.getDialogSearch(), true);
-			}
-
-			/* This */
-			dispose();
-			setUndecorated(true);
-			getRootPane().setWindowDecorationStyle(javax.swing.JRootPane.FRAME);
-			pack();
-			GUIUtil.show(this, true);
-		}
-		else {
-			lafManager.setDefaultLookAndFeelDecorated(false);
-
-			javax.swing.JFrame.setDefaultLookAndFeelDecorated(false);
-			javax.swing.JDialog.setDefaultLookAndFeelDecorated(false);
-
-			MovieManager.getDialog().dispose();
-			MovieManager.getDialog().setUndecorated(false);
-			MovieManager.getDialog().getRootPane().setWindowDecorationStyle(javax.swing.JRootPane.NONE);
-			GUIUtil.show(MovieManager.getDialog(), true);
-
-			/* Updating DialogSearch if open */
-			if (DialogSearch.getDialogSearch() != null) {
-				DialogSearch.getDialogSearch().dispose();
-				DialogSearch.getDialogSearch().setUndecorated(false);
-				DialogSearch.getDialogSearch().getRootPane().setWindowDecorationStyle(javax.swing.JRootPane.NONE);
-				DialogSearch.getDialogSearch().pack();
-				GUIUtil.show(DialogSearch.getDialogSearch(), true);
-			}
-
-			/* This */
-			dispose();
-			setUndecorated(false);
-			getRootPane().setWindowDecorationStyle(javax.swing.JRootPane.NONE);
-			pack();
-
-			GUIUtil.show(this, true);
-		}
-	}
 
 	private void updateEnabling() {
 
@@ -2233,51 +1782,6 @@ public class DialogPrefs extends JDialog implements ActionListener, ItemListener
 			updateRowHeightExample();
 		}
 
-		if (event.getActionCommand().equals("Enable LookAndFeel")) { //$NON-NLS-1$
-
-			if (enableSkinlf != null && enableSkinlf.isSelected()) {
-
-				skinlfThemePackChooser.setEnabled(true);
-				lafChooser.setEnabled(false);
-				substanceChooser.setEnabled(false);
-				nimrodChooser.setEnabled(false);
-				
-				lafManager.setLookAndFeelType(LookAndFeelType.SkinlfLaF);
-				setLookAndFeel(LookAndFeelType.SkinlfLaF);
-
-			}
-			else if (enableSubstanceChooser.isSelected()) {
-				substanceChooser.setEnabled(true);
-				lafChooser.setEnabled(false);
-				skinlfThemePackChooser.setEnabled(false);
-				nimrodChooser.setEnabled(false);
-				
-				lafManager.setLookAndFeelType(LookAndFeelType.Substance);
-				setLookAndFeel(LookAndFeelType.Substance);
-			}
-			else if (enableNimrodChooser.isSelected()) {
-				substanceChooser.setEnabled(false);
-				nimrodChooser.setEnabled(true);
-				lafChooser.setEnabled(false);
-				skinlfThemePackChooser.setEnabled(false);
-				
-				lafManager.setLookAndFeelType(LookAndFeelType.NimROD);
-				setLookAndFeel(LookAndFeelType.NimROD);
-			}
-			else {
-				
-				lafChooser.setEnabled(true);
-
-				substanceChooser.setEnabled(false);
-				
-				if (skinlfThemePackChooser != null)
-					skinlfThemePackChooser.setEnabled(false);
-
-				lafManager.setLookAndFeelType(LookAndFeelType.CustomLaF);
-				setLookAndFeel(LookAndFeelType.CustomLaF);
-			}
-		}
-
 		
 		
 		if (event.getSource().equals(externCommandInfo)) { //$NON-NLS-1$
@@ -2306,26 +1810,6 @@ public class DialogPrefs extends JDialog implements ActionListener, ItemListener
 			}
 
 			MovieManager.getDialog().getSeen().updateUI();
-		}
-
-		if (event.getActionCommand().equals("DefaultLafDecorated")) { //$NON-NLS-1$
-			setDefaultLookAndFeelDecoration(defaultLafDecoratedButton.isSelected());
-		}
-
-		if (event.getSource().equals(lafChooser)) {
-			setLookAndFeel(LookAndFeelType.CustomLaF);
-		}
-		
-		if (event.getSource().equals(skinlfThemePackChooser)) {
-			setLookAndFeel(LookAndFeelType.SkinlfLaF);
-		}
-
-		if (event.getSource().equals(substanceChooser)) {
-			setLookAndFeel(LookAndFeelType.Substance);
-		}
-		
-		if (event.getSource().equals(nimrodChooser)) {
-			setLookAndFeel(LookAndFeelType.NimROD);
 		}
 		
 		MovieManager.getDialog().getMoviesList().requestFocus(true);

@@ -66,7 +66,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import net.sf.xmm.moviemanager.MovieManager;
-import net.sf.xmm.moviemanager.LookAndFeelManager.LookAndFeelType;
 import net.sf.xmm.moviemanager.MovieManagerConfig.NoCoverType;
 import net.sf.xmm.moviemanager.commands.guistarters.MovieManagerCommandAddEpisode;
 import net.sf.xmm.moviemanager.commands.guistarters.MovieManagerCommandEdit;
@@ -581,21 +580,7 @@ public class MovieManagerCommandSelect extends KeyAdapter implements TreeSelecti
 
 			String fontSize = "3";
 			
-			if (MovieManager.getLookAndFeelManager().getLookAndFeelType() == LookAndFeelType.CustomLaF &&
-							("Nimbus".equals(MovieManager.getLookAndFeelManager().getCustomLookAndFeel()) ||
-									(MovieManager.getLookAndFeelManager().getCustomLookAndFeel().indexOf("Synthetica") != -1)))
-				fontSize = "4";
-			
-			/*
-			java.util.Map<java.awt.font.TextAttribute, ?> m = new javax.swing.JTextArea().getFont().getAttributes();
-			
-			java.util.Set<java.awt.font.TextAttribute> keys = m.keySet();
-			
-			for (java.awt.font.TextAttribute key : keys) {
-				System.err.println(m.get(key));
-			}
-			*/
-			
+				
 			if (textfieldForegroundColor == null) {
 
 				try {

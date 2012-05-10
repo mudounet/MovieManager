@@ -41,7 +41,7 @@ public class MovieManager {
     protected static final Logger log = LoggerFactory.getLogger(MovieManager.class.getName());
     static DatabaseHandler databaseHandler = new DatabaseHandler();
     static HTMLTemplateHandler templateHandler = new HTMLTemplateHandler();
-    static LookAndFeelManager lookAndFeelManager = new LookAndFeelManager();
+
     /**
      * Reference to the only instance of MovieManagerConfig.
      *
@@ -117,14 +117,6 @@ public class MovieManager {
                 config.loadConfig();
 
                 /*
-                 * Must be executed before the JFrame (MovieManager) object is
-                 * created.
-                 */
-                if (lookAndFeelManager.getDefaultLookAndFeelDecorated()) {
-                    DialogMovieManager.setDefaultLookAndFeelDecorated(true);
-                }
-
-                /*
                  * Starts the MovieManager.
                  */
                 MovieManager.getDialog().setUp();
@@ -175,9 +167,6 @@ public class MovieManager {
         return templateHandler;
     }
 
-    public static LookAndFeelManager getLookAndFeelManager() {
-        return lookAndFeelManager;
-    }
 
     /**
      * Returns the current database.
@@ -281,20 +270,10 @@ public class MovieManager {
 
         if (!sandbox) {
 
-            if (SysUtil.isAtLeastJRE6()) {
-                SysUtil.includeJarFilesInClasspath("lib/LookAndFeels/1.6");
-            }
 
-            SysUtil.includeJarFilesInClasspath("lib/LookAndFeels");
+
             SysUtil.includeJarFilesInClasspath("lib/drivers");
 
-            /*
-             * Must be called before the GUI is created
-             */
-            if (SysUtil.isMac()) {
-                SysUtil.includeJarFilesInClasspath("lib/mac");
-                lookAndFeelManager.setupOSXLaF();
-            }
         }
 
         movieManager = new MovieManager();
@@ -309,17 +288,6 @@ public class MovieManager {
 
                 try {
 
-                    /*
-                     * Installs the Look&Feels
-                     */
-                    lookAndFeelManager.instalLAFs();
-
-                    if (!MovieManager.isApplet()) {
-                        lookAndFeelManager.setLookAndFeel();
-                    }
-
-                    log.debug("Look & Feels installed.");
-
                     log.debug("Creating MovieManager Dialog");
                     movieManager.createDialog();
 
@@ -331,12 +299,6 @@ public class MovieManager {
 
                     MovieManager.getDialog().showDialog();
 
-                    /*
-                     * SetUp the Application Menu for OSX
-                     */
-                    if (SysUtil.isMac()) {
-                        LookAndFeelManager.macOSXRegistration(MovieManager.getDialog());
-                    }
 
                     // Calls the plugin startup method 
                     MovieManagerLoginHandler loginHandler = MovieManager.getConfig().getLoginHandler();
