@@ -1,12 +1,6 @@
 /target/
 *.txt
 *.sh
-<<<<<<< HEAD
 /log
 /lib/native
 *.htm
-=======
-*.png
-/log
-logfile.html
->>>>>>> Ignore rule
