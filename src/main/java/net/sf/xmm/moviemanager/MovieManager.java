@@ -40,7 +40,6 @@ public class MovieManager {
 
     protected static final Logger log = LoggerFactory.getLogger(MovieManager.class.getName());
     static DatabaseHandler databaseHandler = new DatabaseHandler();
-    static HTMLTemplateHandler templateHandler = new HTMLTemplateHandler();
 
     /**
      * Reference to the only instance of MovieManagerConfig.
@@ -163,9 +162,6 @@ public class MovieManager {
         return databaseHandler;
     }
 
-    public static HTMLTemplateHandler getTemplateHandler() {
-        return templateHandler;
-    }
 
 
     /**
@@ -231,10 +227,6 @@ public class MovieManager {
 
         // Uses this to check if the app is running in a sandbox with limited privileges
         try {
-            /*
-             * Disable HTTPClient logging output
-             */
-            System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog"); //$NON-NLS-1$ //$NON-NLS-2$
 
         } catch (java.security.AccessControlException s) {
             s.printStackTrace();
@@ -278,9 +270,6 @@ public class MovieManager {
 
         movieManager = new MovieManager();
         movieManager.sandbox = sandbox;
-
-//		 Loads the HTML templates
-        templateHandler.loadHTMLTemplates();
 
         EventQueue.invokeLater(new Runnable() {
 

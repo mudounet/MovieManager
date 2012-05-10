@@ -70,10 +70,6 @@ public class DialogExport extends JDialog implements ActionListener {
     
 	protected static org.slf4j.Logger log = LoggerFactory.getLogger(DialogExport.class);
          
-    JRadioButton simpleExport;
-    JRadioButton fullExport;
-    
-    JCheckBox enableAlphabeticSplit;
     
     JTextField titleTextField;
     
@@ -381,29 +377,6 @@ public class DialogExport extends JDialog implements ActionListener {
 
     JPanel createHTMLPanel() {
     	/*Export options*/
-    	simpleExport = new JRadioButton(Localizer.get("DialogExport.panel-export-options.button.simple-export")); //$NON-NLS-1$
-    	simpleExport.setActionCommand("Simple Export"); //$NON-NLS-1$
-
-    	fullExport = new JRadioButton(Localizer.get("DialogExport.panel-export-options.button.full-export")); //$NON-NLS-1$
-    	fullExport.setActionCommand("Full Export"); //$NON-NLS-1$
-
-    	if (MovieManager.getConfig().getHTMLExportType().equals("full")) //$NON-NLS-1$
-    		fullExport.setSelected(true);
-    	else
-    		simpleExport.setSelected(true);
-
-    	/*Group the radio buttons.*/
-    	ButtonGroup exportGroup = new ButtonGroup();
-    	exportGroup.add(simpleExport);
-    	exportGroup.add(fullExport);
-
-    	/*Register a listener for the radio buttons.*/
-    	simpleExport.addActionListener(this);
-    	fullExport.addActionListener(this);
-
-    	enableAlphabeticSplit = new JCheckBox(Localizer.get("DialogExport.panel-export-options.button.divide-alphabetically")); //$NON-NLS-1$
-    	enableAlphabeticSplit.setActionCommand("Divide alphabetically"); //$NON-NLS-1$
-    	enableAlphabeticSplit.setEnabled(false);
 
     	/*Put the radio buttons in a column in a panel.*/
     	JPanel exportOptionPanel = new JPanel(new GridLayout(2, 1));
@@ -416,9 +389,6 @@ public class DialogExport extends JDialog implements ActionListener {
     			BorderFactory.createEmptyBorder(5,5,5,5))));
 
 
-    	exportOptionPanel.add(simpleExport);
-    	exportOptionPanel.add(fullExport);
-    	exportOptionPanel.add(enableAlphabeticSplit);
 
     	JPanel htmlExportPanel = new JPanel();
     	htmlExportPanel.setLayout(new BoxLayout(htmlExportPanel, BoxLayout.PAGE_AXIS));
@@ -512,8 +482,6 @@ public class DialogExport extends JDialog implements ActionListener {
     	settings.exportMode = getExportMode();
 
     	settings.htmlTitle = titleTextField.getText();
-    	settings.htmlAlphabeticSplit = enableAlphabeticSplit.isSelected();
-    	settings.htmlSimpleMode = simpleExport.isSelected();
 
     	switch (settings.exportMode) {
     	case EXCEL: {
@@ -587,17 +555,6 @@ public class DialogExport extends JDialog implements ActionListener {
 
     		return;
     	}
-
-    	if (event.getSource().equals(simpleExport)) {
-    		enableAlphabeticSplit.setEnabled(false);
-    		return;
-    	}
-
-    	if (event.getSource().equals(fullExport)) {
-    		enableAlphabeticSplit.setEnabled(true );
-    		return;
-    	}
-
 
     	ExportMode saveExportFile = null;
     	String extension = null;

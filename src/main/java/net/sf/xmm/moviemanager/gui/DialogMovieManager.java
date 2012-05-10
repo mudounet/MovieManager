@@ -639,26 +639,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
         tabbedMovieInfo.setTitleAt(i, tabName);
     }
 
-    public void setTabbedMovieInfoTitle() {
-        String tabName;
-        ModelHTMLTemplate template = config.getHTMLTemplateHandler().getHTMLTemplate();
-
-        if (template == null) {
-            tabbedMovieInfo.setTitleAt(1, "No Templates available");
-            return;
-        }
-
-        if (template.hasStyles()) {
-
-            String styleName = config.getHTMLTemplateHandler().getHTMLTemplateStyleName();
-            tabName = template.getName() + " -> " + template.getStyle(styleName);
-        } else {
-            tabName = template.getName();
-        }
-
-        // Setting the style name as title of tab bar.
-        tabbedMovieInfo.setTitleAt(1, tabName);
-    }
 
     /**
      * Creates the working area.
@@ -1071,34 +1051,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
         tabbedMovieInfo = new JTabbedPane();
         tabbedMovieInfo.add(config.sysSettings.getLookAndFeelTitle(), createStandardMovieInfo()); //$NON-NLS-1$
 
-        if (!MovieManager.isApplet() && !config.getInternalConfig().getDisableHTMLView()) {
-            setTabbedMovieInfoTitle();
-            tabbedMovieInfo.setSelectedIndex(config.getLastMovieInfoTabIndex());
-            final JTabbedPane finalMovieInfo = tabbedMovieInfo;
-
-            finalMovieInfo.addMouseListener(new MouseListener() {
-
-                public void mousePressed(MouseEvent e) {
-
-                    if (GUIUtil.isRightMouseButton(e)) {
-                        MovieManagerCommandSelect.resetHTMLTemplateChace();
-                    }
-                    setCurrentMainTabIndex(-1);
-                }
-
-                public void mouseClicked(MouseEvent e) {
-                }
-
-                public void mouseEntered(MouseEvent e) {
-                }
-
-                public void mouseExited(MouseEvent e) {
-                }
-
-                public void mouseReleased(MouseEvent e) {
-                }
-            });
-        }
         return tabbedMovieInfo;
     }
 

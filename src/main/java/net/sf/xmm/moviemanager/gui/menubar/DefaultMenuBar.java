@@ -182,9 +182,6 @@ public class DefaultMenuBar extends JMenuBar implements MovieManagerMenuBar {
 		menuBar.add(createMenuTools());
 		menuBar.add(createMenuLists());
 
-		if (!MovieManager.isApplet())
-			menuBar.add(createMenuView());
-
 		/* Creation of the help menu. */
 		menuBar.add(createMenuHelp());
 
@@ -777,124 +774,6 @@ public class DefaultMenuBar extends JMenuBar implements MovieManagerMenuBar {
 	
 	
 	
-	/**
-	 * Creates the views menu.
-	 *
-	 * @return The views menu.
-	 **/
-	protected JMenu createMenuView() {
-
-		log.debug("Start creation of the View menu."); //$NON-NLS-1$
-		menuView = new JMenu("View"); //$NON-NLS-1$
-		menuView.setMnemonic('V');
-
-		final HashMap<String, ModelHTMLTemplate> templates = MovieManager.getTemplateHandler().getHTMLTemplates();
-		String currentTemplateName = MovieManager.getConfig().getHTMLTemplateHandler().getHTMLTemplateName();
-		String currentTemplateStyleName = MovieManager.getConfig().getHTMLTemplateHandler().getHTMLTemplateStyleName();
-		
-		try {
-			ButtonGroup buttonGroup = new ButtonGroup();
-
-			Set<String> keys = templates.keySet();
-			Iterator<String> keysIt = keys.iterator();
-
-			while (keysIt.hasNext()) {
-				String templateName = keysIt.next();
-				ModelHTMLTemplate template = (ModelHTMLTemplate) templates.get(templateName);
-				ArrayList<ModelHTMLTemplateStyle> styles = template.getStyles();
-
-				JMenu templateMenu = new JMenu(template.getName()) {
-					public JToolTip createToolTip() {
-						JMultiLineToolTip tooltip = new JMultiLineToolTip();
-						tooltip.setComponent(this);
-						return tooltip;
-					}
-				};
-				templateMenu.setToolTipText(template.getInfo());
-
-				boolean itemAdded = false;
-
-				for (int u = 0; u < styles.size(); u++) {
-					ModelHTMLTemplateStyle style = (ModelHTMLTemplateStyle) styles.get(u);
-
-					boolean selected = style.getName().equals(currentTemplateStyleName) &&
-										template.getName().equals(currentTemplateName);
-										
-					final JMenuItem m = new JRadioButtonMenuItem(style.getName(), selected)  {
-						public JToolTip createToolTip() {
-							JMultiLineToolTip tooltip = new JMultiLineToolTip();
-							tooltip.setComponent(this);
-							return tooltip;
-						}
-					};
-					m.setToolTipText(style.getInfo());
-
-					m.setActionCommand(template.getName());
-					buttonGroup.add(m);
-					m.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							String styleName = ((JRadioButtonMenuItem) e.getSource()).getText();
-							String command = m.getActionCommand();
-							ModelHTMLTemplate t = (ModelHTMLTemplate) templates.get(command);
-
-							MovieManager.getConfig().getHTMLTemplateHandler().setHTMLTemplate(t, t.getStyle(styleName));
-							MovieManager.getDialog().setTabbedMovieInfoTitle();
-
-							MovieManagerCommandSelect.execute();
-						}
-					});
-
-					templateMenu.add(m);	
-					itemAdded = true;
-				}
-
-				if (itemAdded) 
-					menuView.add(templateMenu);
-				else {
-
-					boolean selected = template.getName().equals(currentTemplateName);
-					
-					JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(template.getName(), selected) {
-						public JToolTip createToolTip() {
-							JMultiLineToolTip tooltip = new JMultiLineToolTip();
-							tooltip.setComponent(this);
-							return tooltip;
-						}
-					};
-					menuItem.setToolTipText(template.getInfo());
-
-					buttonGroup.add(menuItem);
-					menuItem.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							String styleName = ((JRadioButtonMenuItem) e.getSource()).getText();
-							String command = e.getActionCommand();
-							ModelHTMLTemplate t = (ModelHTMLTemplate) templates.get(command);
-
-							MovieManager.getConfig().getHTMLTemplateHandler().setHTMLTemplate(t, t.getStyle(styleName));
-
-							String tabName;
-
-							if (MovieManager.getConfig().getHTMLTemplateHandler().getHTMLTemplate().hasStyles())
-								tabName = MovieManager.getConfig().getHTMLTemplateHandler().getHTMLTemplateStyleName();
-							else
-								tabName = MovieManager.getConfig().getHTMLTemplateHandler().getHTMLTemplate().getName();
-
-							// Setting the style name as title of tab bar.
-							MovieManager.getDialog().setTabbedMovieInfoTitle(1, tabName);
-							MovieManagerCommandSelect.execute();
-						}
-					});
-					menuView.add(menuItem);
-				}
-			}
-
-		} catch (Exception e) {
-			log.error("Exception:" + e.getMessage(), e); //$NON-NLS-1$
-		}
-
-		log.debug("Creation of the View done."); //$NON-NLS-1$
-		return menuView;
-	}
 
 
 	/**

@@ -501,9 +501,6 @@ public class MovieManagerCommandSelect extends KeyAdapter implements TreeSelecti
 		if (MovieManager.getDialog().getCurrentMainTabIndex() == 0) {
 			updateStandardPanel(model, cover);
 		}
-		else {
-			updateHTMLPanel(model, coverFile, coverData, coverDim, nocover);
-		}
 	}
 
 
@@ -696,47 +693,6 @@ public class MovieManagerCommandSelect extends KeyAdapter implements TreeSelecti
 		lastTemplateFile = null;
 	}
 
-	/**
-	 * Updates the HTML panel with the movie info of the current model
-	 * 
-	 * @param model
-	 * @param coverFile
-	 * @param coverDim
-	 */
-	//public static void updateHTMLPanel(ModelEntry model, File coverFile, Dimension coverDim, boolean nocover) {
-	public static void updateHTMLPanel(ModelEntry model, File coverFile, byte [] coverData, Dimension coverDim, boolean nocover) {
-		
-		// Disabled in internal config
-		if (MovieManager.getConfig().getInternalConfig().getDisableHTMLView())
-			return;
-		
-		try {
-						
-			File templateFile = MovieManager.getConfig().getHTMLTemplateHandler().getHTMLTemplateFile();
-			
-			if (templateFile == null || !templateFile.isFile()) {
-				log.warn("Current template file is missing:" + templateFile);
-				return;
-			}
-			
-			
-			// Caches the template
-			if (MovieManager.getConfig().getHTMLViewDebugMode() || lastTemplateFile == null || 
-					!templateFile.getAbsolutePath().equals(lastTemplateFile.getAbsolutePath())) {
-				lastTemplate = FileUtil.readFileToStringBuffer(templateFile);
-				lastTemplateFile = templateFile;
-			}
-			
-
-			
-		}
-		catch (Exception e) {
-		    e.printStackTrace();
-		}
-	}
-	
-	
-	
 	public static void processTemplateCover(StringBuffer template, String coverPath, Dimension coverDim, boolean preserveAspect) {
 			
 		if (coverPath == null)
@@ -774,27 +730,7 @@ public class MovieManagerCommandSelect extends KeyAdapter implements TreeSelecti
 	}
 		
 	
-	/**
-	 * 	@param 		html template
-	 *  @Return		Css style file.
-	 * 
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public static void processTemplateCssStyle(StringBuffer data) throws FileNotFoundException, IOException {
-				
-		ModelHTMLTemplateStyle style = MovieManager.getConfig().getHTMLTemplateHandler().getHTMLTemplateStyle();
-		
-		if (style == null) {
-			log.debug("No style for template " + MovieManager.getConfig().getHTMLTemplateHandler().getHTMLTemplate());
-			return;
-		}
-		
-		String templateStyle = "Styles/" + style.getCssFileName();
-		StringUtil.replaceAll(data, "$css-style$", templateStyle);
-	
-	}
-	
+
 	public static void processTemplateData(StringBuffer template, ModelEntry model) throws FileNotFoundException, IOException {
 		
 		StringUtil.replaceAll(template, "$ReleaseDate$", "" + model.getDate());

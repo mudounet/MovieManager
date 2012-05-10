@@ -105,11 +105,7 @@ public class MovieManagerConfig implements NewDatabaseLoadedEventListener {
 	
 	public final SystemSettings sysSettings = new SystemSettings();
 		
-	HTMLTemplateHandler htmlTemplateHandler = new HTMLTemplateHandler();
-	
-	public HTMLTemplateHandler getHTMLTemplateHandler() {
-		return htmlTemplateHandler;
-	}
+
 	
 	private boolean localConfigMode = false;
 	
@@ -2374,8 +2370,6 @@ public class MovieManagerConfig implements NewDatabaseLoadedEventListener {
 			setUseRegularSeenIcon(getBooleanValue("useRegularSeenIcon:", config, getUseRegularSeenIcon()));
 			setPlotCastMiscellaneousIndex(getIntValue("plotCastMiscellaneousIndex:", config, getPlotCastMiscellaneousIndex()));
 									
-			htmlTemplateHandler.setHTMLTemplateName(getStringValue("HTMLTemplateName:", config));
-			htmlTemplateHandler.setHTMLTemplateStyleName(getStringValue("HTMLTemplateStyleName:", config));
 			setLocale(getStringValue("locale:", config, getLocale()));
 			setFilterCategory(getStringValue("filterOption:", config, getFilterCategory()));
 			setSortOption(getStringValue("sortOption:", config, getSortOption()));
@@ -2890,10 +2884,6 @@ public class MovieManagerConfig implements NewDatabaseLoadedEventListener {
 		 appendToConfig("multiAddIMDbDialogWindowWidth:", getMultiAddIMDbDialogWindowSize().width, settings);
 		 appendToConfig("multiAddIMDbDialogWindowHeight:", getMultiAddIMDbDialogWindowSize().height, settings);
 		 		 
-		 // The current template
-		 appendToConfig("HTMLTemplateName:", htmlTemplateHandler.getHTMLTemplateName(), settings);
-		 appendToConfig("HTMLTemplateStyleName:", htmlTemplateHandler.getHTMLTemplateStyleName(), settings);
-		 
 		 // Search options
 		 appendToConfig("filterOption:", getFilterCategory(), settings);
 		 appendToConfig("sortOption:", getSortOption(), settings);

@@ -111,7 +111,6 @@ public class ModelImportExportSettings {
     
     public String htmlTitle = null;
     public boolean htmlAlphabeticSplit = false;
-    public boolean htmlSimpleMode = false;
     
     JDialog parent = null;
     
@@ -146,9 +145,6 @@ public class ModelImportExportSettings {
     	return htmlAlphabeticSplit;	
     }
         
-    public boolean getIsHTMLSimpleMode() {
-    	return htmlSimpleMode;	
-    }
     
     public char getCSVSeparator() {
     	return csvSeparator;	

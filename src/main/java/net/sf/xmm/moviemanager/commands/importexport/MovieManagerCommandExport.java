@@ -68,11 +68,7 @@ public class MovieManagerCommandExport implements ActionListener{
 			if  (exportSettings.exportMode == ExportMode.EXCEL)
 				exporter = new MovieManagerCommandExportExcel(exportSettings);
 			else if (exportSettings.exportMode == ExportMode.HTML) {
-			
-				if (exportSettings.getIsHTMLSimpleMode())
-					exporter = new MovieManagerCommandExportToSimpleXHTML(exportSettings.getHTMLTitle());
-				else
-					exporter = new MovieManagerCommandExportToFullHTML(exportSettings.getHTMLAlphabeticSplit(), exportSettings.getHTMLTitle());
+                            exporter = new MovieManagerCommandExportToSimpleXHTML(exportSettings.getHTMLTitle());
 			}
 			
 			

@@ -23,7 +23,7 @@ public class Localizer {
 		InputStream inpuStream = null;
 
 		try {
-			inpuStream = FileUtil.getResourceAsStream("/config/MovieManager.tmx");
+			inpuStream = FileUtil.getResourceAsStream("MovieManager.tmx");
 			// inpuStream = DialogMovieManager.applet.getClass().getResourceAsStream("/MovieManager.tmx");
 			
 			if (inpuStream != null) {
@@ -47,10 +47,10 @@ public class Localizer {
 			// do so)
 
 			// First try to get the file from the current dir
-			File f = FileUtil.getFile("config/MovieManager.tmx");
+			File f = FileUtil.getFile("MovieManager.tmx");
 						
 			if (f == null || !f.isFile()) {
-				 f = new File(FileUtil.getFileURL(System.getProperty("user.dir") + "/config/MovieManager.tmx").getPath());
+				 f = new File(FileUtil.getFileURL(System.getProperty("user.dir") + "/MovieManager.tmx").getPath());
 			}
 
 			// If no success the MovieManager.tmx is grabbed from the MovieManager.jar file.
