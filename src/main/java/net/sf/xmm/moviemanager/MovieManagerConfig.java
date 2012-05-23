@@ -69,7 +69,6 @@ public class MovieManagerConfig implements NewDatabaseLoadedEventListener {
 		private static final int release = 7;
 
 		String appTitle = " MeD's Movie Manager v" + getVersion().trim();
-		String lookAndFeelTitle = "Look & Feel";
 
 		/**
 		 * Returns the version.
@@ -83,14 +82,6 @@ public class MovieManagerConfig implements NewDatabaseLoadedEventListener {
 		public int getRelease() {
 			return release;
 		}
-				
-		public String getLookAndFeelTitle() {
-	    	return lookAndFeelTitle;
-	    }
-	    
-	    public void setLookAndFeelTitle(String lookAndFeelTitle) {
-	    	this.lookAndFeelTitle = lookAndFeelTitle;
-	    }
 	    
 	      
 	    public String getAppTitle() {
