@@ -955,36 +955,20 @@ public class DialogMovieInfo extends JDialog implements ModelUpdatedEventListene
 		constraints.anchor = GridBagConstraints.EAST;
 		panelAdditionalInfo.add(additionalInfoUnit, constraints);
 
-		constraints = new GridBagConstraints();
-		constraints.gridx = 0;
-		constraints.gridy = 3;
-		constraints.insets = new Insets(0, -1, 5, -1);
-		constraints.anchor = GridBagConstraints.WEST;
-		panelMovieInfo.add(panelAdditionalInfo, constraints);
+                allTabbedInfo.add("Additional Infos", panelAdditionalInfo);
 
 		createAdditionalInfoPopup();
 		
 		/* Creates the notes... */
 		JPanel panelNotes = new JPanel();
-		panelNotes.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(
-												BorderFactory.createEtchedBorder(),Localizer.get("DialogMovieInfo.panel-notes.title"), //$NON-NLS-1$
-												TitledBorder.DEFAULT_JUSTIFICATION,
-												TitledBorder.DEFAULT_POSITION,
-												new Font(panelNotes.getFont()
-														.getName(), Font.PLAIN,fontSize)),
-								BorderFactory.createEmptyBorder(0, 5, 5, 5)));
+
 		textAreaNotes = new JTextArea("", 4, 20); //$NON-NLS-1$
 		textAreaNotes.setLineWrap(true);
 		textAreaNotes.setWrapStyleWord(true);
 		JScrollPane scrollPaneNotes = new JScrollPane(textAreaNotes);
 		scrollPaneNotes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		panelNotes.add(scrollPaneNotes);
-		constraints = new GridBagConstraints();
-		constraints.gridx = 1;
-		constraints.gridy = 3;
-		constraints.insets = new Insets(0, -1, 5, -1);
-		constraints.anchor = GridBagConstraints.EAST;
-		panelMovieInfo.add(panelNotes, constraints);
+                allTabbedInfo.add("Notes", panelNotes); 
 
 
 		/* Buttons panel... */
