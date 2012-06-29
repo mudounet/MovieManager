@@ -31,8 +31,8 @@
     <MOVIE ID="5" TITLE="Titre de test 5" MD5="1" SIZE="1"/>
     <MOVIE ID="6" TITLE="Titre de test 6" MD5="1" SIZE="1"/>
     <MOVIE ID="7" TITLE="Titre de test 7" MD5="1" SIZE="1"/>
-    <MOVIES_TAGS ID="1" FK_MOVIE="2" FK_TAG="3"/>
-    <MOVIES_TAGS ID="2" FK_MOVIE="2" FK_TAG="5"/>
-    <MOVIES_TAGS ID="3" FK_MOVIE="2" FK_TAG="8"/>
-    <MOVIES_TAGS ID="4" FK_MOVIE="3" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="3"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="5"/>
+    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="8"/>
+    <MOVIES_TAGS FK_MOVIE="3" FK_TAG="5"/>
 </dataset>

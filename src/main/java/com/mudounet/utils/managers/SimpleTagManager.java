@@ -65,15 +65,11 @@ public class SimpleTagManager {
     public List<TagResult> getTagLists() throws DataAccessLayerException {
 
 
-        // select tags.key, count(*) from GenericMovie as movie join movie.tags tags where movie in (select m from GenericMovie as m join m.tags t where t.key in ('Oscar') group by m having count(t)=1) and tags.class = SimpleTag and tags.key not in ('Oscar') group by tags
-
-
-
-        String hql = "select new com.mudounet.utils.managers.TagResult(tags , count(*)) from GenericMovie as movie join movie.tags tags "
-                + "where movie in (select m from GenericMovie as m join m.tags t ";
+        String hql = "select new com.mudounet.utils.managers.TagResult(tags , count(*)) from Movie as m1 join m1.tags tags "
+                + "where m1 in (select m2 from Movie as m2 join m2.tags t ";
 
         if (_tagList.size() > 0) {
-            hql += "where t in (:tags) group by m having count(t)=:tag_count ";
+            hql += "where t in (:tags) group by m2 having count(t)=:tag_count ";
         }
 
         hql = hql + ") and tags.class = SimpleTag ";

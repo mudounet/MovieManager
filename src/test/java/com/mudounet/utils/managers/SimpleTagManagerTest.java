@@ -103,9 +103,9 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
             }
 
             String query = "SELECT KEY, ID, COUNT(*) AS FILMS_COUNT FROM GENERICTAG as T, MOVIES_TAGS as MT INNER JOIN SIMPLETAG AS S ON T.ID = S.FK_TAG WHERE T.ID = MT.FK_TAG AND MT.FK_MOVIE IN ( "
-                    + "select M.ID from GENERICMOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.ID = MT.FK_MOVIE and T.ID = MT.FK_TAG AND (T.KEY = 'Animation') AND FK_MOVIE IN (SELECT Movies_Tags.fk_movie "
+                    + "select M.ID from MOVIE AS M, GENERICTAG as T, MOVIES_TAGS as MT where M.ID = MT.FK_MOVIE and T.ID = MT.FK_TAG AND (T.KEY = 'Animation') AND FK_MOVIE IN (SELECT Movies_Tags.fk_movie "
                     + "FROM Movies_Tags "
-                    + "INNER JOIN GenericMovie a "
+                    + "INNER JOIN MOVIE a "
                     + "ON a.id = Movies_Tags.fk_movie "
                     + "INNER JOIN Generictag t "
                     + "ON t.id = Movies_Tags.fk_tag "
@@ -182,7 +182,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
             List<Movie> result = st.getMovies();
 
             String query = "SELECT fk_movie "
-                    + "FROM Movies_Tags INNER JOIN GenericMovie m ON m.id = fk_movie INNER JOIN Generictag t ON t.id = fk_tag "
+                    + "FROM Movies_Tags INNER JOIN MOVIE m ON m.id = fk_movie INNER JOIN Generictag t ON t.id = fk_tag "
                     + " WHERE t.key IN (" + keyList + ") "
                     + "GROUP BY fk_movie "
                     + "HAVING Count(fk_tag) = " + testedTagList.size();

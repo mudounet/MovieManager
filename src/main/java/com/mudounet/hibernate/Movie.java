@@ -119,8 +119,7 @@ public class Movie {
     }
 
     /**
-     * @hibernate.many-to-one
-     * class="com.mudounet.hibernate.movies.others.TechData"
+     * @hibernate.many-to-one class="com.mudounet.hibernate.movies.others.TechData"
      *
      * @return technical data
      */
@@ -134,9 +133,8 @@ public class Movie {
 
     /**
      * @hibernate.set table="movies_tags" cascade="save-update" lazy="false"
-     * @hibernate.many-to-many column="fk_tag"
-     * class="com.mudounet.hibernate.tags.GenericTag" @hibernate.key
-     * column="fk_movie"
+     * @hibernate.many-to-many column="fk_tag" class="com.mudounet.hibernate.tags.GenericTag" 
+     * @hibernate.key column="fk_movie"
      *
      * @return list of tags applied to movie
      */
