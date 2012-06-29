@@ -116,7 +116,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
     JCheckBox seenCheckBox;
     JTextField languageTextField;
     JLabel languageLabel;
-    JTabbedPane tabbedMovieInfo;
 //  The movies that are currently displayed in the movie list
     ArrayList<ModelMovie> currentMovieList;
     ArrayList<ModelEpisode> currentEpisodeList;
@@ -413,20 +412,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
         }
     }
 
-    public static void setDefaultLookAndFeelDecorated(boolean enable) {
-        JFrame.setDefaultLookAndFeelDecorated(enable);
-        JDialog.setDefaultLookAndFeelDecorated(enable);
-    }
-
-    public void updateLookAndFeelValues() {
-        updateJTreeIcons();
-
-        ExtendedTreeCellRenderer.setDefaultColors();
-        moviesList.updateUI();
-
-        SwingUtilities.updateComponentTreeUI(filterPanel);
-    }
-
     /**
      * Resets the display properties of the info fields. setBackground(new
      * Color(0,0,0,0)); is necessary only for Nimbus L&F which works differently
@@ -620,25 +605,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
         return (JMenuBar) menuBar;
     }
 
-    // Below is GUI creation code 
-    public void setCurrentMainTabIndex(int index) {
-
-        if (index != -1) {
-            tabbedMovieInfo.setSelectedIndex(index);
-        }
-
-        config.setLastMovieInfoTabIndex(tabbedMovieInfo.getSelectedIndex());
-        MovieManagerCommandSelect.execute();
-    }
-
-    public int getCurrentMainTabIndex() {
-        return tabbedMovieInfo.getSelectedIndex();
-    }
-
-    public void setTabbedMovieInfoTitle(int i, String tabName) {
-        tabbedMovieInfo.setTitleAt(i, tabName);
-    }
-
 
     /**
      * Creates the working area.
@@ -659,7 +625,7 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
         workingArea.setMinimumSize(new Dimension(100, 100));
         workingArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-        mainWindowSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, createMoviesList(), createMovieInfo());
+        mainWindowSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, createMoviesList(), createStandardMovieInfo());
         mainWindowSplitPane.setOneTouchExpandable(true);
         mainWindowSplitPane.setContinuousLayout(true);
         mainWindowSplitPane.setDividerSize(7);
@@ -1044,14 +1010,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
         filter.setSize(filterDim);
 
         return filter;
-    }
-
-    protected JTabbedPane createMovieInfo() {
-
-        tabbedMovieInfo = new JTabbedPane();
-        tabbedMovieInfo.add(config.sysSettings.getLookAndFeelTitle(), createStandardMovieInfo()); //$NON-NLS-1$
-
-        return tabbedMovieInfo;
     }
 
     protected JPanel createStandardMovieInfo() {
@@ -1983,17 +1941,6 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
             // ALT+K to show the shortcut map
             shortcutManager.registerShowKeysKey();
 
-            // ALT+T to choose vwitch view 
-            shortcutManager.registerKeyboardShortcut(
-                    KeyStroke.getKeyStroke(KeyEvent.VK_T, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
-                    "Change the view", new AbstractAction() {
-
-                public void actionPerformed(ActionEvent ae) {
-                    int index = getCurrentMainTabIndex();
-                    index = (index == 0) ? 1 : 0;
-                    setCurrentMainTabIndex(index);
-                }
-            });
 
             // ALT+N to focus notes area 
             shortcutManager.registerKeyboardShortcut(

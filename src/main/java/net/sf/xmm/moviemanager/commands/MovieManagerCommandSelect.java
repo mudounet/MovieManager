@@ -498,9 +498,7 @@ public class MovieManagerCommandSelect extends KeyAdapter implements TreeSelecti
 		if (nocover && image != null)
 			coverDim =  new Dimension(image.getWidth(), image.getHeight());
 				
-		if (MovieManager.getDialog().getCurrentMainTabIndex() == 0) {
-			updateStandardPanel(model, cover);
-		}
+                updateStandardPanel(model, cover);
 	}
 
 
