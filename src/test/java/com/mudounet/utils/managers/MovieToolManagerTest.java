@@ -6,8 +6,8 @@ package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.utils.dbunit.TestTools;
-import com.mudounet.hibernate.movies.Movie;
-import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.Utils;
 import java.util.Set;
@@ -46,7 +46,7 @@ public class MovieToolManagerTest {
         logger.info("getMovieInformations");
         File movieFile = Utils.getFileFromClasspath("sample_video.flv");
 
-        GenericMovie m = MovieToolManager.buildMovie(movieFile);
+        Movie m = MovieToolManager.buildMovie(movieFile);
         TechData result = MovieToolManager.getMovieInformations(m);
 
         assertNotNull(result.getCodecName());
@@ -54,7 +54,6 @@ public class MovieToolManagerTest {
         assertEquals(result.getPlayTime() > 0, true);
         assertEquals(result.getHeight() > 0, true);
         assertEquals(result.getWidth() > 0, true);  
-        assertEquals(result.getSize() > 0, true);
 
     }
 
@@ -64,12 +63,12 @@ public class MovieToolManagerTest {
     @Test
     public void testGenSnapshots() throws Exception {
         logger.info("genSnapshots");
-        GenericMovie movie = new Movie();
+        Movie movie = new Movie();
 
         File directory = TestTools.createTempDirectory();
         logger.info("Temporary directory is : "+directory);
 
-        movie.setPath(Utils.getFileFromClasspath("sample_video.flv").getAbsolutePath());
+        movie.setFilename(Utils.getFileFromClasspath("sample_video.flv").getAbsolutePath());
 
         int nbOfSnapshots = 9;
 

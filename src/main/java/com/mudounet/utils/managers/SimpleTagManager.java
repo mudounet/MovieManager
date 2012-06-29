@@ -1,6 +1,6 @@
 package com.mudounet.utils.managers;
 
-import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.tags.SimpleTag;
 import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
@@ -97,7 +97,7 @@ public class SimpleTagManager {
         return results;
     }
 
-    public List<GenericMovie> getMovies() throws DataAccessLayerException {
+    public List<Movie> getMovies() throws DataAccessLayerException {
 
         String hql = "select m from Movie m "
                 + "join m.tags t ";
@@ -113,7 +113,7 @@ public class SimpleTagManager {
             query.setInteger("tag_count", _tagList.size());
         }
 
-        List<GenericMovie> results = template.getQueryResults();
+        List<Movie> results = template.getQueryResults();
 
         return results;
     }

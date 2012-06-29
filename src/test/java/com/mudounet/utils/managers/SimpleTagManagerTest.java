@@ -4,7 +4,7 @@
  */
 package com.mudounet.utils.managers;
 
-import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.Movie;
 import java.util.List;
 import org.dbunit.dataset.ITable;
 import org.hibernate.Transaction;
@@ -179,7 +179,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
             for (String testedKey : testedTagList) {
                 st.addFilterTag(testedKey);
             }
-            List<GenericMovie> result = st.getMovies();
+            List<Movie> result = st.getMovies();
 
             String query = "SELECT fk_movie "
                     + "FROM Movies_Tags INNER JOIN GenericMovie m ON m.id = fk_movie INNER JOIN Generictag t ON t.id = fk_tag "

@@ -4,9 +4,7 @@
  */
 package com.mudounet.hibernate.tags;
 
-import com.mudounet.hibernate.movies.GenericMovie;
-import com.mudounet.hibernate.movies.Movie;
-import com.mudounet.hibernate.movies.QueuedMovie;
+import com.mudounet.hibernate.Movie;
 import com.mudounet.utils.dbunit.ProjectDatabaseTestCase;
 import java.util.Iterator;
 import java.util.List;
@@ -72,41 +70,39 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     public void testMovies() throws Exception {
 
         template.keepConnectionOpened();
-        List list = template.findList(GenericMovie.class);
-        ITable refList = this.getResults("select * from GENERICMOVIE");
+        List list = template.findList(Movie.class);
+        ITable refList = this.getResults("select * from MOVIE");
         assertEquals(list.size(), refList.getRowCount());
 
         Iterator i = list.iterator();
         while (i.hasNext()) {
-            GenericMovie t = (GenericMovie) i.next();
+            Movie t = (Movie) i.next();
             logger.debug(t.toString());
 
-            if (t.getClass() == Movie.class) {
-                Movie m = (Movie) t;
-                Set taglist = m.getTags();
+            Movie m = (Movie) t;
+            Set taglist = m.getTags();
 
-                refList = this.getResults("select * from MOVIES_TAGS WHERE fk_movie=" + t.getId());
-                assertEquals(taglist.size(), refList.getRowCount());
+            refList = this.getResults("select * from MOVIES_TAGS WHERE fk_movie=" + t.getId());
+            assertEquals(taglist.size(), refList.getRowCount());
 
-                for (Object obj : taglist) {
-                    GenericTag tag = (GenericTag) obj;
+            for (Object obj : taglist) {
+                GenericTag tag = (GenericTag) obj;
 
-                    String classType = "";
+                String classType = "";
 
-                    if (this.getResults("select FK_TAG from TAGVALUE WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
-                        classType = com.mudounet.hibernate.tags.TagValue.class.getCanonicalName();
-                    }
-                    if (this.getResults("select FK_TAG from SIMPLETAG WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
-                        classType = com.mudounet.hibernate.tags.SimpleTag.class.getCanonicalName();
-                    }
-
-                    assertEquals(classType, Hibernate.getClass(tag).getCanonicalName());
+                if (this.getResults("select FK_TAG from TAGVALUE WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
+                    classType = com.mudounet.hibernate.tags.TagValue.class.getCanonicalName();
                 }
+                if (this.getResults("select FK_TAG from SIMPLETAG WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
+                    classType = com.mudounet.hibernate.tags.SimpleTag.class.getCanonicalName();
+                }
+
+                assertEquals(classType, Hibernate.getClass(tag).getCanonicalName());
             }
         }
         template.closeConnection();
 
-        assertEquals(list.size(), this.getNbResults("select * from GENERICMOVIE"));
+        assertEquals(list.size(), this.getNbResults("select * from MOVIE"));
 
     }
 
@@ -127,83 +123,15 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
             assertEquals(movielist.size(), refList.getRowCount());
 
             for (Object obj : movielist) {
-                GenericMovie movie = (GenericMovie) obj;
-                refList = this.getResults("select * from GENERICMOVIE WHERE id=" + movie.getId());
+                Movie movie = (Movie) obj;
+                refList = this.getResults("select * from MOVIE WHERE id=" + movie.getId());
                 assertEquals(1, refList.getRowCount());
 
                 assertEquals(movie.getTitle(), refList.getValue(0, "TITLE"));
-
-                char type = refList.getValue(0, "TYPE").toString().charAt(0);
-                String classType = "";
-
-                switch (type) {
-                    case 'G':
-                        classType = com.mudounet.hibernate.movies.GenericMovie.class.getCanonicalName();
-                        break;
-                    case 'M':
-                        classType = com.mudounet.hibernate.movies.Movie.class.getCanonicalName();
-                        break;
-                    case 'P':
-                        classType = com.mudounet.hibernate.movies.ProcessedMovie.class.getCanonicalName();
-                        break;
-                    case 'Q':
-                        classType = com.mudounet.hibernate.movies.QueuedMovie.class.getCanonicalName();
-                        break;
-                }
-
-                assertEquals(classType, Hibernate.getClass(movie).getCanonicalName());
             }
         }
 
         template.closeConnection();
-    }
-
-    @Test
-    public void testQueue() throws Exception {
-
-        List list = null;
-        ITable refList;
-        list = template.findList(QueuedMovie.class);
-        refList = this.getResults("select * from GENERICMOVIE where type='Q'");
-        assertEquals(list.size(), refList.getRowCount());
-
-        Iterator i = list.iterator();
-        while (i.hasNext()) {
-            QueuedMovie q = (QueuedMovie) i.next();
-            refList = this.getResults("select * from GENERICMOVIE where id=" + q.getId());
-
-
-
-
-            Movie m = new Movie();
-            m.setTitle(q.getTitle());
-            m.setMd5("1");
-
-            template.keepConnectionOpened();
-            template.saveOrUpdate(m);
-            template.delete(q);
-            template.closeConnection();
-
-            // Checking that object has been deleted
-            assertEquals(0, this.getResults("select * from GENERICMOVIE where id=" + q.getId()).getRowCount());
-
-            // And also its associated tag
-            assertEquals(0, this.getResults("select * from MOVIES_TAGS where fk_movie=" + q.getId()).getRowCount());
-
-
-            ITable refList2 = this.getResults("select * from GENERICMOVIE where id=" + m.getId());
-            // Checking that new object exist
-            assertEquals(1, refList2.getRowCount());
-
-            // And also its associated tag
-            assertEquals(m.getTags().size(), this.getResults("select * from MOVIES_TAGS where fk_movie=" + m.getId()).getRowCount());
-
-
-
-
-
-
-        }
     }
 
     @Test

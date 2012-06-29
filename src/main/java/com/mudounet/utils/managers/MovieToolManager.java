@@ -4,8 +4,8 @@
  */
 package com.mudounet.utils.managers;
 
-import com.mudounet.hibernate.movies.GenericMovie;
-import com.mudounet.hibernate.movies.Movie;
+import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.RemotePlayer;
@@ -26,28 +26,28 @@ public class MovieToolManager {
 
     protected static Logger logger = LoggerFactory.getLogger(MovieToolManager.class.getName());
 
-    private static RemotePlayer createHeadlessPlayer(GenericMovie movie) throws RemotePlayerException {
+    private static RemotePlayer createHeadlessPlayer(Movie movie) throws RemotePlayerException {
         RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessRemotePlayer();
-        headlessRemotePlayer.load(movie.getPath());
+        headlessRemotePlayer.load(movie.getFilename());
         headlessRemotePlayer.play();
         return headlessRemotePlayer;
     }
 
 
-    public static GenericMovie buildMovie(String path) throws InterruptedException, IOException {
+    public static Movie buildMovie(String path) throws InterruptedException, IOException {
         File file = new File(path);
         return buildMovie(file);
     }
     
-    public static GenericMovie buildMovie(File file) throws InterruptedException, IOException {
+    public static Movie buildMovie(File file) throws InterruptedException, IOException {
         Movie m = new Movie();
-        m.setPath(file.getPath());
+        m.setFilename(file.getPath());
         m.setMd5(m.getMd5());
 
         return m;
     }
     
-    public static TechData getMovieInformations(GenericMovie movie) throws InterruptedException, IOException {
+    public static TechData getMovieInformations(Movie movie) throws InterruptedException, IOException {
         TechData techData = new TechData();
 
      
@@ -76,7 +76,7 @@ public class MovieToolManager {
      * @return found snapshots
      * @throws Exception
      */
-    public static Set<Snapshot> genSnapshots(GenericMovie movie, File directory, int nbOfSnapshots) throws Exception {
+    public static Set<Snapshot> genSnapshots(Movie movie, File directory, int nbOfSnapshots) throws Exception {
         Set<Snapshot> list = new HashSet<Snapshot>();
 
         if (!directory.isDirectory()) {

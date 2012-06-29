@@ -4,7 +4,7 @@
  */
 package com.mudounet.hibernate.tags;
 
-import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.Movie;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +16,7 @@ public class GenericTag implements java.io.Serializable {
 
     private long id;
     private String key;
-    private Set<GenericMovie> movies = new HashSet<GenericMovie>(0);
+    private Set<Movie> movies = new HashSet<Movie>(0);
 
     public GenericTag(String key) {
         this.key = key;
@@ -59,16 +59,16 @@ public class GenericTag implements java.io.Serializable {
      * lazy="false"
      * @hibernate.many-to-many
      * column="fk_movie"
-     * class="com.mudounet.hibernate.movies.GenericMovie"
+     * class="com.mudounet.hibernate.Movie"
      * @hibernate.key
      * column="fk_tag"
-     * @return List of maovies having this tag
+     * @return List of movies having this tag
      */
-    public Set<GenericMovie> getMovies() {
+    public Set<Movie> getMovies() {
         return this.movies;
     }
 
-    public void setMovies(Set<GenericMovie> movies) {
+    public void setMovies(Set<Movie> movies) {
         this.movies = movies;
     }
 

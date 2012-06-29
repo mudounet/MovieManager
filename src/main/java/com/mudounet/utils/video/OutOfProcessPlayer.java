@@ -161,7 +161,6 @@ public abstract class OutOfProcessPlayer {
                 techData = new TechData();
                 
                 this.length = -1;
-                techData.setSize(fileRead.length());
                 mediaPlayer.prepareMedia(fileRead.getAbsolutePath(), getPrepareOptions());
                 mediaPlayer.start();
 

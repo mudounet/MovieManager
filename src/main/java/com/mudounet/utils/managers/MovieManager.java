@@ -4,7 +4,7 @@
  */
 package com.mudounet.utils.managers;
 
-import com.mudounet.hibernate.movies.GenericMovie;
+import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.tags.GenericTag;
 
 /**
@@ -23,11 +23,11 @@ public class MovieManager {
      * @param tag
      * @return Success of operation
      */
-    public static boolean addTagToMovie(GenericMovie movie, GenericTag tag) {
+    public static boolean addTagToMovie(Movie movie, GenericTag tag) {
         return false;
     }
 
-    public static boolean addBasicInfosToMovie(GenericMovie movie, Object techData) {
+    public static boolean addBasicInfosToMovie(Movie movie, Object techData) {
         return false;
     }
 }

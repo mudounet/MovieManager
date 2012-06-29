@@ -15,7 +15,6 @@ public class TechData implements java.io.Serializable {
     private int width = -1;
     private int height = -1;
     private String codecName = "";
-    private long size = -1;
 
     /**
      * @hibernate.id
@@ -56,18 +55,6 @@ public class TechData implements java.io.Serializable {
 
     /**
      * @hibernate.property
-     * @return Size of movie in bytes
-     */
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    /**
-     * @hibernate.property
      * @return Width of movie
      */
     public int getWidth() {
@@ -92,6 +79,6 @@ public class TechData implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "TechData{" + "id=" + id + ", playTime=" + playTime + ", width=" + width + ", height=" + height + ", codecName=" + codecName + ", size=" + size + '}';
+        return "TechData{" + "id=" + id + ", playTime=" + playTime + ", width=" + width + ", height=" + height + ", codecName=" + codecName + '}';
     }
 }

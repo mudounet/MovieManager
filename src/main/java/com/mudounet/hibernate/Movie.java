@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mudounet.hibernate.movies;
+package com.mudounet.hibernate;
 
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.hibernate.tags.GenericTag;
@@ -14,27 +14,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @hibernate.class discriminator-value="G" @hibernate.discriminator
- * column="TYPE" type="char"
+ * @hibernate.class 
  *
  */
-public abstract class GenericMovie {
+public class Movie {
 
-    protected static final Logger logger = LoggerFactory.getLogger(GenericMovie.class.getName());
+    protected static final Logger logger = LoggerFactory.getLogger(Movie.class.getName());
     protected Long id;
     protected String title;
-    protected String path;
+    protected String filename;
     protected String md5;
     protected Set<GenericTag> tags = new HashSet<GenericTag>(0);
     protected TechData techData;
+    protected long size = -1;
 
     /**
      * Tags describing this movie
      */
-    public GenericMovie() {
+    public Movie() {
     }
 
-    public GenericMovie(String title) {
+    public Movie(String title) {
         this.title = title;
     }
 
@@ -52,17 +52,17 @@ public abstract class GenericMovie {
     }
 
     /**
-     * Get the value of md5 @hibernate.property
-     *
-     * @return the value of md5
+     * @hibernate.property
+     * 
+     * @return Get the value of md5 
      */
     public String getMd5() {
         if (md5 == null) {
             try {
-                md5 = Md5Generator.computeMD5(path);
+                md5 = Md5Generator.computeMD5(filename);
             } catch (Exception ex) {
                 md5 = "";
-                logger.error("Exception found with file \"" + path + "\" : ", ex);
+                logger.error("Exception found with file \"" + filename + "\" : ", ex);
             }
         }
 
@@ -80,15 +80,29 @@ public abstract class GenericMovie {
 
     /**
      * @hibernate.property
+     * 
+     * @return Size of movie in bytes
+     */
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    
+    /**
+     * @hibernate.property
      *
      * @return path of movie
      */
-    public String getPath() {
-        return path;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     /**

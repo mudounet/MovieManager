@@ -14,7 +14,6 @@
     <TAGVALUE FK_TAG="2" VALUE="value 2"/>
     <TAGVALUE FK_TAG="4" VALUE="value 3"/>
     
-    
     <GENERICTAG ID="6" KEY="actorTag3"/>
     <GENERICTAG ID="7" KEY="actorTag"/>
     <GENERICTAG ID="8" KEY="actorTag3"/>
@@ -24,16 +23,16 @@
     <TAGVALUE FK_TAG="8" VALUE="value 1"/>
     <TAGVALUE FK_TAG="9" VALUE="value 1"/>
     
-    <GENERICMOVIE ID="1" TYPE="M" TITLE="Titre de test 1" MD5="1"/>
-    <GENERICMOVIE ID="2" TYPE="Q" TITLE="Titre de test 2" MD5="1"/>
-    <GENERICMOVIE ID="3" TYPE="P" TITLE="Titre de test 3" MD5="1"/>
-    <GENERICMOVIE ID="4" TYPE="Q" TITLE="Titre de test 4" MD5="1"/>
-    <GENERICMOVIE ID="8" TYPE="P" TITLE="Titre de test 8" MD5="1"/>
-    <GENERICMOVIE ID="5" TYPE="M" TITLE="Titre de test 5" MD5="1"/>
-    <GENERICMOVIE ID="6" TYPE="Q" TITLE="Titre de test 6" MD5="1"/>
-    <GENERICMOVIE ID="7" TYPE="P" TITLE="Titre de test 7" MD5="1"/>
-    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="3"/>
-    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="5"/>
-    <MOVIES_TAGS FK_MOVIE="2" FK_TAG="8"/>
-    <MOVIES_TAGS FK_MOVIE="3" FK_TAG="5"/>
+    <MOVIE ID="1" TITLE="Titre de test 1" MD5="1" SIZE="1"/>
+    <MOVIE ID="2" TITLE="Titre de test 2" MD5="1" SIZE="1"/>
+    <MOVIE ID="3" TITLE="Titre de test 3" MD5="1" SIZE="1"/>
+    <MOVIE ID="4" TITLE="Titre de test 4" MD5="1" SIZE="1"/>
+    <MOVIE ID="8" TITLE="Titre de test 8" MD5="1" SIZE="1"/>
+    <MOVIE ID="5" TITLE="Titre de test 5" MD5="1" SIZE="1"/>
+    <MOVIE ID="6" TITLE="Titre de test 6" MD5="1" SIZE="1"/>
+    <MOVIE ID="7" TITLE="Titre de test 7" MD5="1" SIZE="1"/>
+    <MOVIES_TAGS ID="1" FK_MOVIE="2" FK_TAG="3"/>
+    <MOVIES_TAGS ID="2" FK_MOVIE="2" FK_TAG="5"/>
+    <MOVIES_TAGS ID="3" FK_MOVIE="2" FK_TAG="8"/>
+    <MOVIES_TAGS ID="4" FK_MOVIE="3" FK_TAG="5"/>
 </dataset>
