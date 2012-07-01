@@ -8,9 +8,9 @@ import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.movies.others.TechData;
-import com.mudounet.utils.video.RemotePlayer;
-import com.mudounet.utils.video.RemotePlayerException;
-import com.mudounet.utils.video.RemotePlayerFactory;
+import com.mudounet.utils.video.external.RemotePlayer;
+import com.mudounet.utils.video.classic.VideoPlayerException;
+import com.mudounet.utils.video.external.RemotePlayerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -26,7 +26,7 @@ public class MovieToolManager {
 
     protected static Logger logger = LoggerFactory.getLogger(MovieToolManager.class.getName());
 
-    private static RemotePlayer createHeadlessPlayer(Movie movie) throws RemotePlayerException {
+    private static RemotePlayer createHeadlessPlayer(Movie movie) throws VideoPlayerException {
         RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessRemotePlayer();
         headlessRemotePlayer.load(movie.getFilename());
         headlessRemotePlayer.play();
@@ -59,7 +59,7 @@ public class MovieToolManager {
             headlessRemotePlayer.close();
 
             
-        } catch (RemotePlayerException ex) {
+        } catch (VideoPlayerException ex) {
             logger.error("Exception found : "+ex);
         }
 
@@ -110,7 +110,7 @@ public class MovieToolManager {
                         success = true;
                         break;
                     }
-                } catch (RemotePlayerException ex) {
+                } catch (VideoPlayerException ex) {
                     logger.warn("Retry " + retry + " / " + nbOfTries);
                     logger.warn("Remote player error : ", ex);
                     headlessRemotePlayer.close();

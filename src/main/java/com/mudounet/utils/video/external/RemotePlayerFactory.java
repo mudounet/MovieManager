@@ -1,5 +1,6 @@
-package com.mudounet.utils.video;
+package com.mudounet.utils.video.external;
 
+import com.mudounet.utils.video.classic.VideoPlayerException;
 import com.sun.jna.Native;
 import java.awt.Canvas;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class RemotePlayerFactory {
                 public void run() {
                     try {
                         player.close();
-                    } catch (RemotePlayerException ex) {
+                    } catch (VideoPlayerException ex) {
                         logger.error("Remote player error : " , ex);
                     }
                 }
@@ -69,7 +70,7 @@ public class RemotePlayerFactory {
                 public void run() {
                     try {
                         player.close();
-                    } catch (RemotePlayerException ex) {
+                    } catch (VideoPlayerException ex) {
                         logger.error("Remote player error : ", ex);
                     }
                 }

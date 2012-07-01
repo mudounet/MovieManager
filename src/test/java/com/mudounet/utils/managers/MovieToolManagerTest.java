@@ -49,12 +49,20 @@ public class MovieToolManagerTest {
         Movie m = MovieToolManager.buildMovie(movieFile);
         TechData result = MovieToolManager.getMovieInformations(m);
 
-        assertNotNull(result.getCodecName());
-        assertEquals(result.getCodecName().length() > 0, true);
         assertEquals(result.getPlayTime() > 0, true);
-        assertEquals(result.getHeight() > 0, true);
-        assertEquals(result.getWidth() > 0, true);  
 
+        assertNotNull(result.getVideoCodec());
+        assertEquals(result.getVideoCodec().length() > 0, true);
+        assertNotNull(result.getVideoFormat());
+        assertEquals(result.getVideoFormat().length() > 0, true);
+        assertNotNull(result.getAudioCodec());
+        assertEquals(result.getAudioCodec().length() > 0, true);
+        assertEquals(result.getVideoBitrate() > 0, true);
+        assertEquals(result.getVideoFramerate() > 0, true);
+        assertEquals(result.getVideoHeight() > 0, true);
+        assertEquals(result.getVideoWidth() > 0, true);
+        assertEquals(result.getAudioBitrate() > 0, true);
+        assertEquals(result.getAudioSamplingRate() > 0, true);
     }
 
     /**
@@ -66,7 +74,7 @@ public class MovieToolManagerTest {
         Movie movie = new Movie();
 
         File directory = TestTools.createTempDirectory();
-        logger.info("Temporary directory is : "+directory);
+        logger.info("Temporary directory is : " + directory);
 
         movie.setFilename(Utils.getFileFromClasspath("sample_video.flv").getAbsolutePath());
 

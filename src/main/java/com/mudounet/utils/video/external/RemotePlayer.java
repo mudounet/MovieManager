@@ -15,27 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mudounet.utils.video;
+package com.mudounet.utils.video.external;
 
+import com.mudounet.utils.video.AbstractPlayer;
 import com.mudounet.hibernate.movies.others.TechData;
+import com.mudounet.utils.video.classic.VideoPlayerException;
 import com.mudounet.utils.video.remotecommands.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Controls an OutOfProcessPlayer via input / output process streams.
  * @author Michael
  */
-public class RemotePlayer {
+public class RemotePlayer extends AbstractPlayer {
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private boolean open;
     private boolean playing;
-    protected static Logger logger = LoggerFactory.getLogger(RemotePlayer.class.getName());
     private boolean paused;
 
     /**
@@ -55,7 +54,7 @@ public class RemotePlayer {
      * Write a given command out to the remote VM player.
      * @param command the command to send.
      */
-    private Object writeOut(Object command, boolean requireAnswer) throws RemotePlayerException {
+    private Object writeOut(Object command, boolean requireAnswer) throws VideoPlayerException {
         if (!open) {
             logger.error("This remote player has been closed!");
             throw new IllegalArgumentException("This remote player has been closed!");
@@ -74,7 +73,7 @@ public class RemotePlayer {
         }
     }
 
-    private Object writeOut(Object command) throws RemotePlayerException {
+    private Object writeOut(Object command) throws VideoPlayerException {
         return writeOut(command, true);
     }
 
@@ -82,12 +81,12 @@ public class RemotePlayer {
      * Block until receiving input from the remote VM player.
      * @return the input string received.
      */
-    private Object getInput() throws RemotePlayerException {
+    private Object getInput() throws VideoPlayerException {
         try {
             logger.debug("Awaiting command.");
             Object returnedInfo = in.readObject();
-            if (returnedInfo.getClass() == RemotePlayerException.class) {
-                throw new RemotePlayerException((RemotePlayerException) returnedInfo);
+            if (returnedInfo.getClass() == VideoPlayerException.class) {
+                throw new VideoPlayerException((VideoPlayerException) returnedInfo);
             } else {
                 logger.debug("received command : " + returnedInfo);
                 return returnedInfo;
@@ -103,17 +102,17 @@ public class RemotePlayer {
     /**
      * Load the given path into the remote player.
      * @param path the path to load.
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public void load(String path) throws RemotePlayerException {
+    public void load(String path) throws VideoPlayerException {
         writeOut(new LoadFile(path));
     }
 
     /**
      * Play the loaded video.
-     * @throws RemotePlayerException 
+     * @throws VideoPlayerException 
      */
-    public void play() throws RemotePlayerException {
+    public void play() throws VideoPlayerException {
         writeOut(new PlayCommand());
         playing = true;
         paused = false;
@@ -121,9 +120,9 @@ public class RemotePlayer {
 
     /**
      * Pause the video.
-     * @throws RemotePlayerException 
+     * @throws VideoPlayerException 
      */
-    public void pause() throws RemotePlayerException {
+    public void pause() throws VideoPlayerException {
         if (!paused) {
             writeOut(new PauseCommand());
             playing = false;
@@ -133,9 +132,9 @@ public class RemotePlayer {
 
     /**
      * Stop the video.
-     * @throws RemotePlayerException 
+     * @throws VideoPlayerException 
      */
-    public void stop() throws RemotePlayerException {
+    public void stop() throws VideoPlayerException {
         writeOut(new StopCommand());
         playing = false;
         paused = false;
@@ -146,9 +145,9 @@ public class RemotePlayer {
      * @param time
      * @param path
      * @return Snapshot is taken
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public boolean takeSnapshot(long time, String path) throws RemotePlayerException {
+    public boolean takeSnapshot(long time, String path) throws VideoPlayerException {
 
         SnapshotCommand c = new SnapshotCommand();
         c.setTime(time);
@@ -160,9 +159,9 @@ public class RemotePlayer {
         /**
      * Retrieve technical data.
      * @return technical Data
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public TechData retrieveTechData() throws RemotePlayerException {
+    public TechData retrieveTechData() throws VideoPlayerException {
 
         TechDataCommand c = new TechDataCommand();
 
@@ -174,27 +173,27 @@ public class RemotePlayer {
      * Determine if the current video is playable, i.e. one is loaded and 
      * ready to start playing when play() is called.
      * @return true if the video is playable, false otherwise.
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public boolean isPlayable() throws RemotePlayerException {
+    public boolean isPlayable() throws VideoPlayerException {
         return ((StateCommand) writeOut(new StateCommand(StateCommand.PLAYABLE))).getValue() == StateCommand.PLAYABLE;
     }
 
     /**
      * Get the length of the currently loaded video.
      * @return the length of the currently loaded video.
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public long getLength() throws RemotePlayerException {
+    public long getLength() throws VideoPlayerException {
         return ((LengthCommand) writeOut(new LengthCommand())).getValue();
     }
 
     /**
      * Get the time in milliseconds of the current position in the video.
      * @return the time in milliseconds of the current position in the video.
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public long getTime() throws RemotePlayerException {
+    public long getTime() throws VideoPlayerException {
         return ((TimeCommand) writeOut(new TimeCommand())).getValue();
     }
 
@@ -202,36 +201,36 @@ public class RemotePlayer {
      * Set the time in milliseconds of the current position in the video.
      * @param time the time in milliseconds of the current position in the
      * video.
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public void setTime(long time) throws RemotePlayerException {
+    public void setTime(long time) throws VideoPlayerException {
         writeOut(new TimeCommand(time));
     }
 
     /**
      * Determine if this video is muted.
      * @return true if it's muted, false if not.
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public boolean getMute() throws RemotePlayerException {
+    public boolean getMute() throws VideoPlayerException {
         return ((MuteCommand) writeOut(new MuteCommand())).getValue();
     }
 
     /**
      * Set whether this video is muted.
      * @param mute true to mute, false to unmute.
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public void setMute(boolean mute) throws RemotePlayerException {
+    public void setMute(boolean mute) throws VideoPlayerException {
         writeOut(new MuteCommand(mute));
     }
 
     /**
      * Terminate the OutOfProcessPlayer. MUST be called before closing, otherwise
      * the player won't quit!
-     * @throws RemotePlayerException 
+     * @throws VideoPlayerException 
      */
-    public void close() throws RemotePlayerException {
+    public void close() throws VideoPlayerException {
         if (open) {
             writeOut(new CloseCommand(), false);
             playing = false;
@@ -242,9 +241,9 @@ public class RemotePlayer {
     /**
      * Determine whether the remote player is playing.
      * @return true if its playing, false otherwise.
-     * @throws RemotePlayerException  
+     * @throws VideoPlayerException  
      */
-    public boolean isPlaying() throws RemotePlayerException {
+    public boolean isPlaying() throws VideoPlayerException {
         return ((StateCommand) writeOut(new StateCommand(StateCommand.PLAYED))).getValue() == StateCommand.PLAYED;
     }
 

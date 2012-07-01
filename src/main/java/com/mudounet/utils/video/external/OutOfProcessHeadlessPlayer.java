@@ -1,4 +1,4 @@
-package com.mudounet.utils.video;
+package com.mudounet.utils.video.external;
 
 import com.sun.jna.NativeLibrary;
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.mudounet.utils.video;
+package com.mudounet.utils.video.external;
 
 import java.io.InputStream;
 import java.io.OutputStream;

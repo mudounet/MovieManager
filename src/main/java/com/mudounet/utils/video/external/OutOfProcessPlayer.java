@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mudounet.utils.video;
+package com.mudounet.utils.video.external;
 
+import com.mudounet.utils.video.classic.VideoPlayerException;
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.remotecommands.*;
 import java.io.*;
@@ -66,10 +67,10 @@ public abstract class OutOfProcessPlayer {
                         execReturnObject(t.getResult());
                     } else {
                         logger.error("TimeOut Exception");
-                        execReturnObject(new RemotePlayerException("Operation has timed-out."));
+                        execReturnObject(new VideoPlayerException("Operation has timed-out."));
                     }
                 } catch (InterruptedException ex) {
-                    execReturnObject(new RemotePlayerException(ex));
+                    execReturnObject(new VideoPlayerException(ex));
                 }
             }
 
@@ -187,7 +188,7 @@ public abstract class OutOfProcessPlayer {
                 logger.debug("Tech Data command received");
                 TechDataCommand t = (TechDataCommand) receivedObject;
 
-                if (techData.getPlayTime() == 0 || techData.getHeight() == 0) {
+                if (techData.getPlayTime() == 0 || techData.getVideoHeight() == 0) {
                 } else {
                     returnObject = techData;
                 }
@@ -309,9 +310,9 @@ public abstract class OutOfProcessPlayer {
 
                         if (track.getClass() == VideoTrackInfo.class) {
                             VideoTrackInfo t = (VideoTrackInfo) track;
-                            techData.setCodecName(t.codecName());
-                            techData.setHeight(t.height());
-                            techData.setWidth(t.width());
+                            techData.setVideoCodec(t.codecName());
+                            techData.setVideoHeight(t.height());
+                            techData.setVideoWidth(t.width());
                             break;
                         }
                     }
