@@ -141,6 +141,16 @@ public class TechData implements java.io.Serializable {
         return videoBitrate;
     }
 
+    
+    /**
+     * 
+     * @param videoBitrate
+     * @return
+     */
+    public void setVideoBitrate(float videoBitrate) {
+        this.videoBitrate = videoBitrate;
+    }
+
 
     /**
      * @hibernate.property

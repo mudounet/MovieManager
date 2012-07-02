@@ -8,8 +8,8 @@ import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.VideoPlayerException;
-import com.mudounet.utils.video.external.RemotePlayer;
-import com.mudounet.utils.video.external.RemotePlayerFactory;
+import com.mudounet.utils.video.VlcPlayer;
+import com.mudounet.utils.video.VlcPlayerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -25,8 +25,8 @@ public class MovieToolManager {
 
     protected static Logger logger = LoggerFactory.getLogger(MovieToolManager.class.getName());
 
-    private static RemotePlayer createHeadlessPlayer(Movie movie) throws VideoPlayerException {
-        RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessPlayer();
+    private static VlcPlayer createHeadlessPlayer(Movie movie) throws VideoPlayerException {
+        VlcPlayer headlessRemotePlayer = VlcPlayerFactory.getHeadlessPlayer();
         headlessRemotePlayer.load(movie.getFilename());
         headlessRemotePlayer.play();
         return headlessRemotePlayer;
@@ -50,7 +50,7 @@ public class MovieToolManager {
         TechData techData = new TechData();
 
      
-        RemotePlayer headlessRemotePlayer;
+        VlcPlayer headlessRemotePlayer;
         try {
             headlessRemotePlayer = createHeadlessPlayer(movie);
             
@@ -87,7 +87,7 @@ public class MovieToolManager {
 
         String prefix = movie.getMd5() + "-";
 
-        RemotePlayer headlessRemotePlayer = createHeadlessPlayer(movie);
+        VlcPlayer headlessRemotePlayer = createHeadlessPlayer(movie);
 
         long length = headlessRemotePlayer.getLength();
 
