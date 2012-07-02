@@ -1,6 +1,6 @@
 package com.mudounet.utils.video.external;
 
-import com.mudounet.utils.video.classic.VideoPlayerException;
+import com.mudounet.utils.video.VideoPlayerException;
 import com.sun.jna.Native;
 import java.awt.Canvas;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class RemotePlayerFactory {
      * use.
      * @return the remote embedded player.
      */
-    public static RemotePlayer getEmbeddedRemotePlayer(Canvas canvas) {
+    public static RemotePlayer getEmbeddedPlayer(Canvas canvas) {
         try {
             long drawable = Native.getComponentID(canvas);
             StreamWrapper wrapper = startSecondPlayerJVM(OutOfProcessEmbeddedPlayer.class, Long.toString(drawable));
@@ -58,7 +58,7 @@ public class RemotePlayerFactory {
      * Get a headless remote player interface to a player in a separate VM.
      * @return a headless remote player interface to a player in a separate VM.
      */
-    public static RemotePlayer getHeadlessRemotePlayer() {
+    public static RemotePlayer getHeadlessPlayer() {
   logger.debug("Creating process in external JVM");
         try {
             

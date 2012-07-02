@@ -2,7 +2,6 @@ package com.mudounet.utils.video;
 
 import com.mudounet.utils.video.external.RemotePlayer;
 import com.mudounet.utils.video.external.RemotePlayerFactory;
-import com.mudounet.utils.video.classic.VideoPlayerException;
 import com.mudounet.utils.Utils;
 import java.awt.BorderLayout;
 import java.awt.Canvas;

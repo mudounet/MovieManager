@@ -5,11 +5,10 @@
 package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.Movie;
-import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.movies.others.TechData;
+import com.mudounet.utils.video.VideoPlayerException;
 import com.mudounet.utils.video.external.RemotePlayer;
-import com.mudounet.utils.video.classic.VideoPlayerException;
 import com.mudounet.utils.video.external.RemotePlayerFactory;
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class MovieToolManager {
     protected static Logger logger = LoggerFactory.getLogger(MovieToolManager.class.getName());
 
     private static RemotePlayer createHeadlessPlayer(Movie movie) throws VideoPlayerException {
-        RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessRemotePlayer();
+        RemotePlayer headlessRemotePlayer = RemotePlayerFactory.getHeadlessPlayer();
         headlessRemotePlayer.load(movie.getFilename());
         headlessRemotePlayer.play();
         return headlessRemotePlayer;

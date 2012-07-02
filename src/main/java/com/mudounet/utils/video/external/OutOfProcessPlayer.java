@@ -17,7 +17,7 @@
  */
 package com.mudounet.utils.video.external;
 
-import com.mudounet.utils.video.classic.VideoPlayerException;
+import com.mudounet.utils.video.VideoPlayerException;
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.remotecommands.*;
 import java.io.*;

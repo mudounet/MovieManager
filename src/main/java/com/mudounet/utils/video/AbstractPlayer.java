@@ -5,7 +5,6 @@
 package com.mudounet.utils.video;
 
 import com.mudounet.hibernate.movies.others.TechData;
-import com.mudounet.utils.video.classic.VideoPlayerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
