@@ -17,7 +17,7 @@
  */
 package com.mudounet.utils.video.external;
 
-import com.mudounet.utils.video.AbstractPlayer;
+import com.mudounet.utils.video.VlcPlayer;
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.VideoPlayerException;
 import com.mudounet.utils.video.remotecommands.*;
@@ -29,7 +29,7 @@ import java.io.ObjectOutputStream;
  * Controls an OutOfProcessPlayer via input / output process streams.
  * @author Michael
  */
-public class RemotePlayer extends AbstractPlayer {
+public class RemotePlayer extends VlcPlayer {
 
     private ObjectInputStream in;
     private ObjectOutputStream out;

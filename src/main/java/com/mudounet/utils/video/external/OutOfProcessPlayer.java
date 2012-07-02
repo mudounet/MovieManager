@@ -24,6 +24,7 @@ import java.io.*;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -37,12 +38,15 @@ import uk.co.caprica.vlcj.player.VideoTrackInfo;
  * @author Michael
  */
 public abstract class OutOfProcessPlayer {
+
     protected static Logger logger = LoggerFactory.getLogger(OutOfProcessPlayer.class.getName());
     protected ObjectOutputStream oos;
     protected ObjectInputStream ois;
     private long length = 0;
     protected CountDownLatch operationFinished;
     protected MediaPlayer mediaPlayer;
+    private File fileRead;
+    private TechData techData;
 
     /**
      * Start the main loop reading from the standard input stream and writing to
@@ -101,14 +105,178 @@ public abstract class OutOfProcessPlayer {
      */
     public abstract String[] getPrepareOptions();
 
+    /**
+     * Set whether this video is muted.
+     *
+     * @param mute true to mute, false to unmute.
+     * @throws VideoPlayerException
+     */
+    public void setMute(boolean mute) throws VideoPlayerException {
+        logger.debug("Request to set mute to " + mute);
+        mediaPlayer.mute(mute);
+    }
+
+    /**
+     * Terminate the OutOfProcessPlayer. MUST be called before closing,
+     * otherwise the player won't quit!
+     *
+     * @throws VideoPlayerException
+     */
+    public void close() throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Get the length of the currently loaded video.
+     *
+     * @return the length of the currently loaded video.
+     * @throws VideoPlayerException
+     */
+    public long getLength() throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Determine if this video is muted.
+     *
+     * @return true if it's muted, false if not.
+     * @throws VideoPlayerException
+     */
+    public boolean getMute() throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Get the time in milliseconds of the current position in the video.
+     *
+     * @return the time in milliseconds of the current position in the video.
+     * @throws VideoPlayerException
+     */
+    public long getTime() throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Determine whether the remote player is paused.
+     *
+     * @return true if its paused, false otherwise.
+     */
+    public boolean isPaused() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Determine if the current video is playable, i.e. one is loaded and ready
+     * to start playing when play() is called.
+     *
+     * @return true if the video is playable, false otherwise.
+     * @throws VideoPlayerException
+     */
+    public boolean isPlayable() throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Determine whether the remote player is playing.
+     *
+     * @return true if its playing, false otherwise.
+     * @throws VideoPlayerException
+     */
+    public boolean isPlaying() throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Load the given path into the remote player.
+     *
+     * @param path the path to load.
+     * @throws VideoPlayerException
+     */
+    public void load(String path) throws VideoPlayerException {
+        logger.debug("Load command received : " + path);
+        fileRead = new File(path);
+        techData = new TechData();
+
+        this.length = -1;
+        mediaPlayer.prepareMedia(fileRead.getAbsolutePath(), getPrepareOptions());
+        mediaPlayer.start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+
+        mediaPlayer.stop();
+    }
+
+    /**
+     * Pause the video.
+     *
+     * @throws VideoPlayerException
+     */
+    public void pause() throws VideoPlayerException {
+        logger.debug("Pause command received");
+        mediaPlayer.pause();
+    }
+
+    /**
+     * Play the loaded video.
+     *
+     * @throws VideoPlayerException
+     */
+    public void play() throws VideoPlayerException {
+        mediaPlayer.play();
+    }
+
+    /**
+     * Retrieve technical data.
+     *
+     * @return technical Data
+     * @throws VideoPlayerException
+     */
+    public TechData retrieveTechData() throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Set the time in milliseconds of the current position in the video.
+     *
+     * @param time the time in milliseconds of the current position in the
+     * video.
+     * @throws VideoPlayerException
+     */
+    public void setTime(long time) throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Stop the video.
+     *
+     * @throws VideoPlayerException
+     */
+    public void stopVideo() throws VideoPlayerException {
+        logger.debug("Stop command received");
+        mediaPlayer.stop();
+    }
+
+    /**
+     * Take a snapshot.
+     *
+     * @param time
+     * @param path
+     * @return Snapshot is taken
+     * @throws VideoPlayerException
+     */
+    public boolean takeSnapshot(long time, String path) throws VideoPlayerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     private class ThreadedAction extends Thread {
 
         private volatile boolean stop = false;
         private Object command;
         private Object result;
         private long length = -1;
-        private File fileRead;
-        private TechData techData;
         private CountDownLatch inTimePositionLatch;
         private CountDownLatch lengthUpdatedLatch = new CountDownLatch(1);
         private CountDownLatch snapshotTakenLatch;
@@ -128,7 +296,11 @@ public abstract class OutOfProcessPlayer {
             while (!stop) {
                 if (newOperationLatch != null && newOperationLatch.getCount() > 0) {
                     try {
-                        result = execReqstdAction(command);
+                        try {
+                            result = execReqstdAction(command);
+                        } catch (VideoPlayerException ex) {
+                            java.util.logging.Logger.getLogger(OutOfProcessPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } catch (InterruptedException ex) {
                         ex.printStackTrace(System.err);
                     }
@@ -153,37 +325,20 @@ public abstract class OutOfProcessPlayer {
             return result;
         }
 
-        private Object execReqstdAction(Object receivedObject) throws InterruptedException {
+        private Object execReqstdAction(Object receivedObject) throws InterruptedException, VideoPlayerException {
             Object returnObject = new BooleanCommand();
 
             if (receivedObject.getClass() == LoadFile.class) {
-                logger.debug("Load command received : " + receivedObject);
-                fileRead = new File(((LoadFile) receivedObject).getFilePath());
-                techData = new TechData();
-                
-                this.length = -1;
-                mediaPlayer.prepareMedia(fileRead.getAbsolutePath(), getPrepareOptions());
-                mediaPlayer.start();
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                }
-                
-                mediaPlayer.stop();
-                
+                load(((LoadFile) receivedObject).getFilePath());
             } else if (receivedObject.getClass() == CloseCommand.class) {
-                logger.debug("Close command received");
+
                 close();
             } else if (receivedObject.getClass() == PlayCommand.class) {
-                logger.debug("Play command received");
-                mediaPlayer.play();
+                play();
             } else if (receivedObject.getClass() == PauseCommand.class) {
-                logger.debug("Pause command received");
-                mediaPlayer.pause();
+                pause();
             } else if (receivedObject.getClass() == StopCommand.class) {
-                logger.debug("Stop command received");
-                mediaPlayer.stop();
+                stopVideo();
             } else if (receivedObject.getClass() == TechDataCommand.class) {
                 logger.debug("Tech Data command received");
                 TechDataCommand t = (TechDataCommand) receivedObject;
@@ -231,8 +386,7 @@ public abstract class OutOfProcessPlayer {
                     t.setValue(mediaPlayer.isMute());
                     returnObject = t;
                 } else {
-                    logger.debug("Request to set mute to " + t.getValue());
-                    mediaPlayer.mute(t.getValue());
+                    setMute(t.getValue());
                 }
             } else if (receivedObject.getClass() == StateCommand.class) {
                 StateCommand t = (StateCommand) receivedObject;
@@ -274,7 +428,7 @@ public abstract class OutOfProcessPlayer {
 
                 @Override
                 public void error(MediaPlayer mediaPlayer) {
-                   logger.error("Unknown error occured");
+                    logger.error("Unknown error occured");
                 }
 
                 @Override
@@ -370,6 +524,7 @@ public abstract class OutOfProcessPlayer {
         }
 
         private void close() {
+            logger.debug("Close command received");
             mediaPlayer.stop();
             mediaPlayer.release();
             System.exit(0);
