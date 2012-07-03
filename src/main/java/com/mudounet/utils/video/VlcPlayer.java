@@ -20,7 +20,6 @@ package com.mudounet.utils.video;
 import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.video.remotecommands.*;
 import java.io.File;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
@@ -45,9 +44,9 @@ public abstract class VlcPlayer {
     protected ObjectOutputStream oos;
     protected ObjectInputStream ois;
     private long length;
-    private CountDownLatch inTimePositionLatch;
+    private CountDownLatch inTimePositionLatch  = new CountDownLatch(1);
     private CountDownLatch lengthUpdatedLatch = new CountDownLatch(1);
-    private CountDownLatch snapshotTakenLatch;
+    private CountDownLatch snapshotTakenLatch  = new CountDownLatch(1);
     private long snapshotTimePosition;
     protected MediaPlayer mediaPlayer;
     private File fileRead;
@@ -111,6 +110,7 @@ public abstract class VlcPlayer {
                     if (track.getClass() == VideoTrackInfo.class) {
                         VideoTrackInfo t = (VideoTrackInfo) track;
                         techData.setVideoCodec(t.codecName());
+                        techData.setVideoFormat("UNKNOWN");
                         techData.setVideoHeight(t.height());
                         techData.setVideoWidth(t.width());
                         break;
@@ -149,7 +149,9 @@ public abstract class VlcPlayer {
      * @throws VideoPlayerException
      */
     public void close() throws VideoPlayerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+            logger.debug("Close command received");
+            mediaPlayer.stop();
+            mediaPlayer.release();
     }
 
     /**
@@ -274,7 +276,7 @@ public abstract class VlcPlayer {
      * @throws VideoPlayerException
      */
     public TechData retrieveTechData() throws VideoPlayerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return techData;
     }
 
     /**
@@ -353,148 +355,5 @@ public abstract class VlcPlayer {
 
     private boolean takeSnapshot(String path) throws InterruptedException {
         return this.takeSnapshot(new File(path));
-    }
-
-    private class ThreadedAction extends Thread {
-
-        private volatile boolean stop = false;
-        private Object command;
-        private Object result;
-        private long length = -1;
-        private CountDownLatch inTimePositionLatch;
-        private CountDownLatch lengthUpdatedLatch = new CountDownLatch(1);
-        private CountDownLatch snapshotTakenLatch;
-        private CountDownLatch newOperationLatch;
-        private long snapshotTimePosition;
-
-        private ThreadedAction() {
-        }
-
-        @Override
-        public void run() {
-            while (!stop) {
-                if (newOperationLatch != null && newOperationLatch.getCount() > 0) {
-                    try {
-                        try {
-                            result = execReqstdAction(command);
-                        } catch (VideoPlayerException ex) {
-                            java.util.logging.Logger.getLogger(VlcPlayer.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace(System.err);
-                    }
-                    newOperationLatch.countDown();
-                }
-            }
-            close();
-        }
-
-        public CountDownLatch requestNewOperation(Object receivedObject) {
-            command = receivedObject;
-            newOperationLatch = new CountDownLatch(1);
-            result = null;
-            return newOperationLatch;
-        }
-
-        public boolean operationInProgress() {
-            return newOperationLatch.getCount() > 0;
-        }
-
-        public Object getResult() {
-            return result;
-        }
-
-        private Object execReqstdAction(Object receivedObject) throws InterruptedException, VideoPlayerException {
-            Object returnObject = new BooleanCommand();
-
-            if (receivedObject.getClass() == LoadFile.class) {
-                load(((LoadFile) receivedObject).getFilePath());
-            } else if (receivedObject.getClass() == CloseCommand.class) {
-
-                close();
-            } else if (receivedObject.getClass() == PlayCommand.class) {
-                play();
-            } else if (receivedObject.getClass() == PauseCommand.class) {
-                pause();
-            } else if (receivedObject.getClass() == StopCommand.class) {
-                stopVideo();
-            } else if (receivedObject.getClass() == TechDataCommand.class) {
-                logger.debug("Tech Data command received");
-                TechDataCommand t = (TechDataCommand) receivedObject;
-
-                if (techData.getPlayTime() == 0 || techData.getVideoHeight() == 0) {
-                } else {
-                    returnObject = techData;
-                }
-
-            } else if (receivedObject.getClass() == SnapshotCommand.class) {
-                SnapshotCommand t = (SnapshotCommand) receivedObject;
-                boolean result2 = takeSnapshot(t.getTime(), t.getPath());
-                returnObject = new BooleanCommand(result2);
-            } else if (receivedObject.getClass() == TimeCommand.class) {
-                TimeCommand t = (TimeCommand) receivedObject;
-                if (t.getValue() < 0) {
-                    logger.debug("request to get time.");
-                    t.setValue(getTime());
-                    returnObject = t;
-                } else {
-                    setTime(t.getValue());
-                }
-            } else if (receivedObject.getClass() == LengthCommand.class) {
-                LengthCommand t = (LengthCommand) receivedObject;
-                logger.debug("Request to get length.");
-
-                t.setValue(getLength());
-
-                returnObject = t;
-            } else if (receivedObject.getClass() == MuteCommand.class) {
-                MuteCommand t = (MuteCommand) receivedObject;
-                if (!t.isSet()) {
-                    logger.debug("request to get mute state.");
-                    t.setValue(mediaPlayer.isMute());
-                    returnObject = t;
-                } else {
-                    setMute(t.getValue());
-                }
-            } else if (receivedObject.getClass() == StateCommand.class) {
-                StateCommand t = (StateCommand) receivedObject;
-                if (t.getValue() == StateCommand.PLAYABLE) {
-
-                    t.setValue(0);
-                    if (mediaPlayer.isPlayable()) {
-                        t.setValue(StateCommand.PLAYABLE);
-                    }
-                } else if (t.getValue() == StateCommand.PLAYED) {
-
-                    t.setValue(0);
-                    if (isPlaying()) {
-                        t.setValue(StateCommand.PLAYED);
-                    }
-
-                } else {
-                    logger.error("State not currently managed : " + t.getValue());
-                }
-                returnObject = t;
-            } else {
-                logger.error("Unknown object : " + receivedObject);
-            }
-
-            return returnObject;
-        }
-
-        private void moveToTime(long newPosition) throws InterruptedException {
-
-        }
-
-        private void close() {
-            logger.debug("Close command received");
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            System.exit(0);
-        }
-
-        public void requestStop() {
-            stop = true;
-        }
     }
 }
