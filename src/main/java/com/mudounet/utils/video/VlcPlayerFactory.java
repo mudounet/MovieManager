@@ -58,8 +58,10 @@ public class VlcPlayerFactory {
      * <p>
      * This is a bit more explicit than using the -Djna.library.path= system property.
      */
-    private static final String NATIVE_LIBRARY_SEARCH_PATH = "/Applications/VLC.app/Contents/MacOS/lib";
+    private static final String NATIVE_LIBRARY_SEARCH_PATH_MAC = "/Applications/VLC.app/Contents/MacOS/lib";
+    private static final String NATIVE_LIBRARY_SEARCH_PATH_WIN = "C:\\Program Files\\VideoLAN\\VLC";
  
+    
     /**
      * Set to true to dump out native JNA memory structures.
      */
@@ -78,9 +80,14 @@ public class VlcPlayerFactory {
         // that can safely be ignored
         LibXUtil.initialise();
  
-        if(null != NATIVE_LIBRARY_SEARCH_PATH) {
-            logger.info("Explicitly adding JNA native library search path: '{}'", NATIVE_LIBRARY_SEARCH_PATH);
-            NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), NATIVE_LIBRARY_SEARCH_PATH);
+        if(null != NATIVE_LIBRARY_SEARCH_PATH_MAC) {
+            logger.info("Explicitly adding JNA native library search path: '{}'", NATIVE_LIBRARY_SEARCH_PATH_MAC);
+            NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), NATIVE_LIBRARY_SEARCH_PATH_MAC);
+        }
+        
+          if(null != NATIVE_LIBRARY_SEARCH_PATH_WIN) {
+            logger.info("Explicitly adding JNA native library search path: '{}'", NATIVE_LIBRARY_SEARCH_PATH_WIN);
+            NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), NATIVE_LIBRARY_SEARCH_PATH_WIN);
         }
  
         System.setProperty("jna.dump_memory", DUMP_NATIVE_MEMORY);

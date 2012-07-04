@@ -102,21 +102,7 @@ public abstract class VlcPlayer {
 
             @Override
             public void videoOutput(MediaPlayer mediaPlayer, int newCount) {
-                List<TrackInfo> trackInfo = mediaPlayer.getTrackInfo();
-
-                for (int i = 0; i < trackInfo.size(); i++) {
-                    Object track = trackInfo.get(i);
-
-                    if (track.getClass() == VideoTrackInfo.class) {
-                        VideoTrackInfo t = (VideoTrackInfo) track;
-                        techData.setVideoCodec(t.codecName());
-                        techData.setVideoFormat("UNKNOWN");
-                        techData.setVideoHeight(t.height());
-                        techData.setVideoWidth(t.width());
-                        break;
-                    }
-                }
-                logger.debug("track properties : " + techData);
+                techData = TechDataBuilder.getTechData(mediaPlayer);
             }
         });
 

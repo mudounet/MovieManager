@@ -14,13 +14,11 @@ public class TechData implements java.io.Serializable {
     private Long id;
     private long playTime = 0; //
     private String videoCodec = ""; //
-    private String videoFormat = ""; //
     private float videoBitrate = 0; //
     private float videoFramerate = 0; //
     private int videoWidth = 0; //
     private int videoHeight = 0; //
     private String audioCodec = ""; //
-    private float audioBitrate = 0; //
     private float audioSamplingRate = 0;
 
     /**
@@ -34,44 +32,6 @@ public class TechData implements java.io.Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /**
-     * @hibernate.property
-     * Get the value of videoFramerate
-     *
-     * @return the value of videoFramerate
-     */
-    public float getVideoFramerate() {
-        return videoFramerate;
-    }
-
-    /**
-     * Set the value of videoFramerate
-     *
-     * @param videoFramerate new value of videoFramerate
-     */
-    public void setVideoFramerate(float videoFramerate) {
-        this.videoFramerate = videoFramerate;
-    }
-
-    /**
-     * @hibernate.property
-     * Get the value of videoFormat
-     *
-     * @return the value of videoFormat
-     */
-    public String getVideoFormat() {
-        return videoFormat;
-    }
-
-    /**
-     * Set the value of videoFormat
-     *
-     * @param videoFormat new value of videoFormat
-     */
-    public void setVideoFormat(String videoFormat) {
-        this.videoFormat = videoFormat;
     }
 
     /**
@@ -93,24 +53,6 @@ public class TechData implements java.io.Serializable {
         this.audioSamplingRate = audioSamplingRate;
     }
 
-    /**
-     * @hibernate.property
-     * Get the value of audioBitrate
-     *
-     * @return the value of audioBitrate
-     */
-    public float getAudioBitrate() {
-        return audioBitrate;
-    }
-
-    /**
-     * Set the value of audioBitrate
-     *
-     * @param audioBitrate new value of audioBitrate
-     */
-    public void setAudioBitrate(float audioBitrate) {
-        this.audioBitrate = audioBitrate;
-    }
 
     /**
      * @hibernate.property
@@ -130,29 +72,19 @@ public class TechData implements java.io.Serializable {
     public void setAudioCodec(String audioCodec) {
         this.audioCodec = audioCodec;
     }
-
-    /**
-     * @hibernate.property
-     * Get the value of videoBitrate
-     *
-     * @return the value of videoBitrate
-     */
-    public float getVideoBitrate() {
-        return videoBitrate;
-    }
-
     
-    /**
-     * 
-     * @param videoBitrate
-     * @return
-     */
-    public void setVideoBitrate(float videoBitrate) {
-        this.videoBitrate = videoBitrate;
+    public void setAudioCodec(int fourCcCodecId) {
+        
+        char[] codecName = {32, 32, 32, 32};
+        codecName[0] = (char)(fourCcCodecId & 0xFF);
+        codecName[1] = (char)((fourCcCodecId >> 8) & 0xFF);
+        codecName[2] = (char)((fourCcCodecId >> 16) & 0xFF);
+        codecName[3] = (char)((fourCcCodecId >> 24) & 0xFF);   
+        
+        this.audioCodec = String.valueOf(codecName);
     }
 
-
-    /**
+   /**
      * @hibernate.property
      *
      * @return Height of movie
@@ -204,5 +136,17 @@ public class TechData implements java.io.Serializable {
         this.videoCodec = codecName;
     }
 
+    public void setVideoCodec(int fourCcCodecId) {
+        
+        char[] codecName = {32, 32, 32, 32};
+        codecName[0] = (char)(fourCcCodecId & 0xFF);
+        codecName[1] = (char)((fourCcCodecId >> 8) & 0xFF);
+        codecName[2] = (char)((fourCcCodecId >> 16) & 0xFF);
+        codecName[3] = (char)((fourCcCodecId >> 24) & 0xFF);   
+        
+        this.videoCodec = String.valueOf(codecName);
+    }
+    
+    
 
 }
