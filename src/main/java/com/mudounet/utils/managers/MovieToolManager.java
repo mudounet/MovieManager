@@ -27,21 +27,24 @@ public class MovieToolManager {
 
     private static VlcPlayer createHeadlessPlayer(Movie movie) throws VideoPlayerException {
         VlcPlayer headlessRemotePlayer = VlcPlayerFactory.getHeadlessPlayer();
-        headlessRemotePlayer.load(movie.getFilename());
+        headlessRemotePlayer.load(movie.getRealFilename());
         headlessRemotePlayer.play();
         return headlessRemotePlayer;
     }
 
-
-    public static Movie buildMovie(String path) throws InterruptedException, IOException {
+    public static Movie buildMovie(String path, String title) throws InterruptedException, IOException {
         File file = new File(path);
-        return buildMovie(file);
+        return buildMovie(file, title);
     }
     
-    public static Movie buildMovie(File file) throws InterruptedException, IOException {
+    public static Movie buildMovie(File file, String title) throws InterruptedException, IOException {
         Movie m = new Movie();
-        m.setFilename(file.getPath());
+        m.setRealFilename(file.getPath());
+        m.setFilename(file.getName());
         m.setMd5(m.getMd5());
+        m.setTitle(title);
+        m.setSize(file.length());
+
 
         return m;
     }

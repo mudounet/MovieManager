@@ -45,7 +45,14 @@ public class MovieToolManagerTest {
         logger.info("getMovieInformations");
         File movieFile = Utils.getFileFromClasspath("sample_video.flv");
 
-        Movie m = MovieToolManager.buildMovie(movieFile);
+        Movie m = MovieToolManager.buildMovie(movieFile, "My movie");
+        
+        
+        assertEquals("sample_video.flv", m.getFilename());
+        assertEquals("b20d0bdbd19487bbfe28e4b92a0b0873", m.getMd5());
+        assertEquals(true, m.getSize() > 0);
+        assertEquals("My movie", m.getTitle());
+        
         MediaInfo result = MovieToolManager.getMovieInformations(m);
 
         assertEquals(result.getPlayTime() > 0, true);
@@ -65,12 +72,11 @@ public class MovieToolManagerTest {
     @Test
     public void testGenSnapshots() throws Exception {
         logger.info("genSnapshots");
-        Movie movie = new Movie();
+        File movieFile = Utils.getFileFromClasspath("sample_video.flv");
+        Movie movie = MovieToolManager.buildMovie(movieFile, "My movie");
 
         File directory = TestTools.createTempDirectory();
         logger.info("Temporary directory is : " + directory);
-
-        movie.setFilename(Utils.getFileFromClasspath("sample_video.flv").getAbsolutePath());
 
         int nbOfSnapshots = 9;
 

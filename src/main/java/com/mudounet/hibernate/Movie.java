@@ -20,13 +20,15 @@ import org.slf4j.LoggerFactory;
 public class Movie {
 
     protected static final Logger logger = LoggerFactory.getLogger(Movie.class.getName());
-    protected Long id;
-    protected String title;
-    protected String filename;
-    protected String md5;
-    protected Set<GenericTag> tags = new HashSet<GenericTag>(0);
-    protected MediaInfo mediaInfo;
-    protected long size = -1;
+    private Long id;
+    private String title;
+    private String filename;
+    private String realFilename;
+
+    private String md5;
+    private Set<GenericTag> tags = new HashSet<GenericTag>(0);
+    private MediaInfo mediaInfo;
+    private long size = -1;
 
     /**
      * Tags describing this movie
@@ -59,10 +61,10 @@ public class Movie {
     public String getMd5() {
         if (md5 == null) {
             try {
-                md5 = Md5Generator.computeMD5(filename);
+                md5 = Md5Generator.computeMD5(realFilename);
             } catch (Exception ex) {
                 md5 = "";
-                logger.error("Exception found with file \"" + filename + "\" : ", ex);
+                logger.error("Exception found with file \"" + realFilename + "\" : ", ex);
             }
         }
 
@@ -162,4 +164,13 @@ public class Movie {
 
         return buffer.toString();
     }
+
+    public String getRealFilename() {
+        return realFilename;
+    }
+
+    public void setRealFilename(String realFilename) {
+        this.realFilename = realFilename;
+    }
+
 }
