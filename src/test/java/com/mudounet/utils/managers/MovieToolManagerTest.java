@@ -57,6 +57,7 @@ public class MovieToolManagerTest {
         assertNotNull(result.getAudioCodec());
         assertEquals(result.getAudioCodec().length() > 0, true);
         assertEquals(result.getAudioSamplingRate() > 0, true);
+        assertEquals(result.getAudioChannels() > 0, true);
     }
 
     /**

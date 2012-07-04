@@ -39,6 +39,7 @@ public class TechDataBuilder {
                  AudioTrackInfo t = (AudioTrackInfo) track;
                  techData.setAudioCodec(t.codec());
                  techData.setAudioSamplingRate(t.rate());
+                 techData.setAudioChannels(t.channels());
             }
         }
         logger.debug("track properties : " + techData);

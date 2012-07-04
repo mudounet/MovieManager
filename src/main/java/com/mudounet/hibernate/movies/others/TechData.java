@@ -20,6 +20,8 @@ public class TechData implements java.io.Serializable {
     private int videoHeight = 0; //
     private String audioCodec = ""; //
     private float audioSamplingRate = 0;
+    private float audioBitRate = 0;
+    private int audioChannels = 0;
 
     /**
      * @hibernate.id generator-class="native"
@@ -147,6 +149,56 @@ public class TechData implements java.io.Serializable {
         this.videoCodec = String.valueOf(codecName);
     }
     
-    
+    /**
+     * @hibernate.property
+     *
+     * @return Video bitrate
+     */
+    public float getVideoBitrate() {
+        return videoBitrate;
+    }
+
+    public void setVideoBitrate(float videoBitrate) {
+        this.videoBitrate = videoBitrate;
+    }
+
+    /**
+     * @hibernate.property
+     *
+     * @return Video framerate
+     */
+    public float getVideoFramerate() {
+        return videoFramerate;
+    }
+
+    public void setVideoFramerate(float videoFramerate) {
+        this.videoFramerate = videoFramerate;
+    }
+
+     /**
+     * @hibernate.property
+     *
+     * @return Audio bitrate
+     */
+    public float getAudioBitRate() {
+        return audioBitRate;
+    }
+
+    public void setAudioBitRate(float audioBitRate) {
+        this.audioBitRate = audioBitRate;
+    }
+
+    /**
+     * @hibernate.property
+     *
+     * @return Audio channels
+     */
+    public int getAudioChannels() {
+        return audioChannels;
+    }
+
+    public void setAudioChannels(int audioChannels) {
+        this.audioChannels = audioChannels;
+    }
 
 }
