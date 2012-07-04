@@ -50,18 +50,12 @@ public class MovieToolManagerTest {
         TechData result = MovieToolManager.getMovieInformations(m);
 
         assertEquals(result.getPlayTime() > 0, true);
-
-        assertNotNull(result.getVideoCodec());
-        assertEquals(result.getVideoCodec().length() > 0, true);
-        assertNotNull(result.getVideoFormat());
-        assertEquals(result.getVideoFormat().length() > 0, true);
-        assertNotNull(result.getAudioCodec());
-        assertEquals(result.getAudioCodec().length() > 0, true);
-        assertEquals(result.getVideoBitrate() > 0, true);
-        assertEquals(result.getVideoFramerate() > 0, true);
         assertEquals(result.getVideoHeight() > 0, true);
         assertEquals(result.getVideoWidth() > 0, true);
-        assertEquals(result.getAudioBitrate() > 0, true);
+        assertNotNull(result.getVideoCodec());
+        assertEquals(result.getVideoCodec().length() > 0, true);
+        assertNotNull(result.getAudioCodec());
+        assertEquals(result.getAudioCodec().length() > 0, true);
         assertEquals(result.getAudioSamplingRate() > 0, true);
     }
 
