@@ -4,7 +4,7 @@
  */
 package com.mudounet.utils.video;
 
-import com.mudounet.hibernate.movies.others.TechData;
+import com.mudounet.hibernate.movies.others.MediaInfo;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,32 +17,32 @@ import uk.co.caprica.vlcj.player.VideoTrackInfo;
  *
  * @author gmanciet
  */
-public class TechDataBuilder {
+public class MediaInfoBuilder {
 
-    protected static Logger logger = LoggerFactory.getLogger(TechDataBuilder.class.getName());
+    protected static Logger logger = LoggerFactory.getLogger(MediaInfoBuilder.class.getName());
     
-    public static TechData getTechData(MediaPlayer mediaPlayer) {
+    public static MediaInfo getMediaInfo(MediaPlayer mediaPlayer) {
         List<TrackInfo> trackInfo = mediaPlayer.getTrackInfo();
-        TechData techData = new TechData();
-        techData.setPlayTime(mediaPlayer.getLength());
+        MediaInfo mediaInfo = new MediaInfo();
+        mediaInfo.setPlayTime(mediaPlayer.getLength());
         
         for (int i = 0; i < trackInfo.size(); i++) {
             Object track = trackInfo.get(i);
 
             if (track.getClass() == VideoTrackInfo.class) {
                 VideoTrackInfo t = (VideoTrackInfo) track;
-                techData.setVideoCodec(t.codec());
-                techData.setVideoHeight(t.height());
-                techData.setVideoWidth(t.width());
+                mediaInfo.setVideoCodec(t.codec());
+                mediaInfo.setVideoHeight(t.height());
+                mediaInfo.setVideoWidth(t.width());
             }
             else if (track.getClass() == AudioTrackInfo.class) {
                  AudioTrackInfo t = (AudioTrackInfo) track;
-                 techData.setAudioCodec(t.codec());
-                 techData.setAudioSamplingRate(t.rate());
-                 techData.setAudioChannels(t.channels());
+                 mediaInfo.setAudioCodec(t.codec());
+                 mediaInfo.setAudioSamplingRate(t.rate());
+                 mediaInfo.setAudioChannels(t.channels());
             }
         }
-        logger.debug("track properties : " + techData);
-        return techData;
+        logger.debug("track properties : " + mediaInfo);
+        return mediaInfo;
     }
 }

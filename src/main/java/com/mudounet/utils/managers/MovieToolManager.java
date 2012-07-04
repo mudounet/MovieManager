@@ -6,7 +6,7 @@ package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.movies.others.Snapshot;
-import com.mudounet.hibernate.movies.others.TechData;
+import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.utils.video.VideoPlayerException;
 import com.mudounet.utils.video.VlcPlayer;
 import com.mudounet.utils.video.VlcPlayerFactory;
@@ -46,15 +46,15 @@ public class MovieToolManager {
         return m;
     }
     
-    public static TechData getMovieInformations(Movie movie) throws InterruptedException, IOException {
-        TechData techData = new TechData();
+    public static MediaInfo getMovieInformations(Movie movie) throws InterruptedException, IOException {
+        MediaInfo mediaInfo = new MediaInfo();
 
      
         VlcPlayer headlessRemotePlayer;
         try {
             headlessRemotePlayer = createHeadlessPlayer(movie);
             
-            techData = headlessRemotePlayer.retrieveTechData();
+            mediaInfo = headlessRemotePlayer.retrieveMediaInfo();
             headlessRemotePlayer.close();
 
             
@@ -62,9 +62,9 @@ public class MovieToolManager {
             logger.error("Exception found : "+ex);
         }
 
-        logger.info("Technical data : ", techData);
+        logger.info("Media Infos : ", mediaInfo);
 
-        return techData;
+        return mediaInfo;
     }
 
     /**

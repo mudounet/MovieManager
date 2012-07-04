@@ -17,21 +17,16 @@
  */
 package com.mudounet.utils.video;
 
-import com.mudounet.hibernate.movies.others.TechData;
-import com.mudounet.utils.video.remotecommands.*;
+import com.mudounet.hibernate.movies.others.MediaInfo;
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
-import uk.co.caprica.vlcj.player.TrackInfo;
-import uk.co.caprica.vlcj.player.VideoTrackInfo;
 
 /**
  * Sits out of process so as not to crash the primary VM.
@@ -41,8 +36,6 @@ import uk.co.caprica.vlcj.player.VideoTrackInfo;
 public abstract class VlcPlayer {
 
     protected static Logger logger = LoggerFactory.getLogger(VlcPlayer.class.getName());
-    protected ObjectOutputStream oos;
-    protected ObjectInputStream ois;
     private long length;
     private CountDownLatch inTimePositionLatch  = new CountDownLatch(1);
     private CountDownLatch lengthUpdatedLatch = new CountDownLatch(1);
@@ -50,12 +43,12 @@ public abstract class VlcPlayer {
     private long snapshotTimePosition;
     protected MediaPlayer mediaPlayer;
     private File fileRead;
-    private TechData techData;
+    private MediaInfo mediaInfo;
 
     public VlcPlayer(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
         this.addSnapshotFunction();
-        this.addTechDataFunction();
+        this.addMediaInfoFunction();
         this.length = -1;
     }
 
@@ -85,7 +78,7 @@ public abstract class VlcPlayer {
                 if (newLength > 0) {
                     logger.debug("Length updated : from " + length + " to " + newLength);
                     length = newLength;
-                    techData.setPlayTime(newLength);
+                    mediaInfo.setPlayTime(newLength);
                 }
             }
 
@@ -97,12 +90,12 @@ public abstract class VlcPlayer {
         });
     }
 
-    private void addTechDataFunction() {
+    private void addMediaInfoFunction() {
         mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
 
             @Override
             public void videoOutput(MediaPlayer mediaPlayer, int newCount) {
-                techData = TechDataBuilder.getTechData(mediaPlayer);
+                mediaInfo = MediaInfoBuilder.getMediaInfo(mediaPlayer);
             }
         });
 
@@ -222,7 +215,7 @@ public abstract class VlcPlayer {
     public void load(String path) throws VideoPlayerException {
         logger.debug("Load command received : " + path);
         fileRead = new File(path);
-        techData = new TechData();
+        mediaInfo = new MediaInfo();
 
         this.length = -1;
         mediaPlayer.prepareMedia(fileRead.getAbsolutePath(), getPrepareOptions());
@@ -256,13 +249,13 @@ public abstract class VlcPlayer {
     }
 
     /**
-     * Retrieve technical data.
+     * Retrieve media informations.
      *
-     * @return technical Data
+     * @return  media informations
      * @throws VideoPlayerException
      */
-    public TechData retrieveTechData() throws VideoPlayerException {
-        return techData;
+    public MediaInfo retrieveMediaInfo() throws VideoPlayerException {
+        return mediaInfo;
     }
 
     /**

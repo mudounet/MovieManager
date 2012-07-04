@@ -27,7 +27,7 @@ public class MovieManager {
         return false;
     }
 
-    public static boolean addBasicInfosToMovie(Movie movie, Object techData) {
+    public static boolean addBasicInfosToMovie(Movie movie, Object mediaInfo) {
         return false;
     }
 }

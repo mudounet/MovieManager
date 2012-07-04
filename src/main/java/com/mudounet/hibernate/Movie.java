@@ -4,7 +4,7 @@
  */
 package com.mudounet.hibernate;
 
-import com.mudounet.hibernate.movies.others.TechData;
+import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.utils.Md5Generator;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class Movie {
     protected String filename;
     protected String md5;
     protected Set<GenericTag> tags = new HashSet<GenericTag>(0);
-    protected TechData techData;
+    protected MediaInfo mediaInfo;
     protected long size = -1;
 
     /**
@@ -119,16 +119,16 @@ public class Movie {
     }
 
     /**
-     * @hibernate.many-to-one class="com.mudounet.hibernate.movies.others.TechData"
+     * @hibernate.many-to-one class="com.mudounet.hibernate.movies.others.MediaInfo"
      *
-     * @return technical data
+     * @return Media informations
      */
-    public TechData getTechData() {
-        return techData;
+    public MediaInfo getMediaInfo() {
+        return mediaInfo;
     }
 
-    public void setTechData(TechData techData) {
-        this.techData = techData;
+    public void setMediaInfo(MediaInfo mediaInfo) {
+        this.mediaInfo = mediaInfo;
     }
 
     /**

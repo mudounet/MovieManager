@@ -8,7 +8,7 @@ package com.mudounet.hibernate.movies.others;
  * @hibernate.class
  *
  */
-public class TechData implements java.io.Serializable {
+public class MediaInfo implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long id;

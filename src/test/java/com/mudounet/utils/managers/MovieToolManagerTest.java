@@ -4,20 +4,19 @@
  */
 package com.mudounet.utils.managers;
 
+import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.movies.others.Snapshot;
-import com.mudounet.utils.dbunit.TestTools;
-import com.mudounet.hibernate.Movie;
-import com.mudounet.hibernate.Movie;
-import com.mudounet.hibernate.movies.others.TechData;
 import com.mudounet.utils.Utils;
-import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.mudounet.utils.dbunit.TestTools;
 import java.io.File;
+import java.util.Set;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -47,7 +46,7 @@ public class MovieToolManagerTest {
         File movieFile = Utils.getFileFromClasspath("sample_video.flv");
 
         Movie m = MovieToolManager.buildMovie(movieFile);
-        TechData result = MovieToolManager.getMovieInformations(m);
+        MediaInfo result = MovieToolManager.getMovieInformations(m);
 
         assertEquals(result.getPlayTime() > 0, true);
         assertEquals(result.getVideoHeight() > 0, true);
