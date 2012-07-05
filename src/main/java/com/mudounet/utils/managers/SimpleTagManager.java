@@ -2,13 +2,14 @@ package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.tags.SimpleTag;
+import com.mudounet.hibernate.tags.TagResult;
 import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.hibernate.Query;
 
 /**
  * @author isabelle
@@ -23,6 +24,11 @@ public class SimpleTagManager {
         this._tagList = new ArrayList<SimpleTag>();
         this.template = new AbstractDao();
     }
+
+    public SimpleTagManager(AbstractDao template) {
+        this.template = template;
+    }
+
     
     public static boolean addSimpleTag(String key) {
         try {
@@ -72,13 +78,13 @@ public class SimpleTagManager {
             hql += "where t in (:tags) group by m2 having count(t)=:tag_count ";
         }
 
-        hql = hql + ") and tags.class = SimpleTag ";
+        hql += ") and tags.class = SimpleTag ";
 
         if (_tagList.size() > 0) {
             hql += " and tags not in (:tags) ";
         }
 
-        hql = hql + "group by tags ";
+        hql += "group by tags ";
 
 
         Query query = template.createQuery(hql);
@@ -93,6 +99,7 @@ public class SimpleTagManager {
         return results;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Movie> getMovies() throws DataAccessLayerException {
 
         String hql = "select m from Movie m "
@@ -109,8 +116,6 @@ public class SimpleTagManager {
             query.setInteger("tag_count", _tagList.size());
         }
 
-        List<Movie> results = template.getQueryResults();
-
-        return results;
+        return template.getQueryResults();
     }
 }

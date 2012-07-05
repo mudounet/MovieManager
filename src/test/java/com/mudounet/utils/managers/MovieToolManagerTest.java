@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MovieToolManagerTest {
 
-    protected Logger logger = LoggerFactory.getLogger(getClass().getName());
+    private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     public MovieToolManagerTest() {
     }
@@ -39,6 +39,7 @@ public class MovieToolManagerTest {
 
     /**
      * Test of getMovieInformations method, of class MovieToolManager.
+     * @throws Exception 
      */
     @Test
     public void testGetMovieInformations() throws Exception {
@@ -68,6 +69,7 @@ public class MovieToolManagerTest {
 
     /**
      * Test of genSnapshots method, of class MovieToolManager.
+     * @throws Exception 
      */
     @Test
     public void testGenSnapshots() throws Exception {

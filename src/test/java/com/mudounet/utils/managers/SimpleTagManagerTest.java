@@ -4,6 +4,7 @@
  */
 package com.mudounet.utils.managers;
 
+import com.mudounet.hibernate.tags.TagResult;
 import com.mudounet.hibernate.Movie;
 import java.util.List;
 import org.dbunit.dataset.ITable;
@@ -25,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
 
     //protected static Logger logger = LoggerFactory.getLogger(SimpleTagManagerTest.class.getName());
-    protected  Logger logger = LoggerFactory.getLogger(getClass().getName());
+    private  Logger logger = LoggerFactory.getLogger(getClass().getName());
     private Transaction tx;
 
     public SimpleTagManagerTest(String name) {
@@ -52,6 +53,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
 
     /**
      * Test of getFilterTagsList method, of class SimpleTagManager.
+     * @throws Exception 
      */
     @Test
     public void testGetFilterTagsList() throws Exception {
@@ -69,6 +71,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
 
     /**
      * Test of getTagLists method, of class TagManager.
+     * @throws Exception 
      */
     @Test
     public void testGetTagLists() throws Exception {
@@ -147,6 +150,7 @@ public class SimpleTagManagerTest extends ProjectDatabaseTestCase {
 
     /**
      * Test of getMovies method, of class SimpleTagManager.
+     * @throws Exception 
      */
     @Test
     public void testGetMovies() throws Exception {

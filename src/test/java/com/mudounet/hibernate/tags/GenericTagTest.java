@@ -22,8 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GenericTagTest extends ProjectDatabaseTestCase {
 
-    protected static Logger logger = LoggerFactory.getLogger(GenericTagTest.class.getName());
-    private Transaction tx;
+    private static Logger logger = LoggerFactory.getLogger(GenericTagTest.class.getName());
 
     public GenericTagTest(String name) {
         super(name);
@@ -31,6 +30,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
     /**
      * Test of getId method, of class GenericTag.
+     * @throws Exception 
      */
     @Test
     public void testPersists() throws Exception {
@@ -109,7 +109,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     @Test
     public void testTags() throws Exception {
         template.keepConnectionOpened();
-        List list = template.findList(GenericTag.class);
+        List<GenericTag> list = template.findList(GenericTag.class);
         ITable refList = this.getResults("select ID, KEY, S.FK_TAG AS S_TAG, T.FK_TAG AS T_TAG  from GENERICTAG LEFT OUTER JOIN SIMPLETAG AS S ON ID=S.FK_TAG LEFT OUTER JOIN TAGVALUE AS T ON ID=T.FK_TAG");
         assertEquals(list.size(), refList.getRowCount());
 
@@ -117,7 +117,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         while (i.hasNext()) {
             GenericTag t = (GenericTag) i.next();
 
-            Set movielist = t.getMovies();
+            Set<Movie> movielist = t.getMovies();
 
             refList = this.getResults("select * from MOVIES_TAGS WHERE fk_tag=" + t.getId());
             assertEquals(movielist.size(), refList.getRowCount());

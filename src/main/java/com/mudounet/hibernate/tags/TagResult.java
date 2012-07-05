@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mudounet.utils.managers;
+package com.mudounet.hibernate.tags;
 
 import com.mudounet.hibernate.tags.GenericTag;
 

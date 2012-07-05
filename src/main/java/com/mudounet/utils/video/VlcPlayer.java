@@ -19,8 +19,6 @@ package com.mudounet.utils.video;
 
 import com.mudounet.hibernate.movies.others.MediaInfo;
 import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -35,13 +33,13 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
  */
 public abstract class VlcPlayer {
 
-    protected static Logger logger = LoggerFactory.getLogger(VlcPlayer.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(VlcPlayer.class.getName());
     private long length;
-    private CountDownLatch inTimePositionLatch  = new CountDownLatch(1);
+    private CountDownLatch inTimePositionLatch = new CountDownLatch(1);
     private CountDownLatch lengthUpdatedLatch = new CountDownLatch(1);
-    private CountDownLatch snapshotTakenLatch  = new CountDownLatch(1);
+    private CountDownLatch snapshotTakenLatch = new CountDownLatch(1);
     private long snapshotTimePosition;
-    protected MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
     private File fileRead;
     private MediaInfo mediaInfo;
 
@@ -122,15 +120,15 @@ public abstract class VlcPlayer {
     }
 
     /**
-     * Terminate the VlcPlayer. MUST be called before closing,
-     * otherwise the player won't quit!
+     * Terminate the VlcPlayer. MUST be called before closing, otherwise the
+     * player won't quit!
      *
      * @throws VideoPlayerException
      */
     public void close() throws VideoPlayerException {
-            logger.debug("Close command received");
-            mediaPlayer.stop();
-            mediaPlayer.release();
+        logger.debug("Close command received");
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
     /**
@@ -251,7 +249,7 @@ public abstract class VlcPlayer {
     /**
      * Retrieve media informations.
      *
-     * @return  media informations
+     * @return media informations
      * @throws VideoPlayerException
      */
     public MediaInfo retrieveMediaInfo() throws VideoPlayerException {
@@ -261,18 +259,18 @@ public abstract class VlcPlayer {
     /**
      * Set the time in milliseconds of the current position in the video.
      *
-     * @param time the time in milliseconds of the current position in the
-     * video.
+     * @param newPosition
      * @throws VideoPlayerException
+     * @throws InterruptedException
      */
     public void setTime(long newPosition) throws VideoPlayerException, InterruptedException {
         logger.debug("Request to set time to " + newPosition);
-              this.snapshotTimePosition = newPosition;
-            inTimePositionLatch = new CountDownLatch(1);
-            mediaPlayer.setTime(newPosition);
-            logger.debug("Going to specified time (ms) : " + newPosition);
-            inTimePositionLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
-            logger.debug("Latch reached.");
+        this.snapshotTimePosition = newPosition;
+        inTimePositionLatch = new CountDownLatch(1);
+        mediaPlayer.setTime(newPosition);
+        logger.debug("Going to specified time (ms) : " + newPosition);
+        inTimePositionLatch.await(10L, TimeUnit.SECONDS); // Might wait forever if error
+        logger.debug("Latch reached.");
     }
 
     /**

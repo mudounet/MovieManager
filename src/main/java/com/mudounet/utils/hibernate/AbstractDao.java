@@ -153,7 +153,6 @@ public class AbstractDao {
         return findList(clazz, null, 0);
     }
 
-    @SuppressWarnings("unchecked")
     public List findList(Class clazz, Criterion crit, int resultLimit) throws DataAccessLayerException {
         List objects = null;
         try {
