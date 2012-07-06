@@ -1,8 +1,10 @@
-
 <dataset>
+
     <MOVIE ID="1" TITLE="[DEL] Film qui n'existe plus" MD5="1"  SIZE="1" FILENAME="plus_de_film.avi"/>
     <MOVIE ID="2" TITLE="[ OK] Rabbids - Anniversary" MD5="1"  SIZE="1"  FILENAME="Rabbids - Anniversary.webm"/>
     <MOVIE ID="3" TITLE="[MOD] Rabbids - UHU" MD5="1"  SIZE="1" FILENAME="Rabbids - Anniversary.webm"/>
     <MOVIE ID="4" TITLE="[DEL] Film qui n'existe plus 2" MD5="1"  SIZE="1" FILENAME="plus_de_film_2.avi"/>
     <MOVIE ID="5" TITLE="[REN] Rabbids - Espace" MD5="1"  SIZE="1"  FILENAME="Rabbids - Espace.flv"/>
+    <SIMPLETAG ID="6"/>
+    <MOVIES_TAGS FK_MOVIE="1" FK_TAG="6"/>
 </dataset>

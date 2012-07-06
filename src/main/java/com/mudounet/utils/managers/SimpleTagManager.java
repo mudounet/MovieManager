@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleTagManager {
 
-    protected static Logger logger = LoggerFactory.getLogger(SimpleTagManager.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(SimpleTagManager.class.getName());
     private ArrayList<SimpleTag> _tagList;
-    protected AbstractDao template;
+    private AbstractDao template;
 
     public SimpleTagManager() {
         this._tagList = new ArrayList<SimpleTag>();
@@ -71,7 +71,7 @@ public class SimpleTagManager {
     public List<TagResult> getTagLists() throws DataAccessLayerException {
 
 
-        String hql = "select new com.mudounet.utils.managers.TagResult(tags , count(*)) from Movie as m1 join m1.tags tags "
+        String hql = "select new com.mudounet.hibernate.tags.TagResult(tags , count(*)) from Movie as m1 join m1.tags tags "
                 + "where m1 in (select m2 from Movie as m2 join m2.tags t ";
 
         if (_tagList.size() > 0) {
@@ -99,7 +99,6 @@ public class SimpleTagManager {
         return results;
     }
 
-    @SuppressWarnings("unchecked")
     public List<Movie> getMovies() throws DataAccessLayerException {
 
         String hql = "select m from Movie m "

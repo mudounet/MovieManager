@@ -1,19 +1,14 @@
 package com.mudounet.utils.hibernate;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.io.StringWriter;
 import java.io.PrintWriter;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
+import java.io.StringWriter;
+import java.util.List;
+import org.hibernate.*;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A layer supertype that handles the common operations for all Data Access Objects.
@@ -24,7 +19,7 @@ public class AbstractDao {
     private Session session;
     private boolean keepConnectionOpened = false;
     private boolean oldKeepConnectionOpened = false;
-    protected Query query;
+    private Query query;
     private Transaction tx;
 
     public AbstractDao() {

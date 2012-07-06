@@ -11,13 +11,14 @@ import com.mudounet.hibernate.Movie;
  * @author gmanciet
  */
 public class CheckedMovie extends Movie {
-    private byte state = 0;
-    
-    public enum state {
-    EQUALS, DELETED, RENAMED, MODIFIED
+
+    private MovieState state = MovieState.UNDEFINED;
+
+    public MovieState getState() {
+        return state;
     }
-    
-    public void checkMovie() {
-        
+
+    public void setState(MovieState state) {
+        this.state = state;
     }
 }

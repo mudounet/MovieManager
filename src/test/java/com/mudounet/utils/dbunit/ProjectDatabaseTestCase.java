@@ -92,16 +92,6 @@ public abstract class ProjectDatabaseTestCase
         }
     }
 
-    @Override
-    protected DatabaseOperation getSetUpOperation() {
-        return DatabaseOperation.REFRESH;
-    }
-
-    @Override
-    protected DatabaseOperation getTearDownOperation() {
-        return DatabaseOperation.DELETE_ALL;
-    }
-
     protected IDatabaseConnection getConnection() throws Exception {
         Properties p = new Properties();
         InputStream m = TestTools.loadFromClasspath("hibernate-db.properties");
@@ -117,8 +107,6 @@ public abstract class ProjectDatabaseTestCase
 
         return connection;
     }
-
-
 
     private InputStream loadFromTestPath(String file) throws Exception {
         InputStream is = TestTools.loadFromClasspath(file);

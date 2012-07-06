@@ -21,14 +21,14 @@ public class Movie {
 
     protected static final Logger logger = LoggerFactory.getLogger(Movie.class.getName());
     private Long id;
-    private String title;
-    private String filename;
-    private String realFilename;
+    protected String title;
+    protected String filename;
+    protected String realFilename;
 
-    private String md5;
+    protected String md5;
     private Set<GenericTag> tags = new HashSet<GenericTag>(0);
     private MediaInfo mediaInfo;
-    private long size = -1;
+    protected long size = -1;
 
     /**
      * Tags describing this movie
