@@ -5,6 +5,9 @@
     <MOVIE ID="3" TITLE="[MOD] Rabbids - UHU" MD5="1"  SIZE="1" FILENAME="Rabbids - Anniversary.webm"/>
     <MOVIE ID="4" TITLE="[DEL] Film qui n'existe plus 2" MD5="1"  SIZE="1" FILENAME="plus_de_film_2.avi"/>
     <MOVIE ID="5" TITLE="[REN] Rabbids - Espace" MD5="1"  SIZE="1"  FILENAME="Rabbids - Espace.flv"/>
-    <SIMPLETAG ID="6"/>
+    <GENERICTAG ID="6" KEY="TEST-TAG"/>
+    <GENERICTAG ID="5" KEY="Acteur 1"/>
+    <TAG FK_TAG="6"/>
+    <ACTOR FK_TAG="5" NAME=""/>
     <MOVIES_TAGS FK_MOVIE="1" FK_TAG="6"/>
 </dataset>

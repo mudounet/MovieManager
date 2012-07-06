@@ -60,9 +60,9 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
         assertEquals(template.findList(GenericTag.class).size(), this.getNbResults("select * from GENERICTAG"));
 
-        assertEquals(template.findList(SimpleTag.class).size(), this.getNbResults("select * from GENERICTAG inner join SIMPLETAG ON id = fk_tag"));
+        assertEquals(template.findList(Tag.class).size(), this.getNbResults("select * from GENERICTAG inner join TAG ON id = fk_tag"));
 
-        assertEquals(template.findList(TagValue.class).size(), this.getNbResults("select * from GENERICTAG  inner join TAGVALUE ON id = fk_tag"));
+        assertEquals(template.findList(Actor.class).size(), this.getNbResults("select * from GENERICTAG  inner join ACTOR ON id = fk_tag"));
 
     }
 
@@ -90,11 +90,11 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
                 String classType = "";
 
-                if (this.getResults("select FK_TAG from TAGVALUE WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
-                    classType = com.mudounet.hibernate.tags.TagValue.class.getCanonicalName();
+                if (this.getResults("select FK_TAG from ACTOR WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
+                    classType = com.mudounet.hibernate.tags.Actor.class.getCanonicalName();
                 }
-                if (this.getResults("select FK_TAG from SIMPLETAG WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
-                    classType = com.mudounet.hibernate.tags.SimpleTag.class.getCanonicalName();
+                if (this.getResults("select FK_TAG from TAG WHERE FK_TAG=" + tag.getId()).getRowCount() == 1) {
+                    classType = com.mudounet.hibernate.tags.Tag.class.getCanonicalName();
                 }
 
                 assertEquals(classType, Hibernate.getClass(tag).getCanonicalName());
@@ -110,7 +110,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     public void testTags() throws Exception {
         template.keepConnectionOpened();
         List<GenericTag> list = template.findList(GenericTag.class);
-        ITable refList = this.getResults("select ID, KEY, S.FK_TAG AS S_TAG, T.FK_TAG AS T_TAG  from GENERICTAG LEFT OUTER JOIN SIMPLETAG AS S ON ID=S.FK_TAG LEFT OUTER JOIN TAGVALUE AS T ON ID=T.FK_TAG");
+        ITable refList = this.getResults("select ID, KEY, S.FK_TAG AS S_TAG, T.FK_TAG AS T_TAG  from GENERICTAG LEFT OUTER JOIN TAG AS S ON ID=S.FK_TAG LEFT OUTER JOIN ACTOR AS T ON ID=T.FK_TAG");
         assertEquals(list.size(), refList.getRowCount());
 
         Iterator i = list.iterator();
@@ -137,16 +137,16 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     @Test
     public void testAddTag() throws Exception {
         String newKeyDescription = "myNewTag";
-        SimpleTag newTag = new SimpleTag(newKeyDescription);
+        Tag newTag = new Tag(newKeyDescription);
 
         template.keepConnectionOpened();
         template.saveOrUpdate(newTag);
         long newTagId = newTag.getId();
         logger.debug("ID of new tag is" + newTagId);
         template.closeConnection();
-        assertEquals(1, this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where KEY='" + newKeyDescription + "'").getRowCount());
+        assertEquals(1, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where KEY='" + newKeyDescription + "'").getRowCount());
         template.keepConnectionOpened();
-        newTag = (SimpleTag) template.find(SimpleTag.class, newTagId);
+        newTag = (Tag) template.find(Tag.class, newTagId);
         template.closeConnection();
         template.keepConnectionOpened();
         template.delete(newTag);
@@ -158,14 +158,14 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     public void testDeleteTag() throws Exception {
         template.keepConnectionOpened();
         long idToDelete = 10;
-        SimpleTag foundItem = (SimpleTag) template.find(SimpleTag.class, idToDelete);
+        Tag foundItem = (Tag) template.find(Tag.class, idToDelete);
         assertEquals("simpleKey3", foundItem.getKey());
-        assertEquals(1, this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
+        assertEquals(1, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
 
         template.closeConnection();
         logger.debug("Tring to delete " + foundItem);
         template.delete(foundItem);
-        assertEquals(0, this.getResults("select * from GenericTag inner join SIMPLETAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
+        assertEquals(0, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
     }
 
     @Override

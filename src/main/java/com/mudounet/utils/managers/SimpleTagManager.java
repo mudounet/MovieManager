@@ -1,7 +1,7 @@
 package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.Movie;
-import com.mudounet.hibernate.tags.SimpleTag;
+import com.mudounet.hibernate.tags.Tag;
 import com.mudounet.hibernate.tags.TagResult;
 import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 public class SimpleTagManager {
 
     private static Logger logger = LoggerFactory.getLogger(SimpleTagManager.class.getName());
-    private ArrayList<SimpleTag> _tagList;
+    private ArrayList<Tag> _tagList;
     private AbstractDao template;
 
     public SimpleTagManager() {
-        this._tagList = new ArrayList<SimpleTag>();
+        this._tagList = new ArrayList<Tag>();
         this.template = new AbstractDao();
     }
 
@@ -35,9 +35,9 @@ public class SimpleTagManager {
             AbstractDao lTemplate = new AbstractDao();
             lTemplate.keepConnectionOpened();
             
-            lTemplate.find(SimpleTag.class, "key", key);
+            lTemplate.find(Tag.class, "key", key);
             
-            lTemplate.saveOrUpdate(new SimpleTag(key));
+            lTemplate.saveOrUpdate(new Tag(key));
             lTemplate.closeConnection();
         
             return false;
@@ -50,7 +50,7 @@ public class SimpleTagManager {
         return false;
     }
 
-    public boolean addFilterTag(SimpleTag tag) {
+    public boolean addFilterTag(Tag tag) {
         if (tag != null) {
             return this._tagList.add(tag);
         } else {
@@ -60,11 +60,11 @@ public class SimpleTagManager {
     }
 
     public boolean addFilterTag(String tag) throws Exception {
-        SimpleTag t = (SimpleTag) template.find(SimpleTag.class, "key", tag);
+        Tag t = (Tag) template.find(Tag.class, "key", tag);
         return this._tagList.add(t);
     }
 
-    public ArrayList<SimpleTag> getFilterTagsList() {
+    public ArrayList<Tag> getFilterTagsList() {
         return this._tagList;
     }
 
@@ -78,7 +78,7 @@ public class SimpleTagManager {
             hql += "where t in (:tags) group by m2 having count(t)=:tag_count ";
         }
 
-        hql += ") and tags.class = SimpleTag ";
+        hql += ") and tags.class = Tag ";
 
         if (_tagList.size() > 0) {
             hql += " and tags not in (:tags) ";

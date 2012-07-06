@@ -5,13 +5,13 @@ package com.mudounet.hibernate.tags;
 /**
 * @hibernate.joined-subclass
 */
-public class SimpleTag extends GenericTag implements java.io.Serializable {
+public class Tag extends GenericTag implements java.io.Serializable {
 
-    public SimpleTag() {
+    public Tag() {
         super();
     }
 
-    public SimpleTag(String key) {
+    public Tag(String key) {
         super(key);
     }
     
