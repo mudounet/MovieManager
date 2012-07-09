@@ -7,6 +7,7 @@ package com.mudounet.hibernate;
 import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.utils.Md5Generator;
+import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -193,4 +194,40 @@ public class Movie {
         Date t = new Date(lastModified);
         setModificationDate(t);
     }
+
+    /**
+     * 
+     * @param o
+     * @return
+     */
+    @Override
+    public boolean equals(Object o) {
+        if(o.getClass() == File.class) {
+            File file = (File)o;
+            if(file.length() != this.getSize()) {
+                return false;
+            }
+            
+            if(file.lastModified() != this.getModificationDate().getTime()) {
+                return false;
+            }
+            
+        
+        }
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 79 * hash + (this.title != null ? this.title.hashCode() : 0);
+        hash = 79 * hash + (this.filename != null ? this.filename.hashCode() : 0);
+        hash = 79 * hash + (this.modificationDate != null ? this.modificationDate.hashCode() : 0);
+        hash = 79 * hash + (this.md5 != null ? this.md5.hashCode() : 0);
+        hash = 79 * hash + (int) (this.size ^ (this.size >>> 32));
+        return hash;
+    }
+    
+    
 }
