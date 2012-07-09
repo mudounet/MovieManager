@@ -42,13 +42,14 @@ public class App {
         
         for (File e : listOfMovies) {
             if(movies.contains(e)) {
-                 System.out.println("EXISTS: "+e.getName());
+                 logger.debug("EXISTS: "+e.getName());
             } 
             else {
+                logger.info("NEW: "+e.getName());
                 MovieListManager.addMovie(e.getAbsolutePath(), e.getName());
-                System.out.println("NEW: "+e.getName());
             }
         }
+        template.closeConnection();
     }
 
     public static List<File> readDirWithMovies(String directory) {
