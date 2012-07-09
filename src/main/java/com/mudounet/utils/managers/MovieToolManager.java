@@ -5,8 +5,8 @@
 package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.Movie;
-import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.movies.others.MediaInfo;
+import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.utils.video.VideoPlayerException;
 import com.mudounet.utils.video.VlcPlayer;
 import com.mudounet.utils.video.VlcPlayerFactory;
