@@ -11,3 +11,5 @@ database/run/database.db.properties
 database/run/database.db.log
 
 database/run/database.db.script
+
+database/run/database.db.lck
