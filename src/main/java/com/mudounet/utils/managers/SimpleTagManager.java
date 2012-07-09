@@ -17,11 +17,10 @@ import org.slf4j.LoggerFactory;
 public class SimpleTagManager {
 
     private static Logger logger = LoggerFactory.getLogger(SimpleTagManager.class.getName());
-    private ArrayList<Tag> _tagList;
+    private ArrayList<Tag> _tagList = new ArrayList<Tag>();
     private AbstractDao template;
 
     public SimpleTagManager() {
-        this._tagList = new ArrayList<Tag>();
         this.template = new AbstractDao();
     }
 
