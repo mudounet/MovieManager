@@ -188,4 +188,9 @@ public class Movie {
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
     }
+
+    public void setModificationDate(long lastModified) {
+        Date t = new Date(lastModified);
+        setModificationDate(t);
+    }
 }

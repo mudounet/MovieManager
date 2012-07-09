@@ -5,3 +5,9 @@
 /lib/native
 *.htm
 logfile.html
+
+database/run/database.db.properties
+
+database/run/database.db.log
+
+database/run/database.db.script

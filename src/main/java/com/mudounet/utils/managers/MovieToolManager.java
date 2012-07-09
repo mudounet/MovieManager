@@ -44,6 +44,7 @@ public class MovieToolManager {
         m.setMd5(m.getMd5());
         m.setTitle(title);
         m.setSize(file.length());
+        m.setModificationDate(file.lastModified());
 
 
         return m;

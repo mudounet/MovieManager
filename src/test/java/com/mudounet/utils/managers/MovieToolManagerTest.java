@@ -53,6 +53,7 @@ public class MovieToolManagerTest {
         assertEquals("b20d0bdbd19487bbfe28e4b92a0b0873", m.getMd5());
         assertEquals(true, m.getSize() > 0);
         assertEquals("My movie", m.getTitle());
+        assertEquals(m.getModificationDate().getTime() > 0, true);
         
         MediaInfo result = MovieToolManager.getMovieInformations(m);
 
@@ -65,6 +66,7 @@ public class MovieToolManagerTest {
         assertEquals(result.getAudioCodec().length() > 0, true);
         assertEquals(result.getAudioSamplingRate() > 0, true);
         assertEquals(result.getAudioChannels() > 0, true);
+        
     }
 
     /**

@@ -2,25 +2,24 @@ package com.mudounet.utils.dbunit;
 
 import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.HibernateFactory;
-import org.dbunit.DatabaseTestCase;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.operation.DatabaseOperation;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.dbunit.DatabaseTestCase;
 import org.dbunit.DefaultOperationListener;
 import org.dbunit.IOperationListener;
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ProjectDatabaseTestCase
         extends DatabaseTestCase {
