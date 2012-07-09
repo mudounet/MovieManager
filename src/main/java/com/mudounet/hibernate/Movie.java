@@ -8,13 +8,14 @@ import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.utils.Md5Generator;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @hibernate.class 
+ * @hibernate.class
  *
  */
 public class Movie {
@@ -24,7 +25,7 @@ public class Movie {
     protected String title;
     protected String filename;
     protected String realFilename;
-
+    private Date modificationDate;
     protected String md5;
     private Set<GenericTag> tags = new HashSet<GenericTag>(0);
     private MediaInfo mediaInfo;
@@ -54,9 +55,9 @@ public class Movie {
     }
 
     /**
-     * @hibernate.property
-     * 
-     * @return Get the value of md5 
+     * @hibernate.property length=32 unique=true
+     *
+     * @return Get the value of md5
      */
     public String getMd5() {
         if (md5 == null) {
@@ -82,7 +83,7 @@ public class Movie {
 
     /**
      * @hibernate.property
-     * 
+     *
      * @return Size of movie in bytes
      */
     public long getSize() {
@@ -93,7 +94,6 @@ public class Movie {
         this.size = size;
     }
 
-    
     /**
      * @hibernate.property
      *
@@ -121,7 +121,8 @@ public class Movie {
     }
 
     /**
-     * @hibernate.many-to-one class="com.mudounet.hibernate.movies.others.MediaInfo"
+     * @hibernate.many-to-one
+     * class="com.mudounet.hibernate.movies.others.MediaInfo"
      *
      * @return Media informations
      */
@@ -135,7 +136,8 @@ public class Movie {
 
     /**
      * @hibernate.set table="movies_tags" cascade="save-update" lazy="false"
-     * @hibernate.many-to-many column="fk_tag" class="com.mudounet.hibernate.tags.GenericTag" 
+     * @hibernate.many-to-many column="fk_tag"
+     * class="com.mudounet.hibernate.tags.GenericTag" 
      * @hibernate.key column="fk_movie"
      *
      * @return list of tags applied to movie
@@ -173,4 +175,17 @@ public class Movie {
         this.realFilename = realFilename;
     }
 
+    /**
+     * @hibernate.property
+
+     *
+     * @return modification date of file
+     */
+    public Date getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
 }
