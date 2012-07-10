@@ -42,10 +42,10 @@ public class MovieToolManager {
         m.setRealFilename(file.getPath());
         m.setFilename(file.getName());
         m.setMd5(m.getMd5());
+        m.setFastMd5(m.getFastMd5());
         m.setTitle(title);
         m.setSize(file.length());
         m.setModificationDate(file.lastModified());
-
 
         return m;
     }
