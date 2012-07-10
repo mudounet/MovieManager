@@ -32,7 +32,7 @@ public class SimpleTagManager {
     public static boolean addSimpleTag(String key) {
         try {
             AbstractDao lTemplate = new AbstractDao();
-            lTemplate.keepConnectionOpened();
+            lTemplate.beginTransaction();
             
             lTemplate.find(Tag.class, "key", key);
             

@@ -29,63 +29,85 @@ public class App {
     protected static Logger logger = LoggerFactory.getLogger(App.class.getName());
     public static AbstractDao template;
     public static Properties properties = new Properties();
+    public static File initDirectory;
 
-    public static void main(String[] args) throws DataAccessLayerException, IOException {
+    public static void main(String[] args) throws DataAccessLayerException, IOException, InterruptedException {
 
         System.out.println("Loading properties...");
         App.properties.load(new FileInputStream("app.properties"));
-        
-        File initDirectory = new File( App.properties.getProperty("init.directory"));
-        
-        if(initDirectory.isDirectory()) {
-            logger.info("Base directory : "+initDirectory.getAbsolutePath());
-        }
-        else {
-            logger.error("Init directory is not defined correctly : "+initDirectory.getAbsolutePath());
+
+        initDirectory = new File(App.properties.getProperty("init.directory"));
+
+        if (initDirectory.isDirectory()) {
+            logger.info("Base directory : " + initDirectory.getAbsolutePath());
+        } else {
+            logger.error("Init directory is not defined correctly : " + initDirectory.getAbsolutePath());
             System.exit(0);
         }
-        
+
         System.out.println("Building Hibernate...");
         HibernateFactory.buildSessionFactory();
-        template = new AbstractDao();
 
         System.out.println("Building Movie list...");
+        template = new AbstractDao();
+
 
         List<File> listOfMovies = readDirWithMovies(initDirectory);
-        
-        if(listOfMovies.isEmpty()) {
-            logger.error("No movies found in path "+initDirectory.getAbsolutePath());
+
+        if (listOfMovies.isEmpty()) {
+            logger.error("No movies found in path " + initDirectory.getAbsolutePath());
             System.exit(0);
         }
-        
+
         SimpleTagManager manager = new SimpleTagManager(template);
-        
+
         List<Movie> movies = manager.getMovies();
-        
-        for (File e : listOfMovies) {
-            Movie m = new Movie();
-            m.setRealFilename(e.getAbsolutePath());
-            m.setSize(e.length());
-            m.getFastMd5();
-            if(movies.contains(m)) {
-                 logger.debug("EXISTS: "+e.getName());
-            } 
-            else {
-                logger.info("NEW: "+e.getName());
-                m = MovieListManager.addMovie(e.getAbsolutePath(), e.getName());
-                logger.debug("Identifier : "+m.getId());
-            }
+
+        for (File file : listOfMovies) {
+            checkOrUpdateMovie(movies, file);
         }
-        logger.debug("Test : "+HibernateFactory.getSessionFactory().isClosed());
-        if(!HibernateFactory.getSessionFactory().isClosed()) {
+
+        template.closeConnection();
+        if (!HibernateFactory.getSessionFactory().isClosed()) {
             HibernateFactory.getSessionFactory().close();
+            logger.info("");
         }
-        logger.debug("Test : "+HibernateFactory.getSessionFactory().isClosed());
     }
 
     public static List<File> readDirWithMovies(File directory) {
         File[] listFiles = directory.listFiles(new MovieFileFilter());
         List<File> listOfMovies = Arrays.asList(listFiles);
         return listOfMovies;
+    }
+
+    public static void checkOrUpdateMovie(List<Movie> movies, File file) {
+        Movie movie = new Movie();
+        movie.setRealFilename(file.getAbsolutePath());
+        movie.setSize(file.length());
+        movie.getFastMd5();
+
+        int index = movies.indexOf(movie);
+        if (index >= 0) {
+            logger.debug("EXISTS: " + file.getName());
+            movie = movies.get(index);
+            movie.setRealFilename(initDirectory.getAbsolutePath() + "/" + movie.getFilename());
+        } else {
+            logger.info("NEW: " + file.getName());
+            template.beginTransaction();
+            movie = MovieListManager.addMovie(file.getAbsolutePath(), file.getName()); 
+        }
+
+        if (movie.getMediaInfo() == null) {
+            template.beginTransaction();
+            MovieListManager.addBasicInfosToMovie(movie);
+            
+            
+        }
+
+        if (template.isSessionOpened()) {
+            template.endTransaction();
+            template.closeConnection();
+        }
+        
     }
 }

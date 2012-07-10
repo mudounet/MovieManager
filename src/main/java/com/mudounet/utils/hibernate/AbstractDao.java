@@ -11,7 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A layer supertype that handles the common operations for all Data Access Objects.
+ * A layer supertype that handles the common operations for all Data Access
+ * Objects.
  */
 public class AbstractDao {
 
@@ -21,38 +22,32 @@ public class AbstractDao {
     private boolean oldKeepConnectionOpened = false;
     private Query query;
     private Transaction tx;
+    private boolean transactionInitiated = false;
 
     public AbstractDao() {
         HibernateFactory.buildIfNeeded();
     }
 
     private void _startOperation() throws HibernateException {
-        logger.debug("Initiating action");
-        if (session != null && session.isOpen() && session.isConnected()) {
-            logger.debug("Session already running");
-        } else {
+        
+
+        if (!transactionInitiated) {
+            beginTransaction();
+        }
+    }
+    
+    private void _openSession() {
+        if (session == null || !session.isOpen() || !session.isConnected()) {
             session = HibernateFactory.openSession();
-            if (session.isOpen() && session.isConnected()) {
+            if (session != null && session.isOpen() && session.isConnected()) {
                 logger.debug("Session opened");
             } else {
                 logger.error("Error while opening connection");
             }
         }
-
-        tx = session.beginTransaction();
-        if (tx.isActive()) {
-            logger.debug("Transaction initiated");
-        } else {
-            logger.error("Transaction not initiated");
-        }
     }
 
     private void _endOperation() {
-        if (tx != null && tx.isActive()) {
-            tx.commit();
-        } else {
-            logger.error("Transaction was not initiated");
-        }
     }
 
     public Query createQuery(String hql) throws DataAccessLayerException {
@@ -66,8 +61,6 @@ public class AbstractDao {
         } catch (HibernateException e) {
             handleException(e);
             return null;
-        } finally {
-            _closeConnectionIfRequested();
         }
     }
 
@@ -81,9 +74,7 @@ public class AbstractDao {
         } catch (HibernateException e) {
             handleException(e);
             return null;
-        } finally {
-            _closeConnectionIfRequested();
-        }
+        } 
     }
 
     public void saveOrUpdate(Object obj) throws DataAccessLayerException {
@@ -94,17 +85,49 @@ public class AbstractDao {
             _endOperation();
         } catch (HibernateException e) {
             handleException(e);
-        } finally {
-            _closeConnectionIfRequested();
+        } 
+    }
+
+    
+    
+    public void beginTransaction() {
+        _openSession();
+        
+        if (tx == null || !tx.isActive()) {
+            tx = session.beginTransaction();
+            if (tx.isActive()) {
+                logger.debug("Transaction initiated");
+                transactionInitiated = true;
+            } else {
+                logger.error("Transaction not initiated");
+                transactionInitiated = false;
+            }
         }
     }
-
-    public void keepConnectionOpened() {
-        this.keepConnectionOpened = true;
+    
+    public void cancelTransaction() {
+        if (tx != null && tx.isActive()) {
+            tx.rollback();
+            logger.debug("Transaction commit cancelled.");
+        } else {
+            logger.error("Transaction was not initiated");
+        }
+        this.transactionInitiated = false;
     }
-
+    
+    public void endTransaction() {
+        if (tx != null && tx.isActive()) {
+            tx.commit();
+            logger.debug("Transaction commit performed.");
+        } else {
+            logger.error("Transaction was not initiated");
+        }
+        this.transactionInitiated = false;
+    }
+    
     public void closeConnection() {
         this.keepConnectionOpened = false;
+
         this._closeConnectionIfRequested();
     }
 
@@ -115,9 +138,7 @@ public class AbstractDao {
             _endOperation();
         } catch (HibernateException e) {
             handleException(e);
-        } finally {
-            _closeConnectionIfRequested();
-        }
+        } 
     }
 
     public Object find(Class clazz, Long id) throws DataAccessLayerException {
@@ -128,9 +149,7 @@ public class AbstractDao {
             _endOperation();
         } catch (HibernateException e) {
             handleException(e);
-        } finally {
-            _closeConnectionIfRequested();
-        }
+        } 
         return obj;
     }
 
@@ -163,9 +182,7 @@ public class AbstractDao {
             _endOperation();
         } catch (HibernateException e) {
             handleException(e);
-        } finally {
-            _closeConnectionIfRequested();
-        }
+        } 
         return objects;
     }
 
@@ -185,13 +202,16 @@ public class AbstractDao {
         throw e;
     }
 
+    public boolean isSessionOpened() {
+        return (session != null && (session.isConnected() || session.isOpen()));
+    }
+    
     private void _closeConnectionIfRequested() {
-        if (this.keepConnectionOpened) {
-            logger.debug("Connection is kept opened");
-            return;
+        if(this.transactionInitiated) {
+            this.endTransaction();
         }
-
-        HibernateFactory.close(session);
+        session.flush();
+        session.close();
         if (session.isConnected() || session.isOpen()) {
             logger.error("Connection is not closed successfully.");
         } else {

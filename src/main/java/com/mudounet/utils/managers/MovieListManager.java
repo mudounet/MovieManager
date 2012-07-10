@@ -6,6 +6,7 @@ package com.mudounet.utils.managers;
 
 import com.mudounet.App;
 import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
@@ -42,8 +43,28 @@ public class MovieListManager {
     public static boolean addTagToMovie(Movie movie, GenericTag tag) {
         return false;
     }
+    
+    public static MediaInfo addBasicInfosToMovie(Movie movie) {
+        try {
+            MediaInfo mediaInfo = MovieToolManager.getMovieInformations(movie);
+            return addBasicInfosToMovie(movie, mediaInfo);
+        } catch (DataAccessLayerException ex) {
+            Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 
-    public static boolean addBasicInfosToMovie(Movie movie, Object mediaInfo) {
-        return false;
+    public static MediaInfo addBasicInfosToMovie(Movie movie, MediaInfo mediaInfo) throws DataAccessLayerException {
+        //template.saveOrUpdate(mediaInfo);
+        template.beginTransaction();
+        template.saveOrUpdate(mediaInfo);
+        movie.setMediaInfo(mediaInfo);
+        template.saveOrUpdate(movie);
+        template.closeConnection();
+        return mediaInfo;
     }
 }

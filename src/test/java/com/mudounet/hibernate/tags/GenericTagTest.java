@@ -69,7 +69,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     @Test
     public void testMovies() throws Exception {
 
-        template.keepConnectionOpened();
+        template.beginTransaction();
         List list = template.findList(Movie.class);
         ITable refList = this.getResults("select * from MOVIE");
         assertEquals(list.size(), refList.getRowCount());
@@ -108,7 +108,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
     @Test
     public void testTags() throws Exception {
-        template.keepConnectionOpened();
+        template.beginTransaction();
         List<GenericTag> list = template.findList(GenericTag.class);
         ITable refList = this.getResults("select ID, KEY, S.FK_TAG AS S_TAG, T.FK_TAG AS T_TAG  from GENERICTAG LEFT OUTER JOIN TAG AS S ON ID=S.FK_TAG LEFT OUTER JOIN ACTOR AS T ON ID=T.FK_TAG");
         assertEquals(list.size(), refList.getRowCount());
@@ -139,16 +139,16 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         String newKeyDescription = "myNewTag";
         Tag newTag = new Tag(newKeyDescription);
 
-        template.keepConnectionOpened();
+        template.beginTransaction();
         template.saveOrUpdate(newTag);
         long newTagId = newTag.getId();
         logger.debug("ID of new tag is" + newTagId);
         template.closeConnection();
         assertEquals(1, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where KEY='" + newKeyDescription + "'").getRowCount());
-        template.keepConnectionOpened();
+        template.beginTransaction();
         newTag = (Tag) template.find(Tag.class, newTagId);
         template.closeConnection();
-        template.keepConnectionOpened();
+        template.beginTransaction();
         template.delete(newTag);
         template.closeConnection();
 
@@ -156,7 +156,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
     @Test
     public void testDeleteTag() throws Exception {
-        template.keepConnectionOpened();
+        template.beginTransaction();
         long idToDelete = 10;
         Tag foundItem = (Tag) template.find(Tag.class, idToDelete);
         assertEquals("simpleKey3", foundItem.getKey());
