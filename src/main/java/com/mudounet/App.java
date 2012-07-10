@@ -63,7 +63,11 @@ public class App {
         List<Movie> movies = manager.getMovies();
         
         for (File e : listOfMovies) {
-            if(movies.contains(e)) {
+            Movie m = new Movie();
+            m.setRealFilename(e.getAbsolutePath());
+            m.setSize(e.length());
+            m.getFastMd5();
+            if(movies.contains(m)) {
                  logger.debug("EXISTS: "+e.getName());
             } 
             else {

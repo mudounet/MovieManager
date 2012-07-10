@@ -4,6 +4,7 @@
  */
 package com.mudounet.utils.managers;
 
+import com.mudounet.App;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.utils.hibernate.AbstractDao;
@@ -18,18 +19,14 @@ import java.util.logging.Logger;
  */
 public class MovieListManager {
 
-    private static AbstractDao template;
-
-    public MovieListManager(AbstractDao template) {
-        this.template = template;
-    }
+    private static AbstractDao template = App.template;
 
     public static boolean addMovie(String path, String title) {
         try {
 
             Movie m = MovieToolManager.buildMovie(path, title);
             template.saveOrUpdate(m);
-
+            return true;
         } catch (DataAccessLayerException ex) {
             Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
