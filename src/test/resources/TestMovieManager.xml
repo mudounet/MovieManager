@@ -1,10 +1,10 @@
 <dataset>
 
-    <MOVIE ID="1" TITLE="[DEL] Film qui n'existe plus" MD5="1"  SIZE="1" FILENAME="plus_de_film.avi"/>
-    <MOVIE ID="2" TITLE="[ OK] Rabbids - Anniversary" MD5="2"  SIZE="1"  FILENAME="Rabbids - Anniversary.webm"/>
-    <MOVIE ID="3" TITLE="[MOD] Rabbids - UHU" MD5="6"  SIZE="3" FILENAME="Rabbids - Anniversary.webm"/>
-    <MOVIE ID="4" TITLE="[DEL] Film qui n'existe plus 2" MD5="4"  SIZE="1" FILENAME="plus_de_film_2.avi"/>
-    <MOVIE ID="5" TITLE="[REN] Rabbids - Espace" MD5="5"  SIZE="1"  FILENAME="Rabbids - Espace.flv"/>
+    <MOVIE ID="1" TITLE="[DEL] Film qui n'existe plus" MD5="1" FASTMD5="1" SIZE="1" FILENAME="plus_de_film.avi"/>
+    <MOVIE ID="2" TITLE="[ OK] Rabbids - Anniversary" MD5="2" FASTMD5="2" SIZE="1"  FILENAME="Rabbids - Anniversary.webm"/>
+    <MOVIE ID="3" TITLE="[MOD] Rabbids - UHU" MD5="6" FASTMD5="6" SIZE="3" FILENAME="Rabbids - Anniversary.webm"/>
+    <MOVIE ID="4" TITLE="[DEL] Film qui n'existe plus 2" MD5="4" FASTMD5="4" SIZE="1" FILENAME="plus_de_film_2.avi"/>
+    <MOVIE ID="5" TITLE="[REN] Rabbids - Espace" MD5="5"  SIZE="1" FASTMD5="5" FILENAME="Rabbids - Espace.flv"/>
     <GENERICTAG ID="6" KEY="TEST-TAG"/>
     <GENERICTAG ID="5" KEY="Acteur 1"/>
     <TAG FK_TAG="6"/>

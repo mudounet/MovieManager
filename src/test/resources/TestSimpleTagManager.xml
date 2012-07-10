@@ -1,17 +1,17 @@
 
 <dataset>
-    <MOVIE ID="1" TITLE="Titre du Film 1 : Documentaire+Animation+Action+Oscar+Comedie" MD5="1"  SIZE="1"/>
-    <MOVIE ID="2" TITLE="Titre du Film 2 : Documentaire+Animation+Action+Oscar+Comedie" MD5="2"  SIZE="1"/>
-    <MOVIE ID="3" TITLE="Titre du Film 3 : Documentaire+Animation+Action+Oscar" MD5="3"  SIZE="1"/>
-    <MOVIE ID="4" TITLE="Titre du Film 4 : Documentaire+Animation+Action+Oscar" MD5="4"  SIZE="1"/>
-    <MOVIE ID="5" TITLE="Titre du Film 5 : Documentaire+Animation+Action" MD5="5"  SIZE="1"/>
-    <MOVIE ID="6" TITLE="Titre du Film 6 : Documentaire+Animation+Action" MD5="6"  SIZE="1"/>
-    <MOVIE ID="7" TITLE="Titre du Film 7 : Documentaire+Animation" MD5="7"  SIZE="1"/>
-    <MOVIE ID="8" TITLE="Titre du Film 8 : Documentaire+Animation" MD5="8"  SIZE="1"/>
-    <MOVIE ID="9" TITLE="Titre du Film 9 : Documentaire" MD5="9"  SIZE="1"/>
-    <MOVIE ID="10" TITLE="Titre du Film 10 : Documentaire" MD5="10" SIZE="0"/>
-    <MOVIE ID="11" TITLE="Titre du Film 11" MD5="11"  SIZE="1"/>
-    <MOVIE ID="12" TITLE="Titre du Film 12" MD5="12"  SIZE="1"/>
+    <MOVIE ID="1" TITLE="Titre du Film 1 : Documentaire+Animation+Action+Oscar+Comedie" MD5="1" FASTMD5="1" SIZE="1"/>
+    <MOVIE ID="2" TITLE="Titre du Film 2 : Documentaire+Animation+Action+Oscar+Comedie" MD5="2" FASTMD5="2" SIZE="1"/>
+    <MOVIE ID="3" TITLE="Titre du Film 3 : Documentaire+Animation+Action+Oscar" MD5="3" FASTMD5="3" SIZE="1"/>
+    <MOVIE ID="4" TITLE="Titre du Film 4 : Documentaire+Animation+Action+Oscar" MD5="4" FASTMD5="4" SIZE="1"/>
+    <MOVIE ID="5" TITLE="Titre du Film 5 : Documentaire+Animation+Action" MD5="5" FASTMD5="5" SIZE="1"/>
+    <MOVIE ID="6" TITLE="Titre du Film 6 : Documentaire+Animation+Action" MD5="6" FASTMD5="6" SIZE="1"/>
+    <MOVIE ID="7" TITLE="Titre du Film 7 : Documentaire+Animation" MD5="7" FASTMD5="7" SIZE="1"/>
+    <MOVIE ID="8" TITLE="Titre du Film 8 : Documentaire+Animation" MD5="8" FASTMD5="8" SIZE="1"/>
+    <MOVIE ID="9" TITLE="Titre du Film 9 : Documentaire" MD5="9" FASTMD5="9" SIZE="1"/>
+    <MOVIE ID="10" TITLE="Titre du Film 10 : Documentaire" MD5="10" FASTMD5="10" SIZE="0"/>
+    <MOVIE ID="11" TITLE="Titre du Film 11" MD5="11" FASTMD5="11" SIZE="1"/>
+    <MOVIE ID="12" TITLE="Titre du Film 12" MD5="12" FASTMD5="12" SIZE="1"/>
 
     <GENERICTAG ID="3" KEY="Action"/>
     <TAG FK_TAG="3"/>

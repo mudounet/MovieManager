@@ -23,14 +23,14 @@
     <ACTOR FK_TAG="8" VALUE="value 1"/>
     <ACTOR FK_TAG="9" VALUE="value 1"/>
     
-    <MOVIE ID="1" TITLE="Titre de test 1" MD5="1" SIZE="1"/>
-    <MOVIE ID="2" TITLE="Titre de test 2" MD5="2" SIZE="1"/>
-    <MOVIE ID="3" TITLE="Titre de test 3" MD5="3" SIZE="1"/>
-    <MOVIE ID="4" TITLE="Titre de test 4" MD5="4" SIZE="1"/>
-    <MOVIE ID="8" TITLE="Titre de test 8" MD5="5" SIZE="1"/>
-    <MOVIE ID="5" TITLE="Titre de test 5" MD5="6" SIZE="1"/>
-    <MOVIE ID="6" TITLE="Titre de test 6" MD5="7" SIZE="1"/>
-    <MOVIE ID="7" TITLE="Titre de test 7" MD5="8" SIZE="1"/>
+    <MOVIE ID="1" TITLE="Titre de test 1" MD5="1" FASTMD5="1" SIZE="1"/>
+    <MOVIE ID="2" TITLE="Titre de test 2" MD5="2" FASTMD5="2" SIZE="1"/>
+    <MOVIE ID="3" TITLE="Titre de test 3" MD5="3" FASTMD5="3" SIZE="1"/>
+    <MOVIE ID="4" TITLE="Titre de test 4" MD5="4" FASTMD5="4" SIZE="1"/>
+    <MOVIE ID="8" TITLE="Titre de test 8" MD5="5" FASTMD5="5" SIZE="1"/>
+    <MOVIE ID="5" TITLE="Titre de test 5" MD5="6" FASTMD5="6" SIZE="1"/>
+    <MOVIE ID="6" TITLE="Titre de test 6" MD5="7" FASTMD5="7" SIZE="1"/>
+    <MOVIE ID="7" TITLE="Titre de test 7" MD5="8" FASTMD5="8" SIZE="1"/>
     <MOVIES_TAGS FK_MOVIE="2" FK_TAG="3"/>
     <MOVIES_TAGS FK_MOVIE="2" FK_TAG="5"/>
     <MOVIES_TAGS FK_MOVIE="2" FK_TAG="8"/>
