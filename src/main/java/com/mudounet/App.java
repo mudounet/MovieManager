@@ -53,6 +53,11 @@ public class App {
 
         List<File> listOfMovies = readDirWithMovies(initDirectory);
         
+        if(listOfMovies.isEmpty()) {
+            logger.error("No movies found in path "+initDirectory.getAbsolutePath());
+            System.exit(0);
+        }
+        
         SimpleTagManager manager = new SimpleTagManager(template);
         
         List<Movie> movies = manager.getMovies();
