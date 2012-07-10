@@ -72,10 +72,10 @@ public class App {
             } 
             else {
                 logger.info("NEW: "+e.getName());
-                MovieListManager.addMovie(e.getAbsolutePath(), e.getName());
+                m = MovieListManager.addMovie(e.getAbsolutePath(), e.getName());
+                logger.debug("Identifier : "+m.getId());
             }
         }
-        template.closeConnection();
     }
 
     public static List<File> readDirWithMovies(File directory) {

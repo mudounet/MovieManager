@@ -21,12 +21,13 @@ public class MovieListManager {
 
     private static AbstractDao template = App.template;
 
-    public static boolean addMovie(String path, String title) {
+    public static Movie addMovie(String path, String title) {
+        Movie m = null;
         try {
 
-            Movie m = MovieToolManager.buildMovie(path, title);
+            m = MovieToolManager.buildMovie(path, title);
             template.saveOrUpdate(m);
-            return true;
+            return m;
         } catch (DataAccessLayerException ex) {
             Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
@@ -35,7 +36,7 @@ public class MovieListManager {
             Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return false;
+        return m;
     }
 
     public static boolean addTagToMovie(Movie movie, GenericTag tag) {
