@@ -100,10 +100,12 @@ public class SimpleTagManager {
 
     public List<Movie> getMovies() throws DataAccessLayerException {
 
-        String hql = "select m from Movie m "
-                + "join m.tags t ";
+        
+        
+        String hql = "select m from Movie m ";
         
         if (_tagList.size() > 0) {
+            hql += "join m.tags t ";
             hql += "where t in (:tags) group by m having count(t)=:tag_count ";
         }
 
