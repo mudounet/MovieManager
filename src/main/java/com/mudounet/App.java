@@ -76,6 +76,11 @@ public class App {
                 logger.debug("Identifier : "+m.getId());
             }
         }
+        logger.debug("Test : "+HibernateFactory.getSessionFactory().isClosed());
+        if(!HibernateFactory.getSessionFactory().isClosed()) {
+            HibernateFactory.getSessionFactory().close();
+        }
+        logger.debug("Test : "+HibernateFactory.getSessionFactory().isClosed());
     }
 
     public static List<File> readDirWithMovies(File directory) {
