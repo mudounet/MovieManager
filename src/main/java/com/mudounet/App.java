@@ -12,8 +12,11 @@ import com.mudounet.utils.hibernate.HibernateFactory;
 import com.mudounet.utils.managers.MovieListManager;
 import com.mudounet.utils.managers.SimpleTagManager;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,16 +28,30 @@ public class App {
 
     protected static Logger logger = LoggerFactory.getLogger(App.class.getName());
     public static AbstractDao template;
+    public static Properties properties = new Properties();
 
-    public static void main(String[] args) throws DataAccessLayerException {
+    public static void main(String[] args) throws DataAccessLayerException, IOException {
 
+        System.out.println("Loading properties...");
+        App.properties.load(new FileInputStream("app.properties"));
+        
+        File initDirectory = new File( App.properties.getProperty("init.directory"));
+        
+        if(initDirectory.isDirectory()) {
+            logger.info("Base directory : "+initDirectory.getAbsolutePath());
+        }
+        else {
+            logger.error("Init directory is not defined correctly : "+initDirectory.getAbsolutePath());
+            System.exit(0);
+        }
+        
         System.out.println("Building Hibernate...");
         HibernateFactory.buildSessionFactory();
         template = new AbstractDao();
 
         System.out.println("Building Movie list...");
 
-        List<File> listOfMovies = readDirWithMovies("/Volumes/Secondaire/jdownloader/Dw/liste");
+        List<File> listOfMovies = readDirWithMovies(initDirectory);
         
         SimpleTagManager manager = new SimpleTagManager(template);
         
@@ -52,9 +69,8 @@ public class App {
         template.closeConnection();
     }
 
-    public static List<File> readDirWithMovies(String directory) {
-        File dir = new File(directory);
-        File[] listFiles = dir.listFiles(new MovieFileFilter());
+    public static List<File> readDirWithMovies(File directory) {
+        File[] listFiles = directory.listFiles(new MovieFileFilter());
         List<File> listOfMovies = Arrays.asList(listFiles);
         return listOfMovies;
     }
