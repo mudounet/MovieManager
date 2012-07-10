@@ -55,13 +55,11 @@ public class Md5Generator {
     // see this How-to for a faster way to convert
     // a byte array to a HEX string
     public static String computeFastMD5(String filename) throws Exception {
-        byte[] b = createGenericChecksum(filename, 100 * 1024); // 100 Mo
+        byte[] b = createGenericChecksum(filename, 50 * 1024 ); // 100 Mo
         String result = "";
         for (int i = 0; i < b.length; i++) {
             result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
         }
         return result;
     }
-
-
 }
