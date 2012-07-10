@@ -67,7 +67,6 @@ public class App {
             checkOrUpdateMovie(movies, file);
         }
 
-        template.closeConnection();
         if (!HibernateFactory.getSessionFactory().isClosed()) {
             HibernateFactory.getSessionFactory().close();
             logger.info("");
@@ -94,18 +93,17 @@ public class App {
         } else {
             logger.info("NEW: " + file.getName());
             template.beginTransaction();
-            movie = MovieListManager.addMovie(file.getAbsolutePath(), file.getName()); 
+            movie = MovieListManager.addMovie(file.getAbsolutePath(), file.getName());
+            template.endTransaction();
         }
 
         if (movie.getMediaInfo() == null) {
             template.beginTransaction();
             MovieListManager.addBasicInfosToMovie(movie);
-            
-            
+            template.endTransaction();
         }
 
         if (template.isSessionOpened()) {
-            template.endTransaction();
             template.closeConnection();
         }
         

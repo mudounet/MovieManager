@@ -29,8 +29,6 @@ public class AbstractDao {
     }
 
     private void _startOperation() throws HibernateException {
-        
-
         if (!transactionInitiated) {
             beginTransaction();
         }
@@ -126,7 +124,6 @@ public class AbstractDao {
     }
     
     public void closeConnection() {
-        this.keepConnectionOpened = false;
 
         this._closeConnectionIfRequested();
     }
