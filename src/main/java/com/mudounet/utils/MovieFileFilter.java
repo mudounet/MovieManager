@@ -17,7 +17,7 @@ public class MovieFileFilter implements FileFilter {
 
     public boolean accept(File file) {
         
-        String[] list = {"avi", "mp4", "mpg", "wmv", "mkv", "vob", "mov"};
+        String[] list = {"avi", "mp4", "mpg", "wmv", "mkv", "flv", "vob", "mov"};
         List<String> listOfMovies = Arrays.asList(list);
 
         for (String e : listOfMovies) {
