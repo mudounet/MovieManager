@@ -31,6 +31,7 @@ public class Movie {
     private Set<GenericTag> tags = new HashSet<GenericTag>(0);
     private MediaInfo mediaInfo;
     protected long size = -1;
+    private String fastMd5;
 
     /**
      * Tags describing this movie
@@ -82,6 +83,34 @@ public class Movie {
         this.md5 = md5;
     }
 
+    /**
+     * @hibernate.property length=32 unique=true
+     *
+     * @return Get the value of md5
+     */
+    public String getFastMd5() {
+        if (fastMd5 == null) {
+            try {
+                fastMd5 = Md5Generator.computeFastMD5(realFilename);
+            } catch (Exception ex) {
+                fastMd5 = "";
+                logger.error("Exception found with file \"" + realFilename + "\" : ", ex);
+            }
+        }
+
+        return fastMd5;
+    }
+
+    /**
+     * Set the value of md5
+     *
+     * @param md5 new value of md5
+     */
+    public void setFastMd5(String md5) {
+        this.fastMd5 = md5;
+    }
+
+    
     /**
      * @hibernate.property
      *
@@ -202,32 +231,20 @@ public class Movie {
      */
     @Override
     public boolean equals(Object o) {
-        if(o.getClass() == File.class) {
-            File file = (File)o;
-            if(file.length() != this.getSize()) {
-                return false;
-            }
-            
-            if(file.lastModified() != this.getModificationDate().getTime()) {
-                return false;
-            }
-            
-        
+        if(o.getClass() == Movie.class) {
+            Movie movie = (Movie)o;
+            return (movie.getSize() == this.getSize() && movie.getFastMd5().equals(this.getFastMd5()) );
         }
-        return super.equals(o);
+        return false;
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 79 * hash + (this.title != null ? this.title.hashCode() : 0);
-        hash = 79 * hash + (this.filename != null ? this.filename.hashCode() : 0);
-        hash = 79 * hash + (this.modificationDate != null ? this.modificationDate.hashCode() : 0);
-        hash = 79 * hash + (this.md5 != null ? this.md5.hashCode() : 0);
-        hash = 79 * hash + (int) (this.size ^ (this.size >>> 32));
+        hash = 31 * hash + (int) (this.size ^ (this.size >>> 32));
+        hash = 31 * hash + (this.fastMd5 != null ? this.fastMd5.hashCode() : 0);
         return hash;
     }
-    
+   
     
 }
