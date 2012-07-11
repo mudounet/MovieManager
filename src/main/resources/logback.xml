@@ -1,7 +1,8 @@
 
 <configuration>
-    <appender name="DebugAppender" class="ch.qos.logback.core.FileAppender">
-        <file>last-exec.log.htm</file>
+    
+    <appender name="OthersAppender" class="ch.qos.logback.core.FileAppender">
+        <file>log/run-others-infos.log.htm</file>
         <append>false</append>
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
             <layout class="ch.qos.logback.classic.html.HTMLLayout">
@@ -9,8 +10,9 @@
             </layout>
         </encoder>
     </appender>
-    <appender name="HistoryAppender" class="ch.qos.logback.core.FileAppender">
-        <file>history.log.htm</file>
+
+    <appender name="DebugAppender" class="ch.qos.logback.core.FileAppender">
+        <file>log/run-debug.log.htm</file>
         <append>false</append>
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
             <layout class="ch.qos.logback.classic.html.HTMLLayout">
@@ -27,9 +29,12 @@
     <logger level="DEBUG" name="com.mudounet">
         <appender-ref ref="DebugAppender"/>       
     </logger>
+    
+    <logger level="WARN" name="org">
+        <appender-ref ref="OthersAppender"/>       
+    </logger>
+    
     <root level="INFO">
-
-        <appender-ref ref="HistoryAppender"/>
         <appender-ref ref="ConsoleAppender"/>
     </root>
 </configuration>

@@ -69,7 +69,7 @@ public class App {
 
         if (!HibernateFactory.getSessionFactory().isClosed()) {
             HibernateFactory.getSessionFactory().close();
-            logger.info("");
+            logger.info("Hibernate session is closed");
         }
     }
 
