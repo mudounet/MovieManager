@@ -48,6 +48,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
         assertEquals(true, t.getId() != 0);
         logger.info("Id is " + t.getId());
+        template.closeConnection();
 
         assertEquals("Specified event not found.", 1, this.getNbResults("select * from GENERICTAG where KEY='TestKey'"));
 
@@ -165,6 +166,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         template.closeConnection();
         logger.debug("Tring to delete " + foundItem);
         template.delete(foundItem);
+        template.closeConnection();
         assertEquals(0, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
     }
 
