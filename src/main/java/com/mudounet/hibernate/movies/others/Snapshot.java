@@ -15,12 +15,13 @@ public class Snapshot extends Image {
     /**
      * Time in milliseconds when snapshot was taken
      */
-    protected long time;
+    private long time;
     private static final long serialVersionUID = 1L;
     
 
      /**
      * @hibernate.property
+     * @return Time when snaphot was taken
      */
     public long getTime() {
         return time;
