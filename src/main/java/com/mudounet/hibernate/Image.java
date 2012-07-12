@@ -11,11 +11,7 @@ import javax.imageio.ImageIO;
 
 /**
  * @hibernate.class
- * discriminator-value="I"
- * @hibernate.discriminator
- * column="TYPE"
- * type="char"
- **/
+ * */
 public class Image implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

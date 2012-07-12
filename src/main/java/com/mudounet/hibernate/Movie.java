@@ -8,8 +8,10 @@ import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.utils.Md5Generator;
-import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,17 +21,17 @@ import org.slf4j.LoggerFactory;
  */
 public class Movie {
 
-    protected static final Logger logger = LoggerFactory.getLogger(Movie.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Movie.class.getName());
     private Long id;
-    protected String title;
-    protected String filename;
-    protected String realFilename;
+    private String title;
+    private String filename;
+    private String realFilename;
     private Date modificationDate;
-    protected String md5;
+    private String md5;
     private Set<GenericTag> tags = new HashSet<GenericTag>(0);
-    private List<Snapshot> snapshots;
+    private Set<Snapshot> snapshots = new HashSet<Snapshot>(0);
     private MediaInfo mediaInfo;
-    protected long size = -1;
+    private long size = -1;
     private String fastMd5;
 
     /**
@@ -224,18 +226,17 @@ public class Movie {
     }
 
     /**
-     * @hibernate.set cascade="save-update" lazy="false"
+     * @hibernate.set cascade="save-update" lazy="true"
      * @hibernate.one-to-many  class="com.mudounet.hibernate.movies.others.Snapshot" 
      * @hibernate.key column="fk_movie"
-     * @hibernate.collection-index time
      *
      * @return list of snapshots applied to movie
      */
-    public List<Snapshot> getSnapshots() {
+    public Set<Snapshot> getSnapshots() {
         return snapshots;
     }
 
-    public void setSnapshots(List<Snapshot> snapshots) {
+    public void setSnapshots(Set<Snapshot> snapshots) {
         this.snapshots = snapshots;
     }
 

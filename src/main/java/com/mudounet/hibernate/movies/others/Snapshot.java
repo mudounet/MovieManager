@@ -7,9 +7,8 @@ package com.mudounet.hibernate.movies.others;
 import com.mudounet.hibernate.Image;
 
 /**
- * @hibernate.subclass
- * discriminator-value="M"
- **/
+* @hibernate.joined-subclass
+*/
 public class Snapshot extends Image {
 
     /**
