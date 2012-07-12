@@ -5,13 +5,11 @@
 package com.mudounet.hibernate;
 
 import com.mudounet.hibernate.movies.others.MediaInfo;
+import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.utils.Md5Generator;
 import java.io.File;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +27,7 @@ public class Movie {
     private Date modificationDate;
     protected String md5;
     private Set<GenericTag> tags = new HashSet<GenericTag>(0);
+    private List<Snapshot> snapshots;
     private MediaInfo mediaInfo;
     protected long size = -1;
     private String fastMd5;
@@ -224,6 +223,24 @@ public class Movie {
         setModificationDate(t);
     }
 
+    /**
+     * @hibernate.set cascade="save-update" lazy="false"
+     * @hibernate.one-to-many  class="com.mudounet.hibernate.movies.others.Snapshot" 
+     * @hibernate.key column="fk_movie"
+     * @hibernate.collection-index time
+     *
+     * @return list of snapshots applied to movie
+     */
+    public List<Snapshot> getSnapshots() {
+        return snapshots;
+    }
+
+    public void setSnapshots(List<Snapshot> snapshots) {
+        this.snapshots = snapshots;
+    }
+
+    
+    
     /**
      * 
      * @param o
