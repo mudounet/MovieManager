@@ -63,7 +63,7 @@ public class App {
 
         HibernateUtils.destroySession();
         HibernateUtils.closeAll();
-        Thread.sleep(15000);
+        Thread.sleep(5000);
     }
 
     public static List<File> readDirWithMovies(File directory) {
