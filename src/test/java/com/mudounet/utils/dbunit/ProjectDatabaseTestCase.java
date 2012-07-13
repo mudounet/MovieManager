@@ -39,19 +39,15 @@ public abstract class ProjectDatabaseTestCase
     @Before
     @Override
     public void setUp() throws Exception {
-        template = new AbstractDao();
-        logger.debug("MARK 1");
         super.setUp();
-        logger.debug("MARK 2");
+        template = new AbstractDao();
     }
 
     @After
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
-        logger.debug("MARK 3");
         template.closeSession();
-        logger.debug("MARK 4");
+        super.tearDown(); 
     }
 
     @Override

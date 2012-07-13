@@ -1,11 +1,11 @@
 
 <dataset>
     <GENERICTAG ID="3" KEY="simpleKey2"/>
+    <GENERICTAG ID="5" KEY="simpleKey1"/>
+    <GENERICTAG ID="10" KEY="simpleKey3"/>
     <TAG FK_TAG="3"/>
     <TAG FK_TAG="5"/>
     <TAG FK_TAG="10"/>
-    <GENERICTAG ID="5" KEY="simpleKey1"/>
-    <GENERICTAG ID="10" KEY="simpleKey3"/>
     
     <GENERICTAG ID="1" KEY="key1"/>
     <GENERICTAG ID="2" KEY="key2"/>

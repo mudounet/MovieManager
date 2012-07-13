@@ -48,6 +48,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
         assertEquals(true, t.getId() != 0);
         logger.info("Id is " + t.getId());
+        template.endTransaction();
         template.closeSession();
 
         assertEquals("Specified event not found.", 1, this.getNbResults("select * from GENERICTAG where KEY='TestKey'"));
@@ -70,7 +71,6 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
     @Test
     public void testMovies() throws Exception {
 
-        template.beginTransaction();
         List list = template.findList(Movie.class);
         ITable refList = this.getResults("select * from MOVIE");
         assertEquals(list.size(), refList.getRowCount());
@@ -109,7 +109,6 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
     @Test
     public void testTags() throws Exception {
-        template.beginTransaction();
         List<GenericTag> list = template.findList(GenericTag.class);
         ITable refList = this.getResults("select ID, KEY, S.FK_TAG AS S_TAG, T.FK_TAG AS T_TAG  from GENERICTAG LEFT OUTER JOIN TAG AS S ON ID=S.FK_TAG LEFT OUTER JOIN ACTOR AS T ON ID=T.FK_TAG");
         assertEquals(list.size(), refList.getRowCount());
@@ -144,29 +143,35 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         template.saveOrUpdate(newTag);
         long newTagId = newTag.getId();
         logger.debug("ID of new tag is" + newTagId);
+        template.endTransaction();
         template.closeSession();
         assertEquals(1, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where KEY='" + newKeyDescription + "'").getRowCount());
         template.beginTransaction();
         newTag = (Tag) template.find(Tag.class, newTagId);
+        template.endTransaction();
         template.closeSession();
         template.beginTransaction();
         template.delete(newTag);
+        template.endTransaction();
         template.closeSession();
 
     }
 
     @Test
     public void testDeleteTag() throws Exception {
-        template.beginTransaction();
         long idToDelete = 10;
+        
         Tag foundItem = (Tag) template.find(Tag.class, idToDelete);
         assertEquals("simpleKey3", foundItem.getKey());
         assertEquals(1, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
-
         template.closeSession();
-        logger.debug("Tring to delete " + foundItem);
+        
+        logger.debug("Trying to delete " + foundItem);
+        template.beginTransaction();
         template.delete(foundItem);
+        template.endTransaction();
         template.closeSession();
+        
         assertEquals(0, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
     }
 
