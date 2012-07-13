@@ -30,7 +30,7 @@ public class App {
     public static Properties properties = new Properties();
     public static File initDirectory;
 
-    public static void main(String[] args) throws DataAccessLayerException, IOException, InterruptedException {
+    public static void main(String[] args) throws DataAccessLayerException, IOException, InterruptedException, Exception {
 
         System.out.println("Loading properties...");
         App.properties.load(new FileInputStream("app.properties"));
@@ -75,7 +75,7 @@ public class App {
         return listOfMovies;
     }
 
-    public static void checkOrUpdateMovie(List<Movie> movies, File file) {
+    public static void checkOrUpdateMovie(List<Movie> movies, File file) throws Exception {
         Movie movie = new Movie();
         movie.setRealFilename(file.getAbsolutePath());
         movie.setSize(file.length());
@@ -88,18 +88,14 @@ public class App {
             movie.setRealFilename(initDirectory.getAbsolutePath() + "/" + movie.getFilename());
         } else {
             logger.info("NEW: " + file.getName());
-            template.beginTransaction();
             movie = MovieListManager.addMovie(file.getAbsolutePath(), file.getName());
-            template.endTransaction();
         }
 
         if (movie.getMediaInfo() == null) {
-            template.beginTransaction();
             MovieListManager.addBasicInfosToMovie(movie);
-            template.endTransaction();
         }
 
-        if (template.isSessionOpened()) {
+        if (AbstractDao.isSessionOpened()) {
             template.closeSession();
         }
         

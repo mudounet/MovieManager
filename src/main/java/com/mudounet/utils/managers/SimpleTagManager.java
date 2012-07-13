@@ -26,7 +26,7 @@ public class SimpleTagManager {
     }
 
    
-    public static boolean addSimpleTag(String key) {
+    public static boolean addSimpleTag(String key) throws Exception {
         try {
             AbstractDao lTemplate = new AbstractDao();
             lTemplate.beginTransaction();

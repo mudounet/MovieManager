@@ -44,7 +44,7 @@ public class MovieListManager {
         return false;
     }
     
-    public static MediaInfo addBasicInfosToMovie(Movie movie) {
+    public static MediaInfo addBasicInfosToMovie(Movie movie) throws Exception {
         try {
             MediaInfo mediaInfo = MovieToolManager.getMovieInformations(movie);
             return addBasicInfosToMovie(movie, mediaInfo);
@@ -58,13 +58,12 @@ public class MovieListManager {
         return null;
     }
 
-    public static MediaInfo addBasicInfosToMovie(Movie movie, MediaInfo mediaInfo) throws DataAccessLayerException {
-        //template.saveOrUpdate(mediaInfo);
+    public static MediaInfo addBasicInfosToMovie(Movie movie, MediaInfo mediaInfo) throws DataAccessLayerException, Exception {
         template.beginTransaction();
         template.saveOrUpdate(mediaInfo);
         movie.setMediaInfo(mediaInfo);
         template.saveOrUpdate(movie);
-        template.closeSession();
+        template.endTransaction();
         return mediaInfo;
     }
 }
