@@ -48,7 +48,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
         assertEquals(true, t.getId() != 0);
         logger.info("Id is " + t.getId());
-        template.closeConnection();
+        template.closeSession();
 
         assertEquals("Specified event not found.", 1, this.getNbResults("select * from GENERICTAG where KEY='TestKey'"));
 
@@ -101,7 +101,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
                 assertEquals(classType, Hibernate.getClass(tag).getCanonicalName());
             }
         }
-        template.closeConnection();
+        template.closeSession();
 
         assertEquals(list.size(), this.getNbResults("select * from MOVIE"));
 
@@ -132,7 +132,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
             }
         }
 
-        template.closeConnection();
+        template.closeSession();
     }
 
     @Test
@@ -144,14 +144,14 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         template.saveOrUpdate(newTag);
         long newTagId = newTag.getId();
         logger.debug("ID of new tag is" + newTagId);
-        template.closeConnection();
+        template.closeSession();
         assertEquals(1, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where KEY='" + newKeyDescription + "'").getRowCount());
         template.beginTransaction();
         newTag = (Tag) template.find(Tag.class, newTagId);
-        template.closeConnection();
+        template.closeSession();
         template.beginTransaction();
         template.delete(newTag);
-        template.closeConnection();
+        template.closeSession();
 
     }
 
@@ -163,10 +163,10 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         assertEquals("simpleKey3", foundItem.getKey());
         assertEquals(1, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
 
-        template.closeConnection();
+        template.closeSession();
         logger.debug("Tring to delete " + foundItem);
         template.delete(foundItem);
-        template.closeConnection();
+        template.closeSession();
         assertEquals(0, this.getResults("select * from GenericTag inner join TAG ON id = fk_tag where ID=" + idToDelete + "").getRowCount());
     }
 

@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import org.hibernate.*;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -16,33 +17,89 @@ import org.slf4j.LoggerFactory;
  */
 public class AbstractDao {
 
-    protected static Logger logger = LoggerFactory.getLogger(AbstractDao.class.getName());
-    private Session session;
-    private boolean keepConnectionOpened = false;
-    private boolean oldKeepConnectionOpened = false;
+    private static final Logger logger = LoggerFactory.getLogger(AbstractDao.class.getName());
+    private static final SessionFactory sessionFactory;
+    private static final Configuration configuration;
+    private static final ThreadLocal<Session> session = new ThreadLocal<Session>();
     private Query query;
     private Transaction tx;
     private boolean transactionInitiated = false;
 
-    public AbstractDao() {
-        HibernateFactory.buildIfNeeded();
+    public static Configuration getConfiguration() {
+        return configuration;
     }
 
-    private void _startOperation() throws HibernateException {
-        if (!transactionInitiated) {
-            beginTransaction();
+    static {
+        try {
+            logger.debug("Building Hibernate Factory");
+            configuration = new Configuration();
+            configuration.configure();
+            sessionFactory = configuration.buildSessionFactory();
+
+        } catch (HibernateException ex) {
+            throw new RuntimeException("Exception building SessionFactory: " + ex.getMessage(), ex);
         }
     }
-    
-    private void _openSession() {
-        if (session == null || !session.isOpen() || !session.isConnected()) {
-            session = HibernateFactory.openSession();
-            if (session != null && session.isOpen() && session.isConnected()) {
-                logger.debug("Session opened");
+
+    public static Session currentSession() throws HibernateException {
+        Session s = session.get();
+        if (!isSessionOpened()) {
+            logger.debug("Opening session...");
+            s = sessionFactory.openSession();
+            session.set(s);
+            if (isSessionOpened()) {
+                logger.debug("Session opened successfully.");
             } else {
                 logger.error("Error while opening connection");
             }
         }
+
+        return s;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (tx != null) {
+            throw new Exception("Commit should be properly cancelled!");
+        }
+        rollback();
+    }
+
+    public static void closeSession() throws HibernateException {
+
+        Session s = session.get();
+        if (s != null) {
+            logger.debug("Closing connection...");
+            s.flush();
+            s.close();
+        }
+        session.set(null);
+    }
+
+    public void rollback() {
+        try {
+            if (tx != null) {
+                tx.rollback();
+            }
+        } catch (HibernateException ignored) {
+            logger.error("Couldn't rollback Transaction", ignored);
+        }
+    }
+
+    public static boolean isSessionOpened() {
+        Session s = session.get();
+        return (s != null && (s.isConnected() && s.isOpen()));
+    }
+
+    private boolean _startOperation(boolean needTransaction) throws HibernateException {
+        currentSession();
+
+        if (needTransaction && !transactionInitiated) {
+            beginTransaction();
+            return true;
+        }
+        return false;
     }
 
     private void _endOperation() {
@@ -50,10 +107,8 @@ public class AbstractDao {
 
     public Query createQuery(String hql) throws DataAccessLayerException {
         try {
-            _startOperation();
-            this.oldKeepConnectionOpened = this.keepConnectionOpened; // backup of current value, since session must be kept opened between two queries.
-            this.keepConnectionOpened = true;
-            this.query = session.createQuery(hql);
+            _startOperation(false);
+            this.query = currentSession().createQuery(hql);
             _endOperation();
             return query;
         } catch (HibernateException e) {
@@ -64,35 +119,32 @@ public class AbstractDao {
 
     public List getQueryResults() throws DataAccessLayerException {
         try {
-            _startOperation();
+            _startOperation(true);
             List results = query.list();
-            this.keepConnectionOpened = this.oldKeepConnectionOpened;
             _endOperation();
             return results;
         } catch (HibernateException e) {
             handleException(e);
             return null;
-        } 
+        }
     }
 
     public void saveOrUpdate(Object obj) throws DataAccessLayerException {
         try {
-            _startOperation();
-            session.saveOrUpdate(obj);
+            _startOperation(true);
+            currentSession().saveOrUpdate(obj);
             logger.debug("Object \"" + obj + "\" saved");
             _endOperation();
         } catch (HibernateException e) {
             handleException(e);
-        } 
+        }
     }
 
-    
-    
     public void beginTransaction() {
-        _openSession();
-        
+
+
         if (tx == null || !tx.isActive()) {
-            tx = session.beginTransaction();
+            tx = currentSession().beginTransaction();
             if (tx.isActive()) {
                 logger.debug("Transaction initiated");
                 transactionInitiated = true;
@@ -102,7 +154,7 @@ public class AbstractDao {
             }
         }
     }
-    
+
     public void cancelTransaction() {
         if (tx != null && tx.isActive()) {
             tx.rollback();
@@ -112,7 +164,7 @@ public class AbstractDao {
         }
         this.transactionInitiated = false;
     }
-    
+
     public void endTransaction() {
         if (tx != null && tx.isActive()) {
             tx.commit();
@@ -122,37 +174,31 @@ public class AbstractDao {
         }
         this.transactionInitiated = false;
     }
-    
-    public void closeConnection() {
-
-        this._closeConnectionIfRequested();
-    }
 
     public void delete(Object obj) throws DataAccessLayerException {
         try {
-            _startOperation();
-            session.delete(obj);
+            _startOperation(true);
+            currentSession().delete(obj);
             _endOperation();
         } catch (HibernateException e) {
             handleException(e);
-        } 
+        }
     }
 
     public Object find(Class clazz, Long id) throws DataAccessLayerException {
         Object obj = null;
         try {
-            _startOperation();
-            obj = session.load(clazz, id);
+            _startOperation(false);
+            obj = currentSession().load(clazz, id);
             _endOperation();
         } catch (HibernateException e) {
             handleException(e);
-        } 
+        }
         return obj;
     }
 
     public Object find(Class clazz, String Column, String Value) throws DataAccessLayerException {
         List result = this.findList(clazz, Restrictions.like(Column, Value, MatchMode.EXACT), 1);
-
         if (result.size() == 1) {
             return result.get(0);
         } else {
@@ -167,8 +213,9 @@ public class AbstractDao {
     public List findList(Class clazz, Criterion crit, int resultLimit) throws DataAccessLayerException {
         List objects = null;
         try {
-            _startOperation();
-            Criteria criteria = session.createCriteria(clazz.getName());
+            _startOperation(false);
+
+            Criteria criteria = currentSession().createCriteria(clazz.getName());
             if (crit != null) {
                 criteria.add(crit);
             }
@@ -179,12 +226,12 @@ public class AbstractDao {
             _endOperation();
         } catch (HibernateException e) {
             handleException(e);
-        } 
+        }
         return objects;
     }
 
     protected void handleException(HibernateException e) throws DataAccessLayerException {
-        HibernateFactory.rollback(tx);
+        rollback();
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -197,22 +244,5 @@ public class AbstractDao {
         e.printStackTrace(pw);
         logger.debug("Unexpected exception : " + sw.toString());
         throw e;
-    }
-
-    public boolean isSessionOpened() {
-        return (session != null && (session.isConnected() || session.isOpen()));
-    }
-    
-    private void _closeConnectionIfRequested() {
-        if(this.transactionInitiated) {
-            this.endTransaction();
-        }
-        session.flush();
-        session.close();
-        if (session.isConnected() || session.isOpen()) {
-            logger.error("Connection is not closed successfully.");
-        } else {
-            logger.debug("Connection closed");
-        }
     }
 }

@@ -8,7 +8,6 @@ import com.mudounet.hibernate.Movie;
 import com.mudounet.utils.MovieFileFilter;
 import com.mudounet.utils.hibernate.AbstractDao;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
-import com.mudounet.utils.hibernate.HibernateFactory;
 import com.mudounet.utils.managers.MovieListManager;
 import com.mudounet.utils.managers.SimpleTagManager;
 import java.io.File;
@@ -45,9 +44,6 @@ public class App {
             System.exit(0);
         }
 
-        System.out.println("Building Hibernate...");
-        HibernateFactory.buildSessionFactory();
-
         System.out.println("Building Movie list...");
         template = new AbstractDao();
 
@@ -59,7 +55,7 @@ public class App {
             System.exit(0);
         }
 
-        SimpleTagManager manager = new SimpleTagManager(template);
+        SimpleTagManager manager = new SimpleTagManager();
 
         List<Movie> movies = manager.getMovies();
 
@@ -67,8 +63,8 @@ public class App {
             checkOrUpdateMovie(movies, file);
         }
 
-        if (!HibernateFactory.getSessionFactory().isClosed()) {
-            HibernateFactory.getSessionFactory().close();
+        if (!template.isSessionOpened()) {
+            template.closeSession();
             logger.info("Hibernate session is closed");
         }
     }
@@ -104,7 +100,7 @@ public class App {
         }
 
         if (template.isSessionOpened()) {
-            template.closeConnection();
+            template.closeSession();
         }
         
     }

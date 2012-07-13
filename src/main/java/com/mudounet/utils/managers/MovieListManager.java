@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class MovieListManager {
 
-    private static AbstractDao template = App.template;
+    private static AbstractDao template = new AbstractDao();
 
     public static Movie addMovie(String path, String title) {
         Movie m = null;
@@ -64,7 +64,7 @@ public class MovieListManager {
         template.saveOrUpdate(mediaInfo);
         movie.setMediaInfo(mediaInfo);
         template.saveOrUpdate(movie);
-        template.closeConnection();
+        template.closeSession();
         return mediaInfo;
     }
 }

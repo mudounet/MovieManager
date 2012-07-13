@@ -1,7 +1,6 @@
 package com.mudounet.utils.dbunit;
 
 import com.mudounet.utils.hibernate.AbstractDao;
-import com.mudounet.utils.hibernate.HibernateFactory;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public abstract class ProjectDatabaseTestCase
         extends DatabaseTestCase {
 
-    protected static Logger logger = LoggerFactory.getLogger(ProjectDatabaseTestCase.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(ProjectDatabaseTestCase.class.getName());
     private static String driver = "hibernate.connection.driver_class";
     private static String url = "hibernate.connection.url";
     private static String username = "hibernate.connection.username";
@@ -40,16 +39,19 @@ public abstract class ProjectDatabaseTestCase
     @Before
     @Override
     public void setUp() throws Exception {
-        HibernateFactory.buildSessionFactory();
         template = new AbstractDao();
+        logger.debug("MARK 1");
         super.setUp();
+        logger.debug("MARK 2");
     }
 
     @After
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        HibernateFactory.closeFactory();
+        logger.debug("MARK 3");
+        template.closeSession();
+        logger.debug("MARK 4");
     }
 
     @Override

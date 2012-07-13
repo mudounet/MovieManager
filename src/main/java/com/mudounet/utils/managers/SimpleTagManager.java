@@ -1,5 +1,6 @@
 package com.mudounet.utils.managers;
 
+import com.mudounet.App;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.tags.Tag;
 import com.mudounet.hibernate.tags.TagResult;
@@ -18,17 +19,13 @@ public class SimpleTagManager {
 
     private static Logger logger = LoggerFactory.getLogger(SimpleTagManager.class.getName());
     private ArrayList<Tag> _tagList = new ArrayList<Tag>();
-    private AbstractDao template;
+    private static AbstractDao template = new AbstractDao();
 
     public SimpleTagManager() {
-        this.template = new AbstractDao();
+        //this.template = new AbstractDao();
     }
 
-    public SimpleTagManager(AbstractDao template) {
-        this.template = template;
-    }
-
-    
+   
     public static boolean addSimpleTag(String key) {
         try {
             AbstractDao lTemplate = new AbstractDao();
@@ -37,7 +34,7 @@ public class SimpleTagManager {
             lTemplate.find(Tag.class, "key", key);
             
             lTemplate.saveOrUpdate(new Tag(key));
-            lTemplate.closeConnection();
+            lTemplate.closeSession();
         
             return false;
         } catch (DataAccessLayerException e) {
