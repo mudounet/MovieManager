@@ -226,7 +226,7 @@ public class Movie {
     }
 
     /**
-     * @hibernate.set cascade="save-update" lazy="true"
+     * @hibernate.set cascade="save-update" lazy="false"
      * @hibernate.one-to-many  class="com.mudounet.hibernate.movies.others.Snapshot" 
      * @hibernate.key column="fk_movie"
      *

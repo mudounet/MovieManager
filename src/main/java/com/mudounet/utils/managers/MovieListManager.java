@@ -7,11 +7,14 @@ package com.mudounet.utils.managers;
 import com.mudounet.App;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.movies.others.MediaInfo;
+import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.tags.GenericTag;
 import com.mudounet.utils.hibernate.HibernateThreadSession;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
 import com.mudounet.utils.hibernate.HibernateUtils;
+import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,4 +72,16 @@ public class MovieListManager {
         template.endTransaction();
         return mediaInfo;
     }
+    
+    public static void genSnapshotsToMovie(Movie movie) throws Exception {
+        template.beginTransaction();
+        Set<Snapshot> results = MovieToolManager.genSnapshots(movie, new File("./data/snapshots"), 9);
+        movie.setSnapshots(results);
+        for (Snapshot s : results) {
+            //template.saveOrUpdate(s);
+        }
+        template.saveOrUpdate(movie);
+        template.endTransaction();
+    }
+            
 }

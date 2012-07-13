@@ -91,6 +91,10 @@ public class App {
         if (movie.getMediaInfo() == null) {
             MovieListManager.addBasicInfosToMovie(movie);
         }
+        
+        if(movie.getSnapshots().isEmpty()) {
+            MovieListManager.genSnapshotsToMovie(movie);
+        }
 
         if (template.isSessionOpened()) {
             template.closeSession();

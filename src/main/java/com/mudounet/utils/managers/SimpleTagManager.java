@@ -1,6 +1,5 @@
 package com.mudounet.utils.managers;
 
-import com.mudounet.App;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.tags.Tag;
 import com.mudounet.hibernate.tags.TagResult;
