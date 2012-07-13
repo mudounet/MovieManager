@@ -6,8 +6,9 @@ package com.mudounet;
 
 import com.mudounet.hibernate.Movie;
 import com.mudounet.utils.MovieFileFilter;
-import com.mudounet.utils.hibernate.AbstractDao;
+import com.mudounet.utils.hibernate.HibernateThreadSession;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
+import com.mudounet.utils.hibernate.HibernateUtils;
 import com.mudounet.utils.managers.MovieListManager;
 import com.mudounet.utils.managers.SimpleTagManager;
 import java.io.File;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class App {
 
     protected static Logger logger = LoggerFactory.getLogger(App.class.getName());
-    public static AbstractDao template;
+    public static HibernateThreadSession template = HibernateUtils.currentSession();
     public static Properties properties = new Properties();
     public static File initDirectory;
 
@@ -45,9 +46,6 @@ public class App {
         }
 
         System.out.println("Building Movie list...");
-        template = new AbstractDao();
-
-
         List<File> listOfMovies = readDirWithMovies(initDirectory);
 
         if (listOfMovies.isEmpty()) {
@@ -63,10 +61,9 @@ public class App {
             checkOrUpdateMovie(movies, file);
         }
 
-        if (!template.isSessionOpened()) {
-            template.closeSession();
-            logger.info("Hibernate session is closed");
-        }
+        HibernateUtils.destroySession();
+        HibernateUtils.closeAll();
+        Thread.sleep(15000);
     }
 
     public static List<File> readDirWithMovies(File directory) {
@@ -95,9 +92,8 @@ public class App {
             MovieListManager.addBasicInfosToMovie(movie);
         }
 
-        if (AbstractDao.isSessionOpened()) {
+        if (template.isSessionOpened()) {
             template.closeSession();
         }
-        
     }
 }

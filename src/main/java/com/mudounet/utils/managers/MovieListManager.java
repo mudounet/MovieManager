@@ -8,8 +8,9 @@ import com.mudounet.App;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.tags.GenericTag;
-import com.mudounet.utils.hibernate.AbstractDao;
+import com.mudounet.utils.hibernate.HibernateThreadSession;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
+import com.mudounet.utils.hibernate.HibernateUtils;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,14 +21,16 @@ import java.util.logging.Logger;
  */
 public class MovieListManager {
 
-    private static AbstractDao template = new AbstractDao();
+    private static HibernateThreadSession template = HibernateUtils.currentSession();
 
     public static Movie addMovie(String path, String title) {
         Movie m = null;
         try {
 
             m = MovieToolManager.buildMovie(path, title);
+            template.beginTransaction();
             template.saveOrUpdate(m);
+            template.endTransaction();
             return m;
         } catch (DataAccessLayerException ex) {
             Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);

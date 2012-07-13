@@ -1,6 +1,7 @@
 package com.mudounet.utils.dbunit;
 
-import com.mudounet.utils.hibernate.AbstractDao;
+import com.mudounet.utils.hibernate.HibernateThreadSession;
+import com.mudounet.utils.hibernate.HibernateUtils;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,7 +29,7 @@ public abstract class ProjectDatabaseTestCase
     private static String url = "hibernate.connection.url";
     private static String username = "hibernate.connection.username";
     private static String password = "hibernate.connection.password";
-    protected AbstractDao template;
+    protected HibernateThreadSession template;
 
     public ProjectDatabaseTestCase(String name) {
         super(name);
@@ -40,13 +41,13 @@ public abstract class ProjectDatabaseTestCase
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        template = new AbstractDao();
+        template = HibernateUtils.currentSession();
     }
 
     @After
     @Override
     protected void tearDown() throws Exception {
-        template.closeSession();
+        HibernateUtils.destroySession();
         super.tearDown(); 
     }
 

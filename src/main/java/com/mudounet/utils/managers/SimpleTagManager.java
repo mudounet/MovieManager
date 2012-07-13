@@ -4,8 +4,9 @@ import com.mudounet.App;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.tags.Tag;
 import com.mudounet.hibernate.tags.TagResult;
-import com.mudounet.utils.hibernate.AbstractDao;
+import com.mudounet.utils.hibernate.HibernateThreadSession;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
+import com.mudounet.utils.hibernate.HibernateUtils;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
@@ -19,22 +20,18 @@ public class SimpleTagManager {
 
     private static Logger logger = LoggerFactory.getLogger(SimpleTagManager.class.getName());
     private ArrayList<Tag> _tagList = new ArrayList<Tag>();
-    private static AbstractDao template = new AbstractDao();
+    private static HibernateThreadSession template = HibernateUtils.currentSession();
 
     public SimpleTagManager() {
-        //this.template = new AbstractDao();
     }
 
    
     public static boolean addSimpleTag(String key) throws Exception {
         try {
-            AbstractDao lTemplate = new AbstractDao();
-            lTemplate.beginTransaction();
-            
-            lTemplate.find(Tag.class, "key", key);
-            
-            lTemplate.saveOrUpdate(new Tag(key));
-            lTemplate.closeSession();
+            template.beginTransaction();
+            template.find(Tag.class, "key", key);
+            template.saveOrUpdate(new Tag(key));
+            template.closeSession();
         
             return false;
         } catch (DataAccessLayerException e) {
@@ -42,8 +39,9 @@ public class SimpleTagManager {
         }
     }
     
+    
     public static boolean deleteSimpleTag(String key) {
-        return false;
+        throw new UnsupportedOperationException("deleteSimpleTag pas fait");
     }
 
     public boolean addFilterTag(Tag tag) {
@@ -52,7 +50,6 @@ public class SimpleTagManager {
         } else {
             return false;
         }
-
     }
 
     public boolean addFilterTag(String tag) throws Exception {
@@ -95,9 +92,7 @@ public class SimpleTagManager {
         return results;
     }
 
-    public List<Movie> getMovies() throws DataAccessLayerException {
-
-        
+    public List<Movie> getMovies() throws DataAccessLayerException { 
         
         String hql = "select m from Movie m ";
         
