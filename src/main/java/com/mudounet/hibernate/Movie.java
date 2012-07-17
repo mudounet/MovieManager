@@ -25,7 +25,6 @@ public class Movie {
     private Long id;
     private String title;
     private String filename;
-    private String realFilename;
     private Date modificationDate;
     private String md5;
     private Set<GenericTag> tags = new HashSet<GenericTag>(0);
@@ -63,15 +62,6 @@ public class Movie {
      * @return Get the value of md5
      */
     public String getMd5() {
-        if (md5 == null) {
-            try {
-                md5 = Md5Generator.computeMD5(realFilename);
-            } catch (Exception ex) {
-                md5 = "";
-                logger.error("Exception found with file \"" + realFilename + "\" : ", ex);
-            }
-        }
-
         return md5;
     }
 
@@ -90,15 +80,6 @@ public class Movie {
      * @return Get the value of md5
      */
     public String getFastMd5() {
-        if (fastMd5 == null) {
-            try {
-                fastMd5 = Md5Generator.computeFastMD5(realFilename);
-            } catch (Exception ex) {
-                fastMd5 = "";
-                logger.error("Exception found with file \"" + realFilename + "\" : ", ex);
-            }
-        }
-
         return fastMd5;
     }
 
@@ -166,7 +147,7 @@ public class Movie {
     }
 
     /**
-     * @hibernate.set table="movies_tags" cascade="save-update" lazy="false"
+     * @hibernate.set table="movies_tags" cascade="save-update" lazy="true"
      * @hibernate.many-to-many column="fk_tag"
      * class="com.mudounet.hibernate.tags.GenericTag" 
      * @hibernate.key column="fk_movie"
@@ -198,13 +179,6 @@ public class Movie {
         return buffer.toString();
     }
 
-    public String getRealFilename() {
-        return realFilename;
-    }
-
-    public void setRealFilename(String realFilename) {
-        this.realFilename = realFilename;
-    }
 
     /**
      * @hibernate.property
@@ -226,7 +200,7 @@ public class Movie {
     }
 
     /**
-     * @hibernate.set cascade="save-update" lazy="false"
+     * @hibernate.set cascade="save-update" lazy="true"
      * @hibernate.one-to-many  class="com.mudounet.hibernate.movies.others.Snapshot" 
      * @hibernate.key column="fk_movie"
      *
@@ -240,7 +214,6 @@ public class Movie {
         this.snapshots = snapshots;
     }
 
-    
     
     /**
      * 
