@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.*;
@@ -39,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * General utility class containing a bunch of static methods.
+ *
  * @author Michael
  */
 public final class Utils {
@@ -54,6 +56,7 @@ public final class Utils {
 
     /**
      * Sleep ignoring the exception.
+     *
      * @param millis milliseconds to sleep.
      */
     public static void sleep(long millis) {
@@ -64,8 +67,18 @@ public final class Utils {
         }
     }
 
+    public static String readableFileSize(long size) {
+        if (size <= 0) {
+            return "0";
+        }
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
     /**
      * Wrap a runnable as one having a low priority.
+     *
      * @param task the runnable to wrap.
      * @return a runnable having a low priority.
      */
@@ -86,6 +99,7 @@ public final class Utils {
 
     /**
      * Get a font identical to the one given apart from in size.
+     *
      * @param font the original font.
      * @param size the size of the new font.
      * @return the resized font.
@@ -102,8 +116,9 @@ public final class Utils {
     }
 
     /**
-     * Calculates the largest size of the given font for which the given string 
+     * Calculates the largest size of the given font for which the given string
      * will fit into the given size.
+     *
      * @param g the graphics to use in the current context.
      * @param font the original font to base the returned font on.
      * @param string the string to fit.
@@ -136,6 +151,7 @@ public final class Utils {
     /**
      * Get the difference between two colours, from 0 to 100 where 100 is most
      * difference and 0 is least different.
+     *
      * @param a the first colour
      * @param b the second colour
      * @return the difference between the colours.
@@ -147,6 +163,7 @@ public final class Utils {
 
     /**
      * Remove all HTML tags from a string.
+     *
      * @param str the string to remove the tags from.
      * @return the string with the tags removed.
      */
@@ -156,7 +173,8 @@ public final class Utils {
 
     /**
      * Determine whether the given frame is completely on the given screen.
-     * @param frame      the frame to check.
+     *
+     * @param frame the frame to check.
      * @param monitorNum the monitor number to check.
      * @return true if the frame is totally on the screen, false otherwise.
      */
@@ -168,7 +186,8 @@ public final class Utils {
 
     /**
      * Centre the given frame on the given monitor.
-     * @param frame      the frame to centre.
+     *
+     * @param frame the frame to centre.
      * @param monitorNum the monitor number to centre the frame on.
      */
     public static void centreOnMonitor(JFrame frame, int monitorNum) {
@@ -184,7 +203,8 @@ public final class Utils {
 
     /**
      * Remove duplicates in a list whilst maintaining the order.
-     * @param <T>  the type of the list.
+     *
+     * @param <T> the type of the list.
      * @param list the list to remove duplicates.
      */
     public static <T> void removeDuplicateWithOrder(List<T> list) {
@@ -202,6 +222,7 @@ public final class Utils {
 
     /**
      * Capitalise the first letter of a string.
+     *
      * @param line the input string.
      * @return the the string with the first letter capitalised.
      */
@@ -215,7 +236,9 @@ public final class Utils {
     }
 
     /**
-     * Get an abbreviation from a name based on the first letter of each word of the name.
+     * Get an abbreviation from a name based on the first letter of each word of
+     * the name.
+     *
      * @param name the name to use for the abbreviation.
      * @return the abbreviation.
      */
@@ -232,6 +255,7 @@ public final class Utils {
 
     /**
      * Escape the XML special characters.
+     *
      * @param s the string to escape.
      * @return the escaped string.
      */
@@ -240,12 +264,13 @@ public final class Utils {
     }
 
     /**
-     * Get the textual content from a file as a string, returning the given error string if a problem occurs retrieving
-     * the content.
-     * @param fileName  the filename to get the text from.
+     * Get the textual content from a file as a string, returning the given
+     * error string if a problem occurs retrieving the content.
+     *
+     * @param fileName the filename to get the text from.
      * @param errorText the error string to return if things go wrong.
-     * @return hopefully the text content of the file, or the errorText string if we can't get the text content for some
-     *         reason.
+     * @return hopefully the text content of the file, or the errorText string
+     * if we can't get the text content for some reason.
      */
     public static synchronized String getTextFromFile(String fileName, String errorText) {
         BufferedReader reader = null;
@@ -273,8 +298,10 @@ public final class Utils {
 
     /**
      * Get an image icon from the location of a specified file.
+     *
      * @param location the location of the image to use.
-     * @return the icon formed from the image, or null if an IOException occured.
+     * @return the icon formed from the image, or null if an IOException
+     * occured.
      */
     public static ImageIcon getImageIcon(String location) {
         return getImageIcon(location, -1, -1);
@@ -282,10 +309,12 @@ public final class Utils {
 
     /**
      * Get an image icon from the location of a specified file.
+     *
      * @param location the location of the image to use.
      * @param width the width of the given image icon.
      * @param height the height of the given image icon.
-     * @return the icon formed from the image, or null if an IOException occured.
+     * @return the icon formed from the image, or null if an IOException
+     * occured.
      */
     public static ImageIcon getImageIcon(String location, int width, int height) {
         Image image = getImage(location, width, height);
@@ -297,8 +326,10 @@ public final class Utils {
 
     /**
      * Get an image from the location of a specified file.
+     *
      * @param location the location of the image to use.
-     * @return the icon formed from the image, or null if an IOException occured.
+     * @return the icon formed from the image, or null if an IOException
+     * occured.
      */
     public static BufferedImage getImage(String location) {
         return getImage(location, -1, -1);
@@ -306,14 +337,16 @@ public final class Utils {
 
     /**
      * Get an image from the location of a specified file.
+     *
      * @param location the location of the image to use.
      * @param width the width of the returned image.
-     * @param height the height of the returned image. 
-     * @return the icon formed from the image, or null if an IOException occured.
+     * @param height the height of the returned image.
+     * @return the icon formed from the image, or null if an IOException
+     * occured.
      */
     public static BufferedImage getImage(String location, int width, int height) {
         try {
-            File f= getFileFromClasspath(location);
+            File f = getFileFromClasspath(location);
             BufferedImage image = ImageIO.read(f);
             if (width > 0 && height > 0) {
                 return resizeImage(image, width, height);
@@ -341,6 +374,7 @@ public final class Utils {
 
     /**
      * Resize a given image to the given width and height.
+     *
      * @param image the image to resize.
      * @param width the width of the new image.
      * @param height the height of the new image.
@@ -360,6 +394,7 @@ public final class Utils {
 
     /**
      * Convert the given icon to an image.
+     *
      * @param icon the icon to convert.
      * @return the converted icon.
      */
@@ -371,6 +406,7 @@ public final class Utils {
 
     /**
      * Determine whether a file is an image file.
+     *
      * @param file the file to check.
      * @return true if the file is an image, false otherwise.
      */
@@ -386,6 +422,7 @@ public final class Utils {
 
     /**
      * Get the names of all the fonts available on the current system.
+     *
      * @return the names of all the fonts available.
      */
     public static String[] getAllFonts() {
@@ -404,8 +441,9 @@ public final class Utils {
 
     /**
      * Get an image filled with the specified colour.
-     * @param color  the colour of the image.
-     * @param width  the width of the image.
+     *
+     * @param color the colour of the image.
+     * @param width the width of the image.
      * @param height the height of the image.
      * @return the image.
      */
@@ -419,6 +457,7 @@ public final class Utils {
 
     /**
      * Parse a colour string to a colour.
+     *
      * @param colour the colour string.
      * @return the colour.
      */

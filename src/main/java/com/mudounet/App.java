@@ -5,9 +5,10 @@
 package com.mudounet;
 
 import com.mudounet.hibernate.Movie;
+import com.mudounet.ui.swing.ext.MovieTable;
 import com.mudounet.utils.MovieFileFilter;
-import com.mudounet.utils.hibernate.HibernateThreadSession;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
+import com.mudounet.utils.hibernate.HibernateThreadSession;
 import com.mudounet.utils.hibernate.HibernateUtils;
 import com.mudounet.utils.managers.MovieListManager;
 import com.mudounet.utils.managers.SimpleTagManager;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import javax.swing.JFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,7 @@ public class App {
     public static HibernateThreadSession template = HibernateUtils.currentSession();
     public static Properties properties = new Properties();
     public static File initDirectory;
+    public static List<Movie> listOfMovies;
 
     public static void main(String[] args) throws DataAccessLayerException, IOException, InterruptedException, Exception {
 
@@ -46,20 +49,28 @@ public class App {
         }
 
         System.out.println("Building Movie list...");
-        List<File> listOfMovies = readDirWithMovies(initDirectory);
+        List<File> movieList = readDirWithMovies(initDirectory);
 
-        if (listOfMovies.isEmpty()) {
+        if (movieList.isEmpty()) {
             logger.error("No movies found in path " + initDirectory.getAbsolutePath());
             System.exit(0);
         }
 
         SimpleTagManager manager = new SimpleTagManager();
 
-        List<Movie> movies = manager.getMovies();
+        listOfMovies = manager.getMovies();
 
-        for (File file : listOfMovies) {
-            checkOrUpdateMovie(movies, file);
+        for (File file : movieList) {
+            checkOrUpdateMovie(listOfMovies, file);
         }
+        
+        //Schedule a job for the event-dispatching thread:
+        //creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
 
         HibernateUtils.destroySession();
         HibernateUtils.closeAll();
@@ -100,4 +111,26 @@ public class App {
             template.closeSession();
         }
     }
+    
+        /**
+     * Create the GUI and show it.  For thread safety,
+     * this method should be invoked from the
+     * event-dispatching thread.
+     */
+    private static void createAndShowGUI() {
+        //Create and set up the window.
+        JFrame frame = new JFrame("TableRenderDemo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+ 
+        //Create and set up the content pane.
+        MovieTable newContentPane = new MovieTable(listOfMovies);
+        newContentPane.setOpaque(true); //content panes must be opaque
+        frame.setContentPane(newContentPane);
+ 
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
+    }
+    
+
 }

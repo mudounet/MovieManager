@@ -134,7 +134,7 @@ public class Movie {
 
     /**
      * @hibernate.many-to-one
-     * class="com.mudounet.hibernate.movies.others.MediaInfo"
+     * class="com.mudounet.hibernate.movies.others.MediaInfo" cascade="save-update" lazy="false"
      *
      * @return Media informations
      */
