@@ -33,23 +33,24 @@ public abstract class ProjectDatabaseTestCase
 
     public ProjectDatabaseTestCase(String name) {
         super(name);
+         template = HibernateUtils.currentSession();
     }
 
     protected abstract String getDataSetFilename();
 
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        template = HibernateUtils.currentSession();
-    }
+//    @Before
+//    @Override
+//    public void setUp() throws Exception {
+//        //super.setUp();
+//       
+//    }
 
-    @After
-    @Override
-    protected void tearDown() throws Exception {
-        HibernateUtils.destroySession();
-        super.tearDown(); 
-    }
+//    @After
+//    @Override
+//    protected void tearDown() throws Exception {
+//        //HibernateUtils.destroySession();
+//        //super.tearDown(); 
+//    }
 
     @Override
     protected IOperationListener getOperationListener() {

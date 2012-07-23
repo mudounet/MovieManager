@@ -43,7 +43,7 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         t.setKey("TestKey");
 
         assertEquals(t.getId(), 0);
-
+        template.beginTransaction();
         template.saveOrUpdate(t);
 
         assertEquals(true, t.getId() != 0);
@@ -101,7 +101,6 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
                 assertEquals(classType, Hibernate.getClass(tag).getCanonicalName());
             }
         }
-        template.closeSession();
 
         assertEquals(list.size(), this.getNbResults("select * from MOVIE"));
 
@@ -109,6 +108,8 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
 
     @Test
     public void testTags() throws Exception {
+        
+        @SuppressWarnings("unchecked")
         List<GenericTag> list = template.findList(GenericTag.class);
         ITable refList = this.getResults("select ID, KEY, S.FK_TAG AS S_TAG, T.FK_TAG AS T_TAG  from GENERICTAG LEFT OUTER JOIN TAG AS S ON ID=S.FK_TAG LEFT OUTER JOIN ACTOR AS T ON ID=T.FK_TAG");
         assertEquals(list.size(), refList.getRowCount());
@@ -130,8 +131,6 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
                 assertEquals(movie.getTitle(), refList.getValue(0, "TITLE"));
             }
         }
-
-        template.closeSession();
     }
 
     @Test
@@ -153,7 +152,6 @@ public class GenericTagTest extends ProjectDatabaseTestCase {
         template.beginTransaction();
         template.delete(newTag);
         template.endTransaction();
-        template.closeSession();
 
     }
 
