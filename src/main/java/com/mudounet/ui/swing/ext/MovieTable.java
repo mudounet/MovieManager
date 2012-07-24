@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -25,6 +27,7 @@ import javax.swing.table.TableCellRenderer;
 public class MovieTable extends JPanel {
 
     private static final long serialVersionUID = 1L;
+    ListSelectionModel listSelectionModel;
 
     public MovieTable(List<Movie> listOfMovies) {
         super(new GridLayout(1, 0));
@@ -32,6 +35,8 @@ public class MovieTable extends JPanel {
         final JTable table = new JTable(new MovieTableModel(listOfMovies));
         table.getColumnModel().getColumn(1).setCellRenderer(new DurationRenderer());
         table.getColumnModel().getColumn(3).setCellRenderer(new FileSizeRenderer());
+        listSelectionModel = table.getSelectionModel();
+        listSelectionModel.addListSelectionListener(new SharedListSelectionHandler());
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);
@@ -114,5 +119,36 @@ public class MovieTable extends JPanel {
             }
         }
     }
+        
+        class SharedListSelectionHandler implements ListSelectionListener {
+            
+        public void valueChanged(ListSelectionEvent e) {
+        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+
+        int firstIndex = e.getFirstIndex();
+        int lastIndex = e.getLastIndex();
+        //logger.debug(e);
+//        boolean isAdjusting = e.getValueIsAdjusting();
+//        logger.debug("Event for indexes "
+//                      + firstIndex + " - " + lastIndex
+//                      + "; isAdjusting is " + isAdjusting
+//                      + "; selected indexes:");
+//
+//        if (lsm.isSelectionEmpty()) {
+//            logger.debug(" <none>");
+//        } else {
+//            // Find out which indexes are selected.
+//            int minIndex = lsm.getMinSelectionIndex();
+//            int maxIndex = lsm.getMaxSelectionIndex();
+//            for (int i = minIndex; i <= maxIndex; i++) {
+//                if (lsm.isSelectedIndex(i)) {
+//                    logger.debug(" " + i);
+//                }
+//            }
+//        }
+//        output.append(newline);
+    }
+}
+
     
 }
