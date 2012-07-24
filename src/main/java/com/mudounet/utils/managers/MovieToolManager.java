@@ -5,6 +5,7 @@
 package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.utils.video.VideoPlayerException;
@@ -25,38 +26,20 @@ public class MovieToolManager {
 
     protected static Logger logger = LoggerFactory.getLogger(MovieToolManager.class.getName());
 
-    private static VlcPlayer createHeadlessPlayer(Movie movie) throws VideoPlayerException {
+    private static VlcPlayer createHeadlessPlayer(MovieProxy movieProxy) throws VideoPlayerException {
         VlcPlayer headlessRemotePlayer = VlcPlayerFactory.getHeadlessPlayer();
-        headlessRemotePlayer.load(movie.getRealFilename());
+        headlessRemotePlayer.load(movieProxy.getFilename());
         headlessRemotePlayer.play();
         return headlessRemotePlayer;
     }
-
-    public static Movie buildMovie(String path, String title) throws InterruptedException, IOException {
-        File file = new File(path);
-        return buildMovie(file, title);
-    }
     
-    public static Movie buildMovie(File file, String title) throws InterruptedException, IOException {
-        Movie m = new Movie();
-        m.setRealFilename(file.getPath());
-        m.setFilename(file.getName());
-        m.setMd5(m.getMd5());
-        m.setFastMd5(m.getFastMd5());
-        m.setTitle(title);
-        m.setSize(file.length());
-        m.setModificationDate(file.lastModified());
-
-        return m;
-    }
-    
-    public static MediaInfo getMovieInformations(Movie movie) throws InterruptedException, IOException {
+    public static MediaInfo getMovieInformations(MovieProxy movieProxy) throws InterruptedException, IOException {
         MediaInfo mediaInfo = new MediaInfo();
 
      
         VlcPlayer headlessRemotePlayer;
         try {
-            headlessRemotePlayer = createHeadlessPlayer(movie);
+            headlessRemotePlayer = createHeadlessPlayer(movieProxy);
             
             mediaInfo = headlessRemotePlayer.retrieveMediaInfo();
             headlessRemotePlayer.close();
@@ -79,7 +62,7 @@ public class MovieToolManager {
      * @return found snapshots
      * @throws Exception
      */
-    public static Set<Snapshot> genSnapshots(Movie movie, File directory, int nbOfSnapshots) throws Exception {
+    public static Set<Snapshot> genSnapshots(MovieProxy movieProxy, File directory, int nbOfSnapshots) throws Exception {
         Set<Snapshot> list = new HashSet<Snapshot>();
 
         if (!directory.isDirectory()) {
@@ -89,9 +72,9 @@ public class MovieToolManager {
             throw new Exception("Number of snapshots has to be defined between 1 and 9.");
         }
 
-        String prefix = movie.getMd5() + "-";
+        String prefix = movieProxy.getMd5() + "-";
 
-        VlcPlayer headlessRemotePlayer = createHeadlessPlayer(movie);
+        VlcPlayer headlessRemotePlayer = createHeadlessPlayer(movieProxy);
 
         long length = headlessRemotePlayer.getLength();
 
@@ -117,7 +100,7 @@ public class MovieToolManager {
                     logger.warn("Retry " + retry + " / " + nbOfTries);
                     logger.warn("Remote player error : ", ex);
                     headlessRemotePlayer.close();
-                    headlessRemotePlayer = createHeadlessPlayer(movie);
+                    headlessRemotePlayer = createHeadlessPlayer(movieProxy);
 
                 }
             }

@@ -30,6 +30,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -76,6 +77,14 @@ public final class Utils {
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
+    public static String readableDuration(long millis) {
+        return String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(millis),  TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+    }
+    
+
+
+    
+    
     /**
      * Wrap a runnable as one having a low priority.
      *

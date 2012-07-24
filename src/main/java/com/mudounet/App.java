@@ -5,6 +5,7 @@
 package com.mudounet;
 
 import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.ui.swing.ext.MovieTable;
 import com.mudounet.utils.MovieFileFilter;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
@@ -84,27 +85,27 @@ public class App {
     }
 
     public static void checkOrUpdateMovie(List<Movie> movies, File file) throws Exception {
-        Movie movie = new Movie();
-        movie.setRealFilename(file.getAbsolutePath());
-        movie.setSize(file.length());
-        movie.getFastMd5();
+        MovieProxy movieProxy = new MovieProxy(file);
+        movieProxy.getFastMd5();
+        Movie movie = movieProxy.getMovie();
 
         int index = movies.indexOf(movie);
+        
         if (index >= 0) {
             logger.debug("EXISTS: " + file.getName());
             movie = movies.get(index);
-            movie.setRealFilename(initDirectory.getAbsolutePath() + "/" + movie.getFilename());
         } else {
             logger.info("NEW: " + file.getName());
-            movie = MovieListManager.addMovie(file.getAbsolutePath(), file.getName());
+            movieProxy.getMd5();
+            movie = MovieListManager.addMovie(movieProxy.getMovie());
         }
 
         if (movie.getMediaInfo() == null) {
-            MovieListManager.addBasicInfosToMovie(movie);
+            MovieListManager.addBasicInfosToMovie(movieProxy);
         }
         
         if(movie.getSnapshots().isEmpty()) {
-            MovieListManager.genSnapshotsToMovie(movie);
+            MovieListManager.genSnapshotsToMovie(movieProxy);
         }
 
         if (template.isSessionOpened()) {

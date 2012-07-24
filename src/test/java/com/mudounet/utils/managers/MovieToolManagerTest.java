@@ -5,6 +5,7 @@
 package com.mudounet.utils.managers;
 
 import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.utils.Utils;
@@ -46,7 +47,8 @@ public class MovieToolManagerTest {
         logger.info("getMovieInformations");
         File movieFile = Utils.getFileFromClasspath("sample_video.flv");
 
-        Movie m = MovieToolManager.buildMovie(movieFile, "My movie");
+        MovieProxy movieProxy = new MovieProxy(movieFile, "My movie");
+        Movie m = movieProxy.getMovie();
         
         
         assertEquals("sample_video.flv", m.getFilename());
@@ -55,7 +57,7 @@ public class MovieToolManagerTest {
         assertEquals("My movie", m.getTitle());
         assertEquals(m.getModificationDate().getTime() > 0, true);
         
-        MediaInfo result = MovieToolManager.getMovieInformations(m);
+        MediaInfo result = MovieToolManager.getMovieInformations(movieProxy);
 
         assertEquals(result.getPlayTime() > 0, true);
         assertEquals(result.getVideoHeight() > 0, true);
@@ -77,14 +79,15 @@ public class MovieToolManagerTest {
     public void testGenSnapshots() throws Exception {
         logger.info("genSnapshots");
         File movieFile = Utils.getFileFromClasspath("sample_video.flv");
-        Movie movie = MovieToolManager.buildMovie(movieFile, "My movie");
+        MovieProxy movieProxy = new MovieProxy(movieFile, "My movie");
+        Movie m = movieProxy.getMovie();
 
         File directory = TestTools.createTempDirectory();
         logger.info("Temporary directory is : " + directory);
 
         int nbOfSnapshots = 9;
 
-        Set<Snapshot> results = MovieToolManager.genSnapshots(movie, directory, nbOfSnapshots);
+        Set<Snapshot> results = MovieToolManager.genSnapshots(movieProxy, directory, nbOfSnapshots);
 
         assertEquals("Snapshot quantity is not correct : ", nbOfSnapshots, results.size());
 

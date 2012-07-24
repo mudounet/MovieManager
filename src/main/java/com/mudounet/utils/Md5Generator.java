@@ -1,5 +1,6 @@
 package com.mudounet.utils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -52,8 +53,6 @@ public class Md5Generator {
         return result;
     }
     
-    // see this How-to for a faster way to convert
-    // a byte array to a HEX string
     public static String computeFastMD5(String filename) throws Exception {
         byte[] b = createGenericChecksum(filename, 50 * 1024 ); // 100 Mo
         String result = "";
@@ -61,5 +60,15 @@ public class Md5Generator {
             result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
         }
         return result;
+    }
+    
+    
+
+    public static String computeMD5(File file) throws Exception {
+        return computeMD5(file.getAbsolutePath());
+    }
+
+    public static String computeFastMD5(File file) throws Exception {
+        return computeFastMD5(file.getAbsolutePath());
     }
 }

@@ -6,6 +6,7 @@ package com.mudounet.utils.managers;
 
 import com.mudounet.App;
 import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.hibernate.movies.others.MediaInfo;
 import com.mudounet.hibernate.movies.others.Snapshot;
 import com.mudounet.hibernate.tags.GenericTag;
@@ -26,22 +27,16 @@ public class MovieListManager {
 
     private static HibernateThreadSession template = HibernateUtils.currentSession();
 
-    public static Movie addMovie(String path, String title) {
-        Movie m = null;
+    public static Movie addMovie(Movie m) {
+        
         try {
-
-            m = MovieToolManager.buildMovie(path, title);
             template.beginTransaction();
             template.saveOrUpdate(m);
             template.endTransaction();
             return m;
         } catch (DataAccessLayerException ex) {
             Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
 
         return m;
     }
@@ -50,10 +45,10 @@ public class MovieListManager {
         return false;
     }
     
-    public static MediaInfo addBasicInfosToMovie(Movie movie) throws Exception {
+    public static MediaInfo addBasicInfosToMovie(MovieProxy movieProxy) throws Exception {
         try {
-            MediaInfo mediaInfo = MovieToolManager.getMovieInformations(movie);
-            return addBasicInfosToMovie(movie, mediaInfo);
+            MediaInfo mediaInfo = MovieToolManager.getMovieInformations(movieProxy);
+            return addBasicInfosToMovie(movieProxy.getMovie(), mediaInfo);
         } catch (DataAccessLayerException ex) {
             Logger.getLogger(MovieListManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
@@ -73,9 +68,10 @@ public class MovieListManager {
         return mediaInfo;
     }
     
-    public static void genSnapshotsToMovie(Movie movie) throws Exception {
+    public static void genSnapshotsToMovie(MovieProxy movieProxy) throws Exception {
         template.beginTransaction();
-        Set<Snapshot> results = MovieToolManager.genSnapshots(movie, new File("./data/snapshots"), 9);
+        Set<Snapshot> results = MovieToolManager.genSnapshots(movieProxy, new File("./data/snapshots"), 9);
+        Movie movie = movieProxy.getMovie();
         movie.setSnapshots(results);
         for (Snapshot s : results) {
             //template.saveOrUpdate(s);

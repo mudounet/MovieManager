@@ -68,7 +68,7 @@ public class MovieTable extends JPanel {
             case 1:  return m.getMediaInfo().getVideoWidth();
             case 2:  return m.getMediaInfo().getVideoHeight();
             case 3:  return Utils.readableFileSize(m.getSize());
-            case 4:  return m.getMediaInfo().getPlayTime();
+            case 4:  return Utils.readableDuration(m.getMediaInfo().getPlayTime());
             case 5:  return m.getMediaInfo().getVideoCodec();
         }
             
