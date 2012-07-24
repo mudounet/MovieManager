@@ -60,9 +60,11 @@ public class App {
         SimpleTagManager manager = new SimpleTagManager();
 
         listOfMovies = manager.getMovies();
-
-        for (File file : movieList) {
-            checkOrUpdateMovie(listOfMovies, file);
+        
+        if(listOfMovies.size() < movieList.size()) {
+            for (File file : movieList) {
+                checkOrUpdateMovie(listOfMovies, file);
+            }
         }
         
         //Schedule a job for the event-dispatching thread:

@@ -43,12 +43,17 @@ public class MovieTable extends JPanel {
     class MovieTableModel extends AbstractTableModel {
         private static final long serialVersionUID = 1L;
 
-        private String[] columnNames = {"Movie title", "Width", "Height", "size", "duration", "Type"};
+        private String[] columnNames = {"Movie title", "duration", "Dimensions", "size",  "Type"};
         private List<Movie> listOfMovies;
 
         public MovieTableModel(List<Movie> listOfMovies) {
             this.listOfMovies = listOfMovies;
         }
+        
+        @Override
+        public String getColumnName(int col) {
+        return columnNames[col].toString();
+    }
         
         public int getRowCount() {
             return listOfMovies.size();
@@ -65,11 +70,10 @@ public class MovieTable extends JPanel {
             Movie m = this.listOfMovies.get(row);
             switch (col) {
             case 0:  return m.getTitle();
-            case 1:  return m.getMediaInfo().getVideoWidth();
-            case 2:  return m.getMediaInfo().getVideoHeight();
+            case 1:  return Utils.readableDuration(m.getMediaInfo().getPlayTime());
+            case 2:  return m.getMediaInfo().getVideoWidth()+" x "+m.getMediaInfo().getVideoHeight();
             case 3:  return Utils.readableFileSize(m.getSize());
-            case 4:  return Utils.readableDuration(m.getMediaInfo().getPlayTime());
-            case 5:  return m.getMediaInfo().getVideoCodec();
+            case 4:  return m.getMediaInfo().getVideoCodec().toUpperCase();
         }
             
             return null;
