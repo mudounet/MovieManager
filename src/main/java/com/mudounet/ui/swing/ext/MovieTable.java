@@ -6,19 +6,17 @@ package com.mudounet.ui.swing.ext;
 
 import com.mudounet.hibernate.Movie;
 import com.mudounet.utils.Utils;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.List;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -41,6 +39,20 @@ public class MovieTable extends JPanel {
         table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        Action delete = new AbstractAction() {
+
+            private static final long serialVersionUID = 1L;
+
+            public void actionPerformed(ActionEvent e) {
+                JTable table = (JTable) e.getSource();
+                int modelRow = Integer.valueOf(e.getActionCommand());
+                ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+            }
+        };
+
+        ButtonColumn buttonColumn = new ButtonColumn(table, delete, 0);
+        buttonColumn.setMnemonic(KeyEvent.VK_D);
 
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
@@ -107,8 +119,8 @@ public class MovieTable extends JPanel {
             }
         }
     }
-    
-        class FileSizeRenderer extends DefaultTableCellRenderer {
+
+    class FileSizeRenderer extends DefaultTableCellRenderer {
 
         private static final long serialVersionUID = 1L;
 
@@ -119,15 +131,15 @@ public class MovieTable extends JPanel {
             }
         }
     }
-        
-        class SharedListSelectionHandler implements ListSelectionListener {
-            
-        public void valueChanged(ListSelectionEvent e) {
-        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
 
-        int firstIndex = e.getFirstIndex();
-        int lastIndex = e.getLastIndex();
-        //logger.debug(e);
+    class SharedListSelectionHandler implements ListSelectionListener {
+
+        public void valueChanged(ListSelectionEvent e) {
+            ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+
+            int firstIndex = e.getFirstIndex();
+            int lastIndex = e.getLastIndex();
+            //logger.debug(e);
 //        boolean isAdjusting = e.getValueIsAdjusting();
 //        logger.debug("Event for indexes "
 //                      + firstIndex + " - " + lastIndex
@@ -147,8 +159,6 @@ public class MovieTable extends JPanel {
 //            }
 //        }
 //        output.append(newline);
+        }
     }
-}
-
-    
 }
