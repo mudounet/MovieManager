@@ -40,7 +40,7 @@ public class App {
         System.out.println("Loading properties...");
         App.properties.load(new FileInputStream("app.properties"));
 
-        initDirectory = new File(App.properties.getProperty("init.directory"));
+        
 
         if (initDirectory.isDirectory()) {
             logger.info("Base directory : " + initDirectory.getAbsolutePath());
