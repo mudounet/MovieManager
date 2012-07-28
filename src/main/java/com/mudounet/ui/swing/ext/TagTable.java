@@ -44,7 +44,7 @@ public class TagTable extends JPanel {
     class MovieTableModel extends AbstractTableModel {
         private static final long serialVersionUID = 1L;
 
-        private String[] columnNames = {"Movie title", "duration", "Dimensions", "size",  "Type"};
+        private String[] columnNames = {"Movie title", "duration", "Dimensions", "size",  "Type", "test"};
         private List<Movie> listOfMovies;
 
         public MovieTableModel(List<Movie> listOfMovies) {

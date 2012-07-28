@@ -9,16 +9,13 @@ import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.ui.swing.ext.MovieTable;
 import com.mudounet.utils.MovieFileFilter;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
-import com.mudounet.utils.hibernate.HibernateThreadSession;
 import com.mudounet.utils.hibernate.HibernateUtils;
 import com.mudounet.utils.managers.MovieListManager;
 import com.mudounet.utils.managers.SimpleTagManager;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import javax.swing.JFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,38 +27,23 @@ import org.slf4j.LoggerFactory;
 public class App {
 
     protected static Logger logger = LoggerFactory.getLogger(App.class.getName());
-    public static HibernateThreadSession template = HibernateUtils.currentSession();
-    public static Properties properties = new Properties();
-    public static File initDirectory;
-    public static List<Movie> listOfMovies;
 
     public static void main(String[] args) throws DataAccessLayerException, IOException, InterruptedException, Exception {
 
-        System.out.println("Loading properties...");
-        App.properties.load(new FileInputStream("app.properties"));
-
-        
-
-        if (initDirectory.isDirectory()) {
-            logger.info("Base directory : " + initDirectory.getAbsolutePath());
-        } else {
-            logger.error("Init directory is not defined correctly : " + initDirectory.getAbsolutePath());
-            System.exit(0);
-        }
-
         System.out.println("Building Movie list...");
-        List<File> movieList = readDirWithMovies(initDirectory);
+        List<File> movieList = readDirWithMovies(GlobalProperties.getMoviesDirectory());
 
         if (movieList.isEmpty()) {
-            logger.error("No movies found in path " + initDirectory.getAbsolutePath());
+            logger.error("No movies found in path " + GlobalProperties.getMoviesDirectory().getAbsolutePath());
             System.exit(0);
         }
 
         SimpleTagManager manager = new SimpleTagManager();
 
-        listOfMovies = manager.getMovies();
+        List<Movie> listOfMovies = manager.getMovies();
+        GlobalVariables.setListOfMovies(listOfMovies);
         
-        if(listOfMovies.size() < movieList.size()) {
+        if(listOfMovies.size() != movieList.size()) {
             for (File file : movieList) {
                 checkOrUpdateMovie(listOfMovies, file);
             }
@@ -110,8 +92,8 @@ public class App {
             MovieListManager.genSnapshotsToMovie(movieProxy);
         }
 
-        if (template.isSessionOpened()) {
-            template.closeSession();
+        if (GlobalVariables.getTemplate().isSessionOpened()) {
+            GlobalVariables.getTemplate().closeSession();
         }
     }
     
@@ -126,7 +108,7 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  
         //Create and set up the content pane.
-        MovieTable newContentPane = new MovieTable(listOfMovies);
+        MovieTable newContentPane = new MovieTable();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
  

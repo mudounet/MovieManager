@@ -4,19 +4,27 @@
  */
 package com.mudounet.ui.swing.ext;
 
+import com.mudounet.GlobalVariables;
 import com.mudounet.hibernate.Movie;
+import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.utils.Utils;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -24,13 +32,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MovieTable extends JPanel {
 
+    protected static org.slf4j.Logger logger = LoggerFactory.getLogger(MovieTable.class.getName());
     private static final long serialVersionUID = 1L;
     ListSelectionModel listSelectionModel;
 
-    public MovieTable(List<Movie> listOfMovies) {
+    public MovieTable() {
         super(new GridLayout(1, 0));
+        
 
-        final JTable table = new JTable(new MovieTableModel(listOfMovies));
+        final JTable table = new JTable(new MovieTableModel(GlobalVariables.getListOfMovies()));
         table.getColumnModel().getColumn(1).setCellRenderer(new DurationRenderer());
         table.getColumnModel().getColumn(3).setCellRenderer(new FileSizeRenderer());
         listSelectionModel = table.getSelectionModel();
@@ -40,14 +50,14 @@ public class MovieTable extends JPanel {
         table.setAutoCreateRowSorter(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        logger.debug("treu");
         Action delete = new AbstractAction() {
-
             private static final long serialVersionUID = 1L;
 
             public void actionPerformed(ActionEvent e) {
                 JTable table = (JTable) e.getSource();
                 int modelRow = Integer.valueOf(e.getActionCommand());
-                ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+                ((MovieTableModel) table.getModel()).removeRow(modelRow);
             }
         };
 
@@ -66,8 +76,8 @@ public class MovieTable extends JPanel {
     class MovieTableModel extends AbstractTableModel {
 
         private static final long serialVersionUID = 1L;
-        private String[] columnNames = {"Movie title", "Duration", "Dimensions", "Size", "Type"};
-        private List<Movie> listOfMovies;
+        private String[] columnNames = {"Movie title", "Duration", "Dimensions", "Size", "Type", ""};
+        private List<Movie> listOfMovies = new ArrayList<Movie>();
 
         public MovieTableModel(List<Movie> listOfMovies) {
             this.listOfMovies = listOfMovies;
@@ -102,9 +112,15 @@ public class MovieTable extends JPanel {
                     return m.getSize();
                 case 4:
                     return m.getMediaInfo().getVideoCodec().toUpperCase();
+                case 5:
+                    return "View";
             }
 
             return null;
+        }
+
+        private void removeRow(int modelRow) {
+            throw new UnsupportedOperationException("Not yet implemented");
         }
     }
 

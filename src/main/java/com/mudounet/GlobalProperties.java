@@ -27,10 +27,10 @@ public class GlobalProperties {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(GlobalProperties.class.getName());
     private static HibernateThreadSession template = HibernateUtils.currentSession();
     private static Properties properties = new Properties();
-    private static List<Movie> listOfMovies;
 
     static {
         try {
+            logger.debug("Initializing static class "+GlobalProperties.class.getName());
             GlobalProperties.properties.load(new FileInputStream("app.properties"));
             moviesDirectory = loadDirectory("movies.dir");
             snapshotDirectory = loadDirectory("snapshots.dir");
@@ -40,24 +40,21 @@ public class GlobalProperties {
     }
     
     private static File loadDirectory(String dirProperty) {
-        File directory = new File(GlobalProperties.getProperties().getProperty(dirProperty));
+        logger.debug("Loading directory "+dirProperty);
+        String result = GlobalProperties.getProperties().getProperty(dirProperty);
+        if(result == null) {
+            logger.error("Property not found : "+dirProperty);
+            return null;
+        }
+        File directory = new File(result);
         
         if (directory.isDirectory()) {
             logger.info("Base directory : " + directory.getAbsolutePath());
             return directory;
         } else {
             logger.error("\""+dirProperty+"\" directory is not defined correctly : " + directory.getAbsolutePath());
-            System.exit(0);
         }
         return null;
-    }
-
-    public static List<Movie> getListOfMovies() {
-        return listOfMovies;
-    }
-
-    public static void setListOfMovies(List<Movie> listOfMovies) {
-        GlobalProperties.listOfMovies = listOfMovies;
     }
 
     public static File getMoviesDirectory() {
