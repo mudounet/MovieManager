@@ -4,7 +4,7 @@
  */
 package com.mudounet.utils.managers;
 
-import com.mudounet.App;
+import com.mudounet.MovieManager;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.hibernate.movies.others.MediaInfo;

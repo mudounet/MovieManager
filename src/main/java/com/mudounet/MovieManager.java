@@ -4,6 +4,7 @@
  */
 package com.mudounet;
 
+import com.mudounet.gui.MovieManagerConfig;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.ui.swing.ext.MovieTable;
@@ -24,9 +25,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author isabelle
  */
-public class App {
+public class MovieManager {
+    private static MovieManagerConfig movieManagerConfig;
 
-    protected static Logger logger = LoggerFactory.getLogger(App.class.getName());
+    public static MovieManagerConfig getConfig() {
+        return movieManagerConfig;
+    }
+    protected static Logger logger = LoggerFactory.getLogger(MovieManager.class.getName());
 
     public static void main(String[] args) throws DataAccessLayerException, IOException, InterruptedException, Exception {
 
@@ -42,16 +47,17 @@ public class App {
 
         List<Movie> listOfMovies = manager.getMovies();
         GlobalVariables.setListOfMovies(listOfMovies);
-        
-        if(listOfMovies.size() != movieList.size()) {
+
+        if (listOfMovies.size() != movieList.size()) {
             for (File file : movieList) {
                 checkOrUpdateMovie(listOfMovies, file);
             }
         }
-        
+
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
             public void run() {
                 createAndShowGUI();
             }
@@ -74,7 +80,7 @@ public class App {
         Movie movie = movieProxy.getMovie();
 
         int index = movies.indexOf(movie);
-        
+
         if (index >= 0) {
             logger.debug("EXISTS: " + file.getName());
             movie = movies.get(index);
@@ -87,8 +93,8 @@ public class App {
         if (movie.getMediaInfo() == null) {
             MovieListManager.addBasicInfosToMovie(movieProxy);
         }
-        
-        if(movie.getSnapshots().isEmpty()) {
+
+        if (movie.getSnapshots().isEmpty()) {
             MovieListManager.genSnapshotsToMovie(movieProxy);
         }
 
@@ -96,26 +102,23 @@ public class App {
             GlobalVariables.getTemplate().closeSession();
         }
     }
-    
-        /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
+
+    /**
+     * Create the GUI and show it. For thread safety, this method should be
+     * invoked from the event-dispatching thread.
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("TableRenderDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- 
+
         //Create and set up the content pane.
         MovieTable newContentPane = new MovieTable();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
- 
+
         //Display the window.
         frame.pack();
         frame.setVisible(true);
     }
-    
-
 }
