@@ -6,24 +6,18 @@ package com.mudounet.ui.swing.ext;
 
 import com.mudounet.GlobalVariables;
 import com.mudounet.hibernate.Movie;
-import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.utils.Utils;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -49,20 +43,6 @@ public class MovieTable extends JPanel {
         table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        logger.debug("treu");
-        Action delete = new AbstractAction() {
-            private static final long serialVersionUID = 1L;
-
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                ((MovieTableModel) table.getModel()).removeRow(modelRow);
-            }
-        };
-
-        ButtonColumn buttonColumn = new ButtonColumn(table, delete, 0);
-        buttonColumn.setMnemonic(KeyEvent.VK_D);
 
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);

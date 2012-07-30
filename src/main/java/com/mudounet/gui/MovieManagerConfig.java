@@ -4,16 +4,13 @@
  */
 package com.mudounet.gui;
 
-import com.mudounet.GlobalProperties;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -23,25 +20,41 @@ import org.slf4j.LoggerFactory;
 public class MovieManagerConfig {
 
     private static Properties properties = new Properties();
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(MovieManagerConfig.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(MovieManagerConfig.class.getName());
     private static final String PROPERTY_FILE = "app.properties";
+    public final SystemSettings sysSettings = new SystemSettings();
+    private Point screenLocation;
 
     static {
         try {
             logger.debug("Initializing static class " + MovieManagerConfig.class.getName());
-            MovieManagerConfig.properties.load(new FileInputStream(PROPERTY_FILE));
+            properties.load(new FileInputStream(PROPERTY_FILE));
         } catch (IOException ex) {
             logger.error(ex.getMessage());
         }
     }
+    Dimension mainSize;
+    int mainWindowSliderPosition;
+    int mainWindowLastSliderPosition;
+    int movieInfoSliderPosition;
+    int movieInfoLastSliderPosition;
+    int additionalInfoNotesSliderPosition;
+    int additionalInfoNotesLastSliderPosition;
 
     private void writeProperty(String key, String value) {
-        properties.setProperty("setMainMaximized", value);
-        try {
-            properties.store(new FileOutputStream(PROPERTY_FILE), "");
-        } catch (IOException ex) {
-            logger.error("Property write failed : "+ex.getMessage());
-        }
+        properties.setProperty(key, value);
+    }
+
+    public void saveConfig() throws IOException {
+        properties.store(new FileOutputStream(PROPERTY_FILE), "");
+    }
+
+    public Point getScreenLocation() {
+        return screenLocation;
+    }
+
+    boolean getMainMaximized() {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     public class SystemSettings {

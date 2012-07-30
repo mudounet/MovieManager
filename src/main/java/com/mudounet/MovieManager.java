@@ -4,15 +4,21 @@
  */
 package com.mudounet;
 
+import com.mudounet.commands.MovieManagerCommandExit;
+import com.mudounet.gui.DialogMovieManager;
 import com.mudounet.gui.MovieManagerConfig;
 import com.mudounet.hibernate.Movie;
 import com.mudounet.hibernate.MovieProxy;
 import com.mudounet.ui.swing.ext.MovieTable;
 import com.mudounet.utils.MovieFileFilter;
+import com.mudounet.utils.SysUtil;
 import com.mudounet.utils.hibernate.DataAccessLayerException;
 import com.mudounet.utils.hibernate.HibernateUtils;
 import com.mudounet.utils.managers.MovieListManager;
 import com.mudounet.utils.managers.SimpleTagManager;
+import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,14 +32,105 @@ import org.slf4j.LoggerFactory;
  * @author isabelle
  */
 public class MovieManager {
-    private static MovieManagerConfig movieManagerConfig;
+    
+    static DatabaseHandler databaseHandler = new DatabaseHandler();
+
+    private static MovieManagerConfig config = new MovieManagerConfig();
+    /**
+     * Reference to the only instance of DialogMovieManager.
+     *
+     */
+    private static DialogMovieManager dialogMovieManager;
+    /**
+     * Reference to the only instance of MovieManager.
+     *
+     */
+    static MovieManager movieManager;
+
+    public static boolean isApplet() {
+        return false;
+    }
+    private boolean sandbox = false;
+
+    public static void exit() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    /**
+     * Returns a reference to the only instance of MovieManager.
+     *
+     * @return Reference to the only instance of the DialogMovieManager.
+     *
+     */
+    public static DialogMovieManager getDialog() {
+        return dialogMovieManager;
+    }
+
+    /**
+     * Creates the main movie manager dialog
+     */
+    void createDialog() {
+
+        dialogMovieManager = new DialogMovieManager();
+
+        dialogMovieManager.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                MovieManagerCommandExit.execute();
+            }
+        });
+    }
 
     public static MovieManagerConfig getConfig() {
-        return movieManagerConfig;
+        return config;
     }
     protected static Logger logger = LoggerFactory.getLogger(MovieManager.class.getName());
 
     public static void main(String[] args) throws DataAccessLayerException, IOException, InterruptedException, Exception {
+
+        boolean sandbox = SysUtil.isRestrictedSandbox();
+        
+        movieManager = new MovieManager();
+        movieManager.sandbox = sandbox;
+
+
+        EventQueue.invokeLater(new Runnable() {
+
+            public final void run() {
+
+                try {
+
+
+                    logger.debug("Creating MovieManager Dialog");
+                    movieManager.createDialog();
+
+                    /*
+                     * Starts the MovieManager.
+                     */
+                    MovieManager.getDialog().setUp();
+                    logger.debug("MovieManager Dialog - setup.");
+
+                    MovieManager.getDialog().showDialog();
+
+
+
+                    logger.debug("Loading Database....");
+
+                    /*
+                     * Loads the database.
+                     */
+                    databaseHandler.loadDatabase(true);
+
+                    logger.error("Database method not loaded.");
+
+
+                } catch (Exception e) {
+                    logger.error("Exception occured while intializing MeD's Movie Manager", e);
+                }
+            }
+        });
+
 
         System.out.println("Building Movie list...");
         List<File> movieList = readDirWithMovies(GlobalProperties.getMoviesDirectory());
