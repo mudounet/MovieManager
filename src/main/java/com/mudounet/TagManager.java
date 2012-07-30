@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TagManager {
 
-    protected static org.slf4j.Logger logger = LoggerFactory.getLogger(TagManager.class.getName());
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(TagManager.class.getName());
 
     public static void main(String[] args) {
         String tagRef;
