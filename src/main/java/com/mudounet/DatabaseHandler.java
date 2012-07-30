@@ -4,13 +4,27 @@
  */
 package com.mudounet;
 
+import com.mudounet.database.Database;
+
 /**
  *
  * @author isabelle
  */
-class DatabaseHandler {
+public class DatabaseHandler {
 
     void loadDatabase(boolean b) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    Database getDatabase() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public void saveActiveAdditionalInfoFields(int[] newActiveFields) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public int[] getActiveAdditionalInfoFields() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
     

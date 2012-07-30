@@ -5,6 +5,7 @@
 package com.mudounet;
 
 import com.mudounet.commands.MovieManagerCommandExit;
+import com.mudounet.database.Database;
 import com.mudounet.gui.DialogMovieManager;
 import com.mudounet.gui.MovieManagerConfig;
 import com.mudounet.hibernate.Movie;
@@ -50,6 +51,20 @@ public class MovieManager {
     public static boolean isApplet() {
         return false;
     }
+
+    /**
+     * Returns a reference to the only instance of MovieManager.
+     *
+     * @return Reference to the only instance of MovieManager.
+     **/
+    public static MovieManager getIt() {
+        return movieManager;
+    }
+
+    public static DatabaseHandler getDatabaseHandler() {
+        return databaseHandler;
+    }
+    
     private boolean sandbox = false;
 
     public static void exit() {
@@ -217,5 +232,14 @@ public class MovieManager {
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+    }
+
+/**
+     * Returns the current database.
+     *
+     * @return The current database.
+     **/
+    synchronized public Database getDatabase() {
+        return databaseHandler.getDatabase();
     }
 }

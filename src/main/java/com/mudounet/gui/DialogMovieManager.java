@@ -5,10 +5,12 @@
 package com.mudounet.gui;
 
 import com.mudounet.MovieManager;
+import com.mudounet.models.ModelMovie;
 import com.mudounet.utils.FileUtil;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
     public static MovieManagerConfig config = MovieManager.getConfig();
     MovieManagerMenuBar menuBar = null;
     private JTree moviesList;
+    ArrayList<ModelMovie> currentMovieList;
 
     public static JApplet getApplet() {
         log.warn("JApplet is not defined");
@@ -73,6 +76,14 @@ public class DialogMovieManager extends JFrame implements ComponentListener {
      */
     public JTree getMoviesList() {
         return moviesList;
+    }
+
+    public void setCurrentMovieList(ArrayList<ModelMovie> currentMovieList) {
+        this.currentMovieList = currentMovieList;
+    }
+
+    public ArrayList<ModelMovie> getCurrentMoviesList() {
+        return currentMovieList;
     }
 
     @Override
