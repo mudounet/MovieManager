@@ -19,5 +19,9 @@ public class Database {
     public int addExtraInfoFieldName(String extraInfoFieldName) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    public boolean isMySQL() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
     
 }

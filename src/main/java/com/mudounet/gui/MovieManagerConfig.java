@@ -57,6 +57,26 @@ public class MovieManagerConfig {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    public boolean getUseJTreeCovers() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public boolean getUseJTreeIcons() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public int getMovieListRowHeight() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public String getCoversPath() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public boolean getStoreCoversLocally() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
     public class SystemSettings {
 
         /**
