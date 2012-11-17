@@ -12,6 +12,7 @@ import java.util.Set;
 import org.dbunit.dataset.ITable;
 import org.hibernate.Hibernate;
 import org.hibernate.Transaction;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author gmanciet
  */
-public class GenericTagTest extends ProjectDatabaseTestCase {
+@Ignore public class GenericTagTest extends ProjectDatabaseTestCase {
 
     private static Logger logger = LoggerFactory.getLogger(GenericTagTest.class.getName());
 

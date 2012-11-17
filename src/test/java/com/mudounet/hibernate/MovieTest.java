@@ -5,13 +5,14 @@
 package com.mudounet.hibernate;
 
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
  * @author gmanciet
  */
-public class MovieTest {
+@Ignore public class MovieTest {
     
     public MovieTest() {
     }

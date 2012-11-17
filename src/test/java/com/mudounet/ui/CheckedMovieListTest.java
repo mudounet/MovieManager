@@ -10,13 +10,14 @@ import java.util.ArrayList;
 import org.dbunit.dataset.ITable;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
  * @author gmanciet
  */
-public class CheckedMovieListTest extends ProjectDatabaseTestCase {
+@Ignore public class CheckedMovieListTest extends ProjectDatabaseTestCase {
     
     public CheckedMovieListTest(String name) {
         super(name);

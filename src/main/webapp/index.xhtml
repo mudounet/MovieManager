@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pm="http://primefaces.org/mobile"
+        contentType="text/html">
+
+  <pm:page title="Main screen">
+
+    <!-- vue Forms -->
+    <pm:view id="login" swatch="b">
+      <pm:header title="#{msg['forms']}"/>
+      <pm:content>
+        <h:form id="formulaire">
+          <h:outputText value="Basic: " />
+          <p:password id="password" label="#{msg['input']}" value="#{sessionMgt.password}"/>
+          <p:commandButton value="#{msg['valider']}" update=":formulaire" action="#{sessionMgt.checkLogin}"/>
+        </h:form>
+      </pm:content>
+    </pm:view>
+    
+        <!-- login bon -->
+    <pm:view id="loginSuccess" swatch="b">
+      <pm:header title="#{msg['confirmations']}">
+        <f:facet name="right"><p:button value="#{msg['continue']}" icon="forward" href="#home"/></f:facet>
+      </pm:header>
+    </pm:view>
+        
+    
+    <pm:view id="home" swatch="b">
+      <pm:header title="#{msg['list_movies_header']}">
+      </pm:header>
+    </pm:view>
+
+  </pm:page>
+</f:view>

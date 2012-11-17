@@ -16,6 +16,7 @@ import java.util.Collections;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author gmanciet
  */
-public class TagManagerTest extends ProjectDatabaseTestCase {
+@Ignore public class TagManagerTest extends ProjectDatabaseTestCase {
 
     //protected static Logger logger = LoggerFactory.getLogger(TagManagerTest.class.getName());
     private  Logger logger = LoggerFactory.getLogger(getClass().getName());

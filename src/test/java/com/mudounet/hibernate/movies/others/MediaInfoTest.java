@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
  *
  * @author gmanciet
  */
-public class MediaInfoTest {
+@Ignore public class MediaInfoTest {
     
     public MediaInfoTest() {
     }
